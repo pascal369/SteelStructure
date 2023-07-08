@@ -22,7 +22,7 @@ class ViewProvider:
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(260, 425)
+        Dialog.resize(260, 450)
         Dialog.move(1000, 0)
         #タイプ
         self.label_type = QtGui.QLabel(Dialog)
@@ -90,12 +90,23 @@ class Ui_Dialog(object):
         self.lineEdit_p.setObjectName("lineEdit_p")
         #img
         self.img = QtGui.QLabel(Dialog)
-        self.img.setGeometry(QtCore.QRect(30, 205, 200, 200))
+        self.img.setGeometry(QtCore.QRect(30, 230, 200, 200))
         self.img.setAlignment(QtCore.Qt.AlignCenter)
         self.retranslateUi(Dialog)
+        #比重
+        self.mtrl = QtGui.QLabel('Specific gravity of material',Dialog)
+        self.mtrl.setGeometry(QtCore.QRect(10, 190, 150, 12))
+        self.le_mtrl = QtGui.QLineEdit(Dialog)
+        self.le_mtrl.setGeometry(QtCore.QRect(180, 190, 50, 20))
+        self.le_mtrl.setAlignment(QtCore.Qt.AlignCenter)
+
         self.comboBox_type.addItems(HandData.type)
         self.comboBox_siyo.addItems(HandData.siyo)
+
+        self.comboBox_siyo.setCurrentIndex(1)
         self.comboBox_siyo.currentIndexChanged[int].connect(self.on_type)
+        self.comboBox_siyo.setCurrentIndex(0)
+
         self.comboBox_type.currentIndexChanged[int].connect(self.on_type)
         self.lineEdit_l.setText(QtGui.QApplication.translate("Dialog", '1100', None))
         self.lineEdit_l1.setText(QtGui.QApplication.translate("Dialog", '1500', None))
@@ -136,10 +147,10 @@ class Ui_Dialog(object):
         except:
             pass
 
-        spec_siyo=str(self.comboBox_siyo.currentIndex())
+        spec_siyo=self.comboBox_siyo.currentIndex()
 
         if key=='00':
-            pic=spec_siyo+'_直線01L.jpg'
+            pic=str(spec_siyo)+'_直線01L.jpg'
 
             self.label_l1.setText(QtGui.QApplication.translate("Dialog", "length l1[m]", None))
             self.label_l2.setText(QtGui.QApplication.translate("Dialog", "", None))
@@ -148,7 +159,7 @@ class Ui_Dialog(object):
             self.lineEdit_cn.setText(QtGui.QApplication.translate("Dialog", "", None))
             self.lineEdit_p.setText(QtGui.QApplication.translate("Dialog", "1000", None))
         elif key=='01':
-            pic=spec_siyo+'_端部01L.jpg'
+            pic=str(spec_siyo)+'_端部01L.jpg'
 
             self.label_l1.setText(QtGui.QApplication.translate("Dialog", "length l1[m]", None))
             self.label_l2.setText(QtGui.QApplication.translate("Dialog", "length l2[m]", None))
@@ -157,7 +168,7 @@ class Ui_Dialog(object):
             self.lineEdit_cn.setText(QtGui.QApplication.translate("Dialog", "90", None))
 
         elif key=='02':
-            pic=spec_siyo+'_コーナー01L.jpg'
+            pic=str(spec_siyo)+'_コーナー01L.jpg'
 
             self.label_l1.setText(QtGui.QApplication.translate("Dialog", "length l1[m]", None))
             self.label_l2.setText(QtGui.QApplication.translate("Dialog", "length l2[m]", None))
@@ -166,7 +177,7 @@ class Ui_Dialog(object):
             self.lineEdit_cn.setText(QtGui.QApplication.translate("Dialog", "90", None))
             self.lineEdit_p.setText(QtGui.QApplication.translate("Dialog", "1000", None))
         elif key=='03':
-            pic=spec_siyo+'_arc01.jpg'
+            pic=str(spec_siyo)+'_arc01.jpg'
 
             self.label_l1.setText(QtGui.QApplication.translate("Dialog", "radius R[m]", None))
             self.label_l2.setText(QtGui.QApplication.translate("Dialog", "", None))
@@ -175,20 +186,28 @@ class Ui_Dialog(object):
             self.lineEdit_cn.setText(QtGui.QApplication.translate("Dialog", "90", None))
             #self.lineEdit_p.setText(QtGui.QApplication.translate("Dialog", "1000", None))
         elif key=='04':
-           pic=spec_siyo+'_edge01R.jpg'   
+           pic=str(spec_siyo)+'_edge01R.jpg'   
 
         elif key=='05':
-           pic=spec_siyo+'_edge01L.jpg'   
+           pic=str(spec_siyo)+'_edge01L.jpg'   
 
         elif key=='06':
-           pic=spec_siyo+'_channel01.jpg'  
+           pic=str(spec_siyo)+'_channel01.jpg'  
 
-           self.label_l1.setText(QtGui.QApplication.translate("Dialog", "length l1[m]", None))
-           self.label_l2.setText(QtGui.QApplication.translate("Dialog", "length l2[m]", None))
-           self.label_cn.setText(QtGui.QApplication.translate("Dialog", "angle k[deg]", None))
-           self.lineEdit_l2.setText(QtGui.QApplication.translate("Dialog", "1000", None))
-           self.lineEdit_cn.setText(QtGui.QApplication.translate("Dialog", "90", None))  
-           self.lineEdit_p.setText(QtGui.QApplication.translate("Dialog", "1000", None))  
+        #'''   
+        print (spec_siyo)
+        if spec_siyo < 2:
+           self.le_mtrl.setText(QtGui.QApplication.translate("Dialog", "7.85", None))  
+        else:
+           self.le_mtrl.setText(QtGui.QApplication.translate("Dialog", "2.70", None))     
+        #'''
+
+        self.label_l1.setText(QtGui.QApplication.translate("Dialog", "length l1[m]", None))
+        self.label_l2.setText(QtGui.QApplication.translate("Dialog", "length l2[m]", None))
+        self.label_cn.setText(QtGui.QApplication.translate("Dialog", "angle k[deg]", None))
+        self.lineEdit_l2.setText(QtGui.QApplication.translate("Dialog", "1000", None))
+        self.lineEdit_cn.setText(QtGui.QApplication.translate("Dialog", "90", None))  
+        self.lineEdit_p.setText(QtGui.QApplication.translate("Dialog", "1000", None))  
 
         try:
             base=os.path.dirname(os.path.abspath(__file__))
@@ -205,7 +224,7 @@ class Ui_Dialog(object):
         global l2
         global k
         global p
-        
+        g0=float(self.le_mtrl.text())
         #Gui.activeDocument().activeView().viewTop()
         if key=='00':
             label='StraightLine'
@@ -224,6 +243,7 @@ class Ui_Dialog(object):
         #print(label)
         obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
         obj.addProperty("App::PropertyEnumeration", "spec",label)
+        obj.addProperty("App::PropertyFloat", "g0",'Specific gravity').g0=g0
         obj.spec=HandData.siyo
         i=self.comboBox_siyo.currentIndex()
         obj.spec=HandData.siyo[i] 

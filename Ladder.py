@@ -62,10 +62,21 @@ class Ui_Dialog(object):
         self.lineEdit_l.setGeometry(QtCore.QRect(80, 85, 50, 20))
         self.lineEdit_l.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_l.setObjectName("lineEdit_l")
+
+        #比重
+        self.mtrl = QtGui.QLabel('Specific gravity of material',Dialog)
+        self.mtrl.setGeometry(QtCore.QRect(10, 110, 150, 12))
+        self.le_mtrl = QtGui.QLineEdit('7.85',Dialog)
+        self.le_mtrl.setGeometry(QtCore.QRect(180, 110, 50, 20))
+        self.le_mtrl.setAlignment(QtCore.Qt.AlignCenter)
+
         #img
         self.img = QtGui.QLabel(Dialog)
         self.img.setGeometry(QtCore.QRect(30, 100, 200, 400))
         self.img.setAlignment(QtCore.Qt.AlignCenter)
+        
+
+
         self.retranslateUi(Dialog)
         self.comboBox_type.addItems(ladderdata.type)
         self.comboBox_st.addItems(ladderdata.step_h)
@@ -106,7 +117,7 @@ class Ui_Dialog(object):
         h=float(self.comboBox_st.currentText())#ステップ高
         L=float(self.lineEdit_l.text())#手すり高
         L0=int(self.lineEdit_size.text())#床面高さ
-        
+        g0=float(self.le_mtrl.text())
         if key=='00' or key=='02':
             if key=='00':
                 label='LadderA'
@@ -117,6 +128,7 @@ class Ui_Dialog(object):
             obj.type=ladderdata.type
             i=self.comboBox_type.currentIndex()
             obj.type=ladderdata.type[i] 
+            obj.addProperty("App::PropertyFloat", "g0",'Specific gravity').g0=g0
             obj.addProperty("App::PropertyFloat", "StepHight",label).StepHight=h
             obj.addProperty("App::PropertyFloat", "RailingHight",label).RailingHight=L
             obj.addProperty("App::PropertyFloat", "FloorHight",label).FloorHight=L0
@@ -135,6 +147,7 @@ class Ui_Dialog(object):
             obj.type=ladderdata.type
             i=self.comboBox_type.currentIndex()
             obj.type=ladderdata.type[i] 
+            obj.addProperty("App::PropertyFloat", "g0",'Specific gravity').g0=g0
             obj.addProperty("App::PropertyFloat", "StepHight",label).StepHight=h
             obj.addProperty("App::PropertyFloat", "RailingHight",label).RailingHight=L
             obj.addProperty("App::PropertyFloat", "FloorHight",label).FloorHight=L0

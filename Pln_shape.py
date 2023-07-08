@@ -197,9 +197,11 @@ class Ui_Dialog(object):
         try:
             obj.addProperty("App::PropertyFloat", "mass",label)
             obj.mass=g
+            obj.g0=g0
         except:
             obj.mass=g
-
+            obj.g0=g0 
+            
     def on_shape(self):
         global key
         key=self.combo_shape.currentIndex()

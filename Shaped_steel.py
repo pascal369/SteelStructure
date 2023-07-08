@@ -16,7 +16,7 @@ import Draft
 import FreeCAD, FreeCADGui
 import FreeCAD as App
 from shpst_data import ShpstData
-'''
+
 from shpst_data import ShpstData
 from shpst_data import ParamAngle
 from shpst_data import ParamChannel
@@ -42,7 +42,7 @@ import shpst_data.ParamLWAngle
 import shpst_data.ParamLWChannel
 import shpst_data.ParamRipChannel
 import shpst_data.ParamSqurePipe
-'''
+
 #JIS G 3192
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
