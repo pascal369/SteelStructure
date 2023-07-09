@@ -56,15 +56,14 @@ class Ui_Dialog(object):
         self.pushButton_m3.setGeometry(QtCore.QRect(80, 115, 100, 23))
         self.pushButton_m3.setObjectName("pushButton")  
         self.le_mass = QtGui.QLineEdit(Dialog)
-        self.le_mass.setGeometry(QtCore.QRect(170, 180, 50, 20))
+        self.le_mass.setGeometry(QtCore.QRect(180, 115, 50, 20))
         self.le_mass.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_mass.setText('10.0')
-        
         #密度
         self.lbl_gr = QtGui.QLabel('SpecificGravity',Dialog)
-        self.lbl_gr.setGeometry(QtCore.QRect(80, 142, 80, 12))
+        self.lbl_gr.setGeometry(QtCore.QRect(80, 145, 80, 12))
         self.le_gr = QtGui.QLineEdit(Dialog)
-        self.le_gr.setGeometry(QtCore.QRect(170, 180, 50, 20))
+        self.le_gr.setGeometry(QtCore.QRect(180, 142, 50, 20))
         self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_gr.setText('7.85')
 
