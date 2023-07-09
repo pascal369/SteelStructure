@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import csv
 import pathlib
 import subprocess
 import FreeCAD as App
@@ -46,12 +47,24 @@ class Ui_Dialog(object):
         self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
         self.pushButton_m.setGeometry(QtCore.QRect(80, 85, 100, 23))
         self.pushButton_m.setObjectName("pushButton")  
-
+        #質量集計
+        self.pushButton_m2 = QtGui.QPushButton('massTally',Dialog)
+        self.pushButton_m2.setGeometry(QtCore.QRect(180, 85, 100, 23))
+        self.pushButton_m2.setObjectName("pushButton")
+        #質量入力
+        self.pushButton_m3 = QtGui.QPushButton('massImput[kg]',Dialog)
+        self.pushButton_m3.setGeometry(QtCore.QRect(80, 115, 100, 23))
+        self.pushButton_m3.setObjectName("pushButton")  
+        self.le_mass = QtGui.QLineEdit(Dialog)
+        self.le_mass.setGeometry(QtCore.QRect(170, 180, 50, 20))
+        self.le_mass.setAlignment(QtCore.Qt.AlignCenter)  
+        self.le_mass.setText('10.0')
+        
         #密度
         self.lbl_gr = QtGui.QLabel('SpecificGravity',Dialog)
-        self.lbl_gr.setGeometry(QtCore.QRect(80, 118, 80, 12))
+        self.lbl_gr.setGeometry(QtCore.QRect(80, 142, 80, 12))
         self.le_gr = QtGui.QLineEdit(Dialog)
-        self.le_gr.setGeometry(QtCore.QRect(170, 115, 50, 20))
+        self.le_gr.setGeometry(QtCore.QRect(170, 180, 50, 20))
         self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_gr.setText('7.85')
 
@@ -71,11 +84,15 @@ class Ui_Dialog(object):
         self.comboBox_element2.currentIndexChanged[int].connect(self.onDia2)
         self.comboBox_element2.setCurrentIndex(0)
 
+        
+
         self.retranslateUi(Dialog)
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QObject.connect(self.pushButton_m, QtCore.SIGNAL("pressed()"), self.massCulc)
-        
+        QtCore.QObject.connect(self.pushButton_m2, QtCore.SIGNAL("pressed()"), self.massTally2)
+        QtCore.QObject.connect(self.pushButton_m3, QtCore.SIGNAL("pressed()"), self.massImput)
+
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -84,6 +101,22 @@ class Ui_Dialog(object):
         self.label_element2.setText(QtGui.QApplication.translate("Dialog", "Element2", None))   
         self.pushButton.setText(QtGui.QApplication.translate("Dialog", "Execution", None))  
 
+    def massImput(self):
+         # 選択したオブジェクトを取得する
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
+
+        label='mass[kg]'
+        
+        g=float(self.le_mass.text())
+        try:
+            obj.addProperty("App::PropertyFloat", "mass",label)
+            obj.mass=g
+        except:
+            obj.mass=g
+         
+         
     def massCulc(self):
         # 選択したオブジェクトを取得する
         c00 = Gui.Selection.getSelection()
@@ -99,6 +132,31 @@ class Ui_Dialog(object):
         except:
             obj.mass=g
 
+    def massTally2(self):
+        #def get_object_mass():
+        doc = App.ActiveDocument
+        objects = doc.Objects
+        #print('aaa')
+        
+        mass_list = []
+        
+        for obj in objects:
+            if Gui.ActiveDocument.getObject(obj.Name).Visibility:
+                if obj.isDerivedFrom("Part::Feature"):
+                    if hasattr(obj, "mass"):
+                        # Add the object's name, count, and mass to the list
+                        mass_list.append([obj.Label, 1, obj.mass])
+                else:
+                     pass
+        doc_path = doc.FileName
+        csv_filename = os.path.splitext(os.path.basename(doc_path))[0] + "_counts_and_masses.csv"
+        csv_path = os.path.join(os.path.dirname(doc_path), csv_filename)
+        print(doc_path)
+        with open(csv_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["Object Name",'Count', "Mass[kg]"])
+            writer.writerows(mass_list) 
+                 
     def onDia(self):
          global key
          
