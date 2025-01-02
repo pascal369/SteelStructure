@@ -3,7 +3,6 @@
 [name] Steel Structure Workbench
 
 [contents] Create 3D data of Steel Structure.
-
 Post,ShapedSteel,SteelPlate,SteelStairs,Ladder,Handrail,Trestle,SteelBrace,LatticeBeam,TrussBeam,TurnBackle,accodionGate,grating
 
 [Operating environment] Environment in which FreeCAD operates
