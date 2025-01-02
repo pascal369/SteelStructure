@@ -72,18 +72,6 @@ class Ui_Dialog(object):
          Gui.Selection.clearSelection()
          Gui.Selection.addSelection(spreadsheet)
          selection = Gui.Selection.getSelection()
-         if selection:
-             selected_object = selection[0]
-             if selected_object.TypeId == "App::Part":
-                 # Partsグループが選択されている場合の処理
-                 parts_group = selected_object
-                 # Partsグループ内のオブジェクトを走査してスプレッドシートを探す
-                 for obj in parts_group.Group:
-                     if obj.TypeId == "Spreadsheet::Sheet":
-                         # スプレッドシートが見つかった場合の処理
-                         spreadsheet = obj
-                         #Gui.Selection.clearSelection()
-                         Gui.Selection.addSelection(spreadsheet)
          # 選択したスプレッドシートを取得
          if selection:
              for obj in selection:
@@ -103,7 +91,7 @@ class Ui_Dialog(object):
          fname='grating.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'grating_data',fname) 
-         print(joined_path)
+         #print(joined_path)
          try:
             Gui.ActiveDocument.mergeProject(joined_path)
          except:
