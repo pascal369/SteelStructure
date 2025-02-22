@@ -85,40 +85,7 @@ class ThreadedHoll:
         dt=float(sa1[3])
         t01=float(sa1[5])
         t02=float(sa1[6])
-        #六角穴部
-        if st=='Flat_head_1' or st=='Point_ahead_1':
-            t=t01
-        else:
-            t=t02
-        x1=(e0/2)*math.cos(math.pi/6)
-        y1=(e0/2)*math.sin(math.pi/6)
-        t1=e0/2*math.tan(math.pi/6)
-        t2=t+t1
-        z=L2-t2
-        p1=(x1,y1,z)
-        p2=(0,e0/2,z)
-        p3=(-x1,y1,z)
-        p4=(-x1,-y1,z)
-        p5=(0,-e0/2,z)
-        p6=(x1,-y1,z)
-        plist=[p1,p2,p3,p4,p5,p6,p1]
-        w10=Part.makePolygon(plist)
-        wface = Part.Face(w10)
-        c001=wface.extrude(Base.Vector(0,0,t2))
-        c1=c1.cut(c001)
-        #下部カット
-        p1=(-e0/2,0,0)
-        p2=(-e0/2,0,t1)
-        p3=(0,0,0)
-        plist=[p1,p2,p3,p1]
-        w10=Part.makePolygon(plist)
-        wface = Part.Face(w10)
-        c002=wface.revolve(Base.Vector(0,0.0,0),Base.Vector(0,0,1),360)
-        c001=c001.cut(c002)
-        c001.Placement=App.Placement(App.Vector(0,0,L1-t2),App.Rotation(App.Vector(0,0,1),0))
-        c001=c001.cut(c002)
-        c001.Placement=App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,1,0),-90))
-        c1=c1.cut(c001)
+        
         #下部カット
         d0p=dt
         x=(dk-d0p)/2
