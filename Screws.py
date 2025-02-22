@@ -5,7 +5,6 @@ import Import
 from PySide import QtGui
 from PySide import QtUiTools
 from PySide import QtCore
-
 from FreeCAD import Base
 import FreeCADGui as Gui
 import FreeCAD, Part, math
@@ -17,7 +16,6 @@ import Draft
 import FreeCAD as App
 
 from ScrLib import ScrData
-
 from ScrLib import ParamHxgNut
 from ScrLib import ParamEyNut
 from ScrLib import ParamSmlScrw
@@ -31,6 +29,7 @@ from ScrLib import ParamWasher
 from ScrLib import ParamBrgNut
 from ScrLib import ParamUBlt
 from ScrLib import ParamUBnd
+from ScrLib import ParamThreadedHoll
 
 DEBUG = True # set to True to show debug messages
 #JIS B 1181
@@ -43,78 +42,77 @@ class ViewProvider:
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(280, 280)
+        Dialog.resize(300, 280)
         Dialog.move(1000, 0)
         #種類 type
-        self.type = QtGui.QLabel(Dialog)
-        self.type.setGeometry(QtCore.QRect(10, 10, 50, 12))
+        self.type = QtGui.QLabel('Type',Dialog)
+        self.type.setGeometry(QtCore.QRect(10, 13, 50, 12))
         self.type.setObjectName("type")
         self.comboBox_type = QtGui.QComboBox(Dialog)
-        self.comboBox_type.setGeometry(QtCore.QRect(70, 10, 180, 22))
-        self.comboBox_type.setObjectName("comboBox_type")
-        self.type2 = QtGui.QLabel(Dialog)
-        self.type2.setGeometry(QtCore.QRect(70, 33, 200, 22))
-        self.type2.setObjectName("type2")
+        self.comboBox_type.setGeometry(QtCore.QRect(100, 10, 180, 22))
+       
         #規格
-        self.standard = QtGui.QLabel(Dialog)
-        self.standard.setGeometry(QtCore.QRect(10, 58, 60, 22))
-        #self.standard.setObjectName("standard")
+        self.standard = QtGui.QLabel('Standard',Dialog)
+        self.standard.setGeometry(QtCore.QRect(10, 38, 60, 22))
+        #self.standard.setAlignment(QtCore.Qt.AlignLeft)
         self.comboBox_standard = QtGui.QComboBox(Dialog)
-        self.comboBox_standard.setGeometry(QtCore.QRect(70, 55, 180, 22))
-        self.comboBox_standard.setObjectName("comboBox_standard")
+        self.comboBox_standard.setGeometry(QtCore.QRect(100, 35, 180, 22))
+        
         #ねじ呼び径
-        self.dia = QtGui.QLabel(Dialog)
-        self.dia.setGeometry(QtCore.QRect(10, 80, 40, 22))
+        self.dia = QtGui.QLabel('Nominal',Dialog)
+        self.dia.setGeometry(QtCore.QRect(10, 63, 40, 22))
         #self.dia.setObjectName("yobikei")
         self.comboBox_dia = QtGui.QComboBox(Dialog)
-        self.comboBox_dia.setGeometry(QtCore.QRect(70, 78, 80, 22))
-        self.comboBox_dia.setObjectName("comboBox_dia")
+        self.comboBox_dia.setGeometry(QtCore.QRect(100, 60, 80, 22))
+        
         #フランジ規格
-        self.fdia = QtGui.QLabel(Dialog)
-        self.fdia.setGeometry(QtCore.QRect(170, 80, 60, 22))
+        self.fdia = QtGui.QLabel('flange',Dialog)
+        self.fdia.setGeometry(QtCore.QRect(190, 63, 60, 22))
         #self.fdia.setObjectName("yobikei")
         self.comboBox_fdia = QtGui.QComboBox(Dialog)
-        self.comboBox_fdia.setGeometry(QtCore.QRect(210, 78, 40, 22))
-        self.comboBox_fdia.setObjectName("comboBox_fdia")
+        self.comboBox_fdia.setGeometry(QtCore.QRect(230, 60, 50, 22))
+        
         #首下長さ
-        self.kubisita = QtGui.QLabel(Dialog)
-        self.kubisita.setGeometry(QtCore.QRect(10, 102, 110, 20))
-        self.kubisita.setAlignment(QtCore.Qt.AlignCenter)
+        self.kubisita = QtGui.QLabel('neckLength',Dialog)
+        self.kubisita.setGeometry(QtCore.QRect(10, 85, 80, 22))
+        #self.kubisita.setAlignment(QtCore.Qt.AlignCenter)
         #self.kubisita.setObjectName("kubisita")
         self.lineEdit = QtGui.QLineEdit(Dialog)
-        self.lineEdit.setGeometry(QtCore.QRect(130, 102, 50, 20))
+        self.lineEdit.setGeometry(QtCore.QRect(100, 85, 80, 22))
         self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit.setObjectName("lineEdit")
+        #self.lineEdit.setObjectName("lineEdit")
         #ねじ部長さ
-        self.nejibu = QtGui.QLabel(Dialog)
-        self.nejibu.setGeometry(QtCore.QRect(10, 126, 110, 20))
-        self.nejibu.setAlignment(QtCore.Qt.AlignCenter)
-        self.nejibu.setObjectName("nejibu")
+        self.nejibu = QtGui.QLabel('threadLength',Dialog)
+        self.nejibu.setGeometry(QtCore.QRect(10, 110, 110, 22))
+        #self.nejibu.setAlignment(QtCore.Qt.AlignCenter)
+        #self.nejibu.setObjectName("nejibu")
         self.lineEdit_2 = QtGui.QLineEdit(Dialog)
-        self.lineEdit_2.setGeometry(QtCore.QRect(130, 123, 50, 20))
+        self.lineEdit_2.setGeometry(QtCore.QRect(100, 108, 80, 22))
         self.lineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_2.setObjectName("lineEdit_2")
+        #self.lineEdit_2.setObjectName("lineEdit_2")
         #checkboxフランジ部
-        self.checkboxf = QtGui.QCheckBox(Dialog)
-        self.checkboxf.setGeometry(QtCore.QRect(190, 103, 65, 23))
+        self.checkboxf = QtGui.QCheckBox('Flange',Dialog)
+        self.checkboxf.setGeometry(QtCore.QRect(190, 85, 65, 23))
         #checkboxねじ表示
-        self.checkbox = QtGui.QCheckBox(Dialog)
-        self.checkbox.setGeometry(QtCore.QRect(190, 123, 61, 23))
+        self.checkbox = QtGui.QCheckBox('Thread',Dialog)
+        self.checkbox.setGeometry(QtCore.QRect(190, 108, 61, 22))
         self.checkbox.setObjectName("checkbox")
         #creat
-        self.pushButton = QtGui.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(10, 145, 250, 25))
+        self.pushButton = QtGui.QPushButton('Create',Dialog)
+        self.pushButton.setGeometry(QtCore.QRect(30, 145, 250, 22))
         self.pushButton.setObjectName("pushButton")
         #img
         self.img = QtGui.QLabel(Dialog)
-        self.img.setGeometry(QtCore.QRect(10, 175, 250, 100))
+        self.img.setGeometry(QtCore.QRect(30, 175, 250, 100))
         self.img.setAlignment(QtCore.Qt.AlignCenter)
         self.retranslateUi(Dialog)
 
         self.comboBox_type.addItems(ScrData.b_type)
         self.comboBox_fdia.addItems(ScrData.flange_st)
+
         self.comboBox_type.setCurrentIndex(1)
         self.comboBox_type.currentIndexChanged[int].connect(self.on_type)
+        self.comboBox_standard.currentIndexChanged[int].connect(self.on_standard)
         self.comboBox_type.setCurrentIndex(0)
 
         self.comboBox_standard.setCurrentIndex(1)
@@ -130,18 +128,7 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "ねじライブラリ", None))
-        self.type.setText(QtGui.QApplication.translate("Dialog", "種類", None))
-        self.type2.setText(QtGui.QApplication.translate("Dialog", "六角ナット", None))
-        self.dia.setText(QtGui.QApplication.translate("Dialog", "呼び径", None))
-        self.fdia.setText(QtGui.QApplication.translate("Dialog", "フランジ", None))
-        self.standard.setText(QtGui.QApplication.translate("Dialog", "規格", None))
-        self.kubisita.setText(QtGui.QApplication.translate("Dialog", "", None))
-        self.nejibu.setText(QtGui.QApplication.translate("Dialog", "", None))
-        self.pushButton.setText(QtGui.QApplication.translate("Dialog", "Create", None))
-        self.checkbox.setText(QtGui.QApplication.translate("Dialog", "ねじ表示", None))
-        self.checkboxf.setText(QtGui.QApplication.translate("Dialog", "フランジ部", None))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Screws", None))
 
     def on_type(self):
         global key
@@ -158,7 +145,7 @@ class Ui_Dialog(object):
             ta=ScrData.bolt_st4
         elif key=='05':
             ta=ScrData.bolt_st5
-        elif key=='06':
+        elif key=='06' or key=='13':
             ta=ScrData.bolt_st6
         elif key=='07':
             ta=ScrData.bolt_st7
@@ -171,28 +158,25 @@ class Ui_Dialog(object):
         elif key=='11':
             ta=ScrData.u_bolt_st
         elif key=='12':
-            ta=ScrData.u_band_st      
+            ta=ScrData.u_band_st 
 
         self.comboBox_standard.clear()
-        self.comboBox_standard.addItems(ta)
+        try:
+            self.comboBox_standard.addItems(ta)
+        except:
+            return
     def on_dia(self):
         global sa
         global L2
         st=self.comboBox_standard.currentText()
         dia=self.comboBox_dia.currentText()
-        self.kubisita.setText(QtGui.QApplication.translate("Dialog", "首下長さ", None))
-        self.nejibu.setText(QtGui.QApplication.translate("Dialog", "ねじ部長さ", None))
         if key=='00':
             try:
                 sa=ScrData.regular[dia]
             except:
                 return  
-            self.kubisita.setText(QtGui.QApplication.translate("Dialog", "", None))
-            self.nejibu.setText(QtGui.QApplication.translate("Dialog", "", None))
-            self.lineEdit.setText(str(''))
-            self.lineEdit_2.setText(str(''))
 
-        elif key=='05'  or key=='01' or key=='02':
+        elif key=='05'  or key=='01' :
             try:
                 sa=ScrData.regular[dia]
             except:
@@ -200,9 +184,20 @@ class Ui_Dialog(object):
             p=sa[0]
             D0=sa[2]
             L1=D0*5
-            L2=D0*5-p*3
+            L2=int(L1*0.75)
             self.lineEdit.setText(str(L1))
             self.lineEdit_2.setText(str(L2))
+        elif key=='02':
+            try:
+                sa=ScrData.regular[dia]
+            except:
+                return    
+            p=sa[0]
+            D0=sa[2]
+            L1=D0*5
+            L2=int(L1*0.75)
+            self.lineEdit.setText(str(L1))
+            self.lineEdit_2.setText(str(L2))    
         elif key=='03':
             try:
                 sa=ScrData.regular[dia]
@@ -212,7 +207,6 @@ class Ui_Dialog(object):
             D0=sa[2]
             self.lineEdit.setText(str(''))
             self.lineEdit_2.setText(str(D0*3-p*3))
-            self.kubisita.setText(QtGui.QApplication.translate("Dialog", "", None))
         elif key=='04':
             if st=='Type_J':
                 try:
@@ -228,8 +222,7 @@ class Ui_Dialog(object):
             L2=float(sa[5])
             self.lineEdit.setText(str(L1))
             self.lineEdit_2.setText(str(L2))
-            self.kubisita.setText(QtGui.QApplication.translate("Dialog", "外長さ", None))
-        elif key=='06' :
+        elif key=='06' or key=='13':
             try:
                 sa=ScrData.set_screw[dia]
             except:
@@ -238,7 +231,6 @@ class Ui_Dialog(object):
             D0=sa[2]    
             L2=float(sa[4])
             self.lineEdit_2.setText(str(L2))
-            self.kubisita.setText(QtGui.QApplication.translate("Dialog", "", None))
         elif key=='07':
             try:
                 sa=ScrData.eye_bolt[dia]
@@ -255,8 +247,6 @@ class Ui_Dialog(object):
                 return
             self.lineEdit.setText(str(''))
             self.lineEdit_2.setText(str(''))
-            self.kubisita.setText(QtGui.QApplication.translate("Dialog", "", None))
-            self.nejibu.setText(QtGui.QApplication.translate("Dialog", "", None))
         elif key=='10':
             if st=='Bearing Nut' or st=='Bearing Washer' or st=='shaft End':
                 try:
@@ -286,8 +276,9 @@ class Ui_Dialog(object):
                 l=sa[3]
                 self.lineEdit.setText(str(L))#首下
                 self.lineEdit_2.setText(str(l))#ねじ部
+        
     def on_standard(self):
-        global FC
+        #global FC
         global pic
         global label
         dia=self.comboBox_dia.currentText()
@@ -295,177 +286,182 @@ class Ui_Dialog(object):
         st=self.comboBox_standard.currentText()
         if key=='00':
             dia=ScrData.size[3:]
-            if st=='Type1':
-                FC="六角ナット_1種 JIS B 1181"
-            elif st=='Type2':
-                FC="六角ナット_2種 JIS B 1181"
-            elif st=='Type3':
-                FC="六角ナット_3種 JIS B 1181"
             pic='img_nut_' + st + '.png'
         elif key=='01':
             dia=ScrData.size[5:]
             pic='img_bolt_' + st + '.png'
-            FC="六角ボルト JIS B 1180"
+            #FC="六角ボルト JIS B 1180"
         elif key=='02':
+            dia=ScrData.sh_size
+            pic='img_sh_bolt.png' 
             if st=='Section1':
-                FC="六角穴付きボルト_1欄 JIS B 1176"
+                #FC="六角穴付きボルト_1欄 JIS B 1176"
+                return
             elif st=='Section2':
-                FC="六角穴付きボルト_2欄 JIS B 1176"
-                self.type2.setText(QtGui.QApplication.translate("Dialog", "六角穴付きボルト_2欄 JIS B 1176", None))
-            dia=ScrData.size[5:]
-            pic='img_sh_bolt.png'
+                #FC="六角穴付きボルト_2欄 JIS B 1176"
+                #self.type2.setText(QtGui.QApplication.translate("Dialog", "六角穴付きボルト_2欄 JIS B 1176", None))
+                return
         elif key=='03':
             dia=ScrData.size[5:]
             pic='img_all_screw.png'
-            FC="全ねじボルト JIS B 0205"
+            #FC="全ねじボルト JIS B 0205"
         elif key=='04':
             if st=='Type_L':
-                dia=ScrData.size[10:16]
+                dia=ScrData.anch_size
                 pic='img_anchor_L.png'
-                FC="アンカーボルト_L形"
+                #FC="アンカーボルト_L形"
             elif st=='Type_J':
-                dia=ScrData.size[10:16]
+                dia=ScrData.anch_size
                 pic='img_anchor_J.png'
-                FC="アンカーボルト_J形"
+                #FC="アンカーボルト_J形"
         elif key=='05':
             if st=='Pan_head':
                 dia=ScrData.size[2:11]
                 pic='img_pan_head.png'
-                FC="なべ小ねじ JIS B 1101"
+                #FC="なべ小ねじ JIS B 1101"
             elif st=='Flat_head':
                 dia=ScrData.size[2:11]
                 pic='img_flat_head.png'
-                FC="皿小ねじ JIS B 1101"
+                #FC="皿小ねじ JIS B 1101"
             elif st=='Round_flat_head':
                 dia=ScrData.size[2:11]
                 pic='img_round_flat_head.png'
-                FC="丸皿小ねじ JIS B 1101"
-                self.type2.setText(QtGui.QApplication.translate("Dialog", "丸皿小ねじ JIS B 1101", None))
+                #FC="丸皿小ねじ JIS B 1101"
+                #self.type2.setText(QtGui.QApplication.translate("Dialog", "丸皿小ねじ JIS B 1101", None))
             elif st=='Truss_screw':
                 dia=ScrData.size[3:10]
                 pic='img_truss_screw.png'
-                FC="トラス小ねじ JIS B 1101"
+                #FC="トラス小ねじ JIS B 1101"
             elif st=='Binding_head':
                 dia=ScrData.size[3:10]
                 pic='img_binding_head.png'
-                FC="バインド小ねじ JIS B 1101"
+                #FC="バインド小ねじ JIS B 1101"
             elif st=='Round_screw':
                 dia=ScrData.size[:10]
                 pic='img_round_screw.png'
-                FC="丸小ねじ JIS B 1101"
+                #FC="丸小ねじ JIS B 1101"
             elif st=='Flat_screw':
                 dia=ScrData.size[:10]
                 pic='img_flat_screw.png'
-                FC="平小ねじ JIS B 1101"
-        elif key=='06':
+                #FC="平小ねじ JIS B 1101"
+        elif key=='06' or key=='13':
             dia=ScrData.size[2:14]
-            if st=='Flat_head_1' :
-                pic='img_flat_s_head.png'
-                FC="六角穴付き止めねじ_平先_1欄"
-            elif st=='Flat_head_2' :
-                pic='img_flat_s_head.png'
-                FC="六角穴付き止めねじ_平先_2欄"
-            elif st=='Point_ahead_1' :
-                pic='img_point_ahead.png'
-                FC="六角穴付き止めねじ_とがり先_1欄"
-            elif st=='Point_ahead_2':
-                pic='img_point_ahead.png'
-                FC="六角穴付き止めねじ_とがり先_2欄"
+            if key=='06':
+                if st=='Flat_head_1' :
+                    pic='img_flat_s_head.png'
+                    #FC="六角穴付き止めねじ_平先_1欄"
+                elif st=='Flat_head_2' :
+                    pic='img_flat_s_head.png'
+                    #FC="六角穴付き止めねじ_平先_2欄"
+                elif st=='Point_ahead_1' :
+                    pic='img_point_ahead.png'
+                    #FC="六角穴付き止めねじ_とがり先_1欄"
+                elif st=='Point_ahead_2':
+                    pic='img_point_ahead.png'
+                    #FC="六角穴付き止めねじ_とがり先_2欄"
+            elif key=='13':
+                pic='img_threadedHoll.png' 
+                #FC='ねじ穴'       
         elif key=='07':
             dia=ScrData.size[9:]
             pic='img_eyebolt.png'
-            FC="アイボルト"
+            #FC="アイボルト"
         elif key=='08':
             dia=ScrData.size[9:]
             pic='img_eyenut.png'
-            FC="アイナット"
+            #FC="アイナット"
         elif key=='09':
             b='JIS B 1256_'
             if st=='Small circle':
                 dia=ScrData.size[:16]
                 pic='img_washer.png'
-                FC=b+"小形丸"
+                #FC=b+"小形丸"
             elif st=='Polish circle':
                 dia=ScrData.size[3:16]
                 pic='img_washer.png'
-                FC=b+"みがき丸"
+                #FC=b+"みがき丸"
             elif st=='Common circle':
                 dia=ScrData.size[8:16]
                 pic='img_washer.png'
-                FC=b+"並丸"
+                #FC=b+"並丸"
             elif st=='Small corner':
                 dia=ScrData.size[8:16]
                 pic='img_cwasher.png'
-                FC=b+"小形角"
+                #FC=b+"小形角"
             elif st=='Large angle':
                 dia=ScrData.size[8:16]
                 pic='img_cwasher.png'
-                FC=b+"大形角"
+                #FC=b+"大形角"
             elif st=='Spring_washer_general':
                 b='JIS B 1251_'
                 dia=ScrData.size[3:16]
                 pic='img_swasher.png'
-                FC=b+"ばね一般"
+                #FC=b+"ばね一般"
                 #self.type2.setText(QtGui.QApplication.translate("Dialog", b+"ばね一般" , None))
             elif st=='Spring_washer_heavy':
                 b='JIS B 1251_'
                 dia=ScrData.size[8:16]
                 pic='img_swasher.png'
-                FC=b+"ばね重荷重"
+                #FC=b+"ばね重荷重"
                 #self.type2.setText(QtGui.QApplication.translate("Dialog", b+"ばね重荷重" , None))
             elif st=='Inclined_washer_5degrees':
                 dia=ScrData.size[10:]
                 pic='img_incwasher.png'
-                FC="傾斜5度"
+                #FC="傾斜5度"
                 #self.type2.setText(QtGui.QApplication.translate("Dialog", "傾斜5度" , None))
             elif st=='Inclined_washer_8degrees':
                 dia=ScrData.size[10:]
                 pic='img_incwasher.png'
-                FC="傾斜8度"
+                #FC="傾斜8度"
                 #self.type2.setText(QtGui.QApplication.translate("Dialog", "傾斜8度" , None))
         elif key=='10':
             if st=='Bearing Nut':
                 dia=ScrData.brg_size
                 pic='img_brg_nut.png'
-                FC="ベアリングナット"
-                self.type2.setText(QtGui.QApplication.translate("Dialog", "ベアリングナット" , None))
+                #FC="ベアリングナット"
+                #self.type2.setText(QtGui.QApplication.translate("Dialog", "ベアリングナット" , None))
             elif st=='Bearing Washer':
                 dia=ScrData.brg_size
                 pic='img_brg_washer.png'
-                FC="ベアリングナット ワッシャー"
-                self.type2.setText(QtGui.QApplication.translate("Dialog", "ベアリングナット ワッシャー" , None))
+                #FC="ベアリングナット ワッシャー"
+                #self.type2.setText(QtGui.QApplication.translate("Dialog", "Bearing Washer" , None))
             elif st=='Shaft End':
                 dia=ScrData.brg_size
                 pic='img_shaft_end.png'
-                FC="軸端"
-                self.type2.setText(QtGui.QApplication.translate("Dialog", "軸端" , None))
+                #FC="軸端"
+                #self.type2.setText(QtGui.QApplication.translate("Dialog", "軸端" , None))
         elif key=='11':
             if st=='U_bolt':
                 dia=ScrData.U_size
                 pic='img_u_bolt.png'
-                FC='Uボルト'
+                #FC='Uボルト'
         elif key=='12':
             if st=='U_band':
                 dia=ScrData.U_size
                 pic='img_u_band.png'
-                FC='Uバンド'
+                #FC='Uバンド'
 
         base=os.path.dirname(os.path.abspath(__file__))
         joined_path = os.path.join(base, "ScrLib",pic)
         self.img.setPixmap(QtGui.QPixmap(joined_path))
         self.comboBox_dia.clear()
-        self.comboBox_dia.addItems(dia)
+        try:
+            self.comboBox_dia.addItems(dia)
+        except:
+            return
+
     def create_screw(self):
         global c00
         key=self.comboBox_type.currentText()[:2]
         st=self.comboBox_standard.currentText()
         dia=self.comboBox_dia.currentText()
-        #self.type.setText(QtGui.QApplication.translate("Dialog", dia , None))
+        
         if key!='10':
             if key=='11' or key=='12':
                 sa = ScrData.regular[size1]
             else:
-                sa = ScrData.regular[dia]
+                #sa = ScrData.regular[dia]
+                pass
             if key=='00' or key=='08':
                 if key=='00':
                     label='hexagon_nut'
@@ -524,9 +520,9 @@ class Ui_Dialog(object):
                     obj.addProperty("App::PropertyBool",'Thread',label).Thread = False
                 obj.addProperty("App::PropertyString", "key",label).key=key
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
-                obj.dia=ScrData.size[5:]
+                obj.dia=ScrData.sh_size
                 i=self.comboBox_dia.currentIndex()
-                obj.dia=ScrData.size[i+5]  
+                obj.dia=ScrData.sh_size[i]  
                 obj.addProperty("App::PropertyEnumeration", "st",label)
                 obj.st=ScrData.bolt_st2
                 i=self.comboBox_standard.currentIndex()
@@ -562,9 +558,9 @@ class Ui_Dialog(object):
                 else:
                     obj.addProperty("App::PropertyBool",'Thread',label).Thread = False
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
-                obj.dia=ScrData.size[10:]
+                obj.dia=ScrData.anch_size
                 i=self.comboBox_dia.currentIndex()
-                obj.dia=ScrData.size[i+10]  
+                obj.dia=ScrData.anch_size[i]  
                 obj.addProperty("App::PropertyEnumeration", "st",label)
                 obj.st=ScrData.bolt_st4
                 i=self.comboBox_standard.currentIndex()
@@ -574,7 +570,7 @@ class Ui_Dialog(object):
                 ParamAnchBlt.AnchBlt(obj)
                 obj.ViewObject.Proxy=0
                 #FreeCAD.ActiveDocument.recompute()      
-            elif key=='05' or key=='06' :
+            elif key=='05' or key=='06' or key=='13':
                 try:
                     L1=float(self.lineEdit.text())
                 except:
@@ -619,7 +615,11 @@ class Ui_Dialog(object):
                     ParamSmlScrw.SmlScrw(obj)
                     obj.ViewObject.Proxy=0
                     #FreeCAD.ActiveDocument.recompute() 
-                elif key=='06':
+                elif key=='06' or key=='13':
+                    #label=st
+                    if key=='13':
+                        st='ThreadedHoll'
+                        #label=st
                     label=st
                     obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
                     if self.checkbox.isChecked():
@@ -634,9 +634,14 @@ class Ui_Dialog(object):
                     obj.st=ScrData.bolt_st6
                     i=self.comboBox_standard.currentIndex()
                     obj.st=ScrData.bolt_st6[i]   
-                    #obj.addProperty("App::PropertyFloat",'L1',label).L1=L1
+                    #if key=='13':
+                    #    obj.addProperty("App::PropertyFloat",'L1',label).L1=L1
+
                     obj.addProperty("App::PropertyFloat",'L2',label).L2=L2
-                    ParamSetScrew.SetScrew(obj)
+                    if key=='06':
+                        ParamSetScrew.SetScrew(obj)
+                    elif key=='13':
+                        ParamThreadedHoll.ThreadedHoll(obj)
                     obj.ViewObject.Proxy=0
                     #FreeCAD.ActiveDocument.recompute() 
             elif key=='07':
@@ -659,38 +664,67 @@ class Ui_Dialog(object):
                 #FreeCAD.ActiveDocument.recompute() 
             elif key=='09':
                 label=st
+                print(st)
                 obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
+                obj.addProperty("App::PropertyFloat", "t",label)
                 if st=='Small circle':
                     obj.dia=ScrData.size[:16]
                     i=self.comboBox_dia.currentIndex()
                     obj.dia=ScrData.size[i] 
+                    sa=ScrData.p_washer[dia]
+                    t=sa[2]
                 elif st=='Polish circle' or st=='Spring_washer_general':
                     obj.dia=ScrData.size[3:16]
                     i=self.comboBox_dia.currentIndex()
                     obj.dia=ScrData.size[i+3]  
+                    sa=ScrData.p_washer[dia]
+                    if st=='Polish chircle':
+                        t=sa[5]
+                    elif st=='Spring_washer_general':
+                        t=sa[17]    
                 elif st=='Common circle' or st=='Small corner' or st=='Large angle' or st=='Spring_washer_heavy':
                     obj.dia=ScrData.size[8:16]
                     i=self.comboBox_dia.currentIndex()
                     obj.dia=ScrData.size[i+8] 
+                    sa=ScrData.p_washer[dia]
+                    if st=='Common circle':
+                        t=sa[8]
+                    elif st=='Small corner':
+                        t=sa[11] 
+                    elif st=='Large angle':
+                        t=sa[14]  
+                    elif st=='Spring_washer_heavy':
+                        t=sa[20]         
                 elif st=='Inclined_washer_5degrees' or st=='Inclined_washer_8degrees':
                     obj.dia=ScrData.size[10:]
                     i=self.comboBox_dia.currentIndex()
                     obj.dia=ScrData.size[i+10] 
+                    sa=ScrData.inc_washer[dia]
+                    if st=='Inclined_washer_5degrees':
+                        t=sa[3]
+                    elif st=="Inclined_washer_8degrees":
+                        t=sa[7]
+                    
                 obj.addProperty("App::PropertyEnumeration", "st",label)
                 obj.st=ScrData.bolt_st9
                 i=self.comboBox_standard.currentIndex()
                 obj.st=ScrData.bolt_st9[i]  
+
+                #obj.addProperty("App::PropertyEnumeration", "t",label)
+                #obj.t=t
+                #print(st,t)
                 ParamWasher.Washer(obj)
+                #print(obj.t)
                 obj.ViewObject.Proxy=0
+
                 #FreeCAD.ActiveDocument.recompute() 
-            
+                
             elif key=='11':
                 label='U_bolt'
                 L1=float(self.lineEdit.text())
                 L2=float(self.lineEdit_2.text())
                 obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
-
                 obj.addProperty("App::PropertyEnumeration", "dia",label)   
                 obj.dia=ScrData.U_size
                 i=self.comboBox_dia.currentIndex()
@@ -767,7 +801,8 @@ class Ui_Dialog(object):
                 obj.addProperty("App::PropertyFloat", "L2",label).L2=L2
                 ParamBrgNut.BrgNut(obj)
                 obj.ViewObject.Proxy=0
-                FreeCAD.ActiveDocument.recompute()                
+                FreeCAD.ActiveDocument.recompute()   
+
         
 class main():
         d = QtGui.QWidget()
