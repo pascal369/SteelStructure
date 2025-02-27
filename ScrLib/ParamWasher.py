@@ -17,8 +17,11 @@ class Washer:
         label=obj.Name
         dia=App.ActiveDocument.getObject(label).dia
         st=App.ActiveDocument.getObject(label).st
+        #t=App.ActiveDocument.getObject(label).t
+        #print('bbbbbbbbbbbbbb')
         def pwasher(self):
             global c01
+            #print('ccccccccccccccc')
             p1=(d/2,0,0)
             p2=(d/2,0,t)
             p3=(D/2,0,t)
@@ -113,7 +116,11 @@ class Washer:
             t2=float(sa[7])
             cwasher(self)
             c1=c01
+        #print(t)
+        #obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
+        #obj.addProperty("App::PropertyFloat", "t",label).t=t  
+        
         doc=App.ActiveDocument
         Gui.Selection.addSelection(doc.Name,obj.Name)
-        #Gui.runCommand('Draft_Move',0)     
         obj.Shape=c1
+        #FreeCAD.ActiveDocument.recompute() 

@@ -97,11 +97,13 @@ class HxgNut:#00六角ナット
             p1=(-(D0-x),0,-p/2)
             p2=(-(D0-x),0,p/2)
             p3=(-D0,0,a)
-            p4=(-D0,0,-a)
+            p4=(-D0-a/2,0,0)
+            p5=(-D0,0,-a)
             edge1 = Part.makeLine(p1,p2)
             edge2 = Part.makeLine(p2,p3)
-            edge3 = Part.makeLine(p3,p4)
-            edge4 = Part.makeLine(p4,p1)
+            edge3=Part.Arc(Base.Vector(p3),Base.Vector(p4),Base.Vector(p5)).toShape()
+            edge4 = Part.makeLine(p5,p1)
+
             #らせん_sweep
             helix=Part.makeHelix(p,2*p+H,D0,0,False)
             helix.Placement=App.Placement(App.Vector(0,0,-p),App.Rotation(App.Vector(0,0,1),0))

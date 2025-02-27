@@ -20,65 +20,7 @@ class BrgNut:
         L1=App.ActiveDocument.getObject(label).L1
         L2=App.ActiveDocument.getObject(label).L2
         st=App.ActiveDocument.getObject(label).st
-        def hexagon_bolt(self):
-            global c00
-            global c0
-            sa=ScrData.regular[dia]
-            p=sa[0]
-            H1=sa[1]
-            m=sa[6]
-            m1=sa[7]
-            s0=sa[8]
-            e0=sa[9]
-            D0=sa[2]
-            D2=sa[3]
-            D1=sa[4]
-            dk=sa[5]
-            z=sa[10]
-            H0=0.86625*p
-            x=H1+H0/8
-            y=x*math.tan(math.pi/6)
-            r0=D0/2+H0/8
-            a=p/2-y
-            #ボルト部
-            cb= Part.makeCylinder(D0/2,L1,Base.Vector(0,0,0),Base.Vector(0,0,1),360)
-            c00=cb
-            #Part.shw(cb)
-            p1=(-D0/2,0,0)
-            p2=(-D0/2,0,z)
-            p3=(-D0/2+z,0,0)
-            plist=[p1,p2,p3,p1]
-            w10=Part.makePolygon(plist)
-            wface=Part.Face(w10)
-            c0=wface.revolve(Base.Vector(0,0.0,0),Base.Vector(0.0,0.0,1.0),360)
-            #ねじ断面
-            if Thread==True:
-                p1=(D1/2,0,-a)
-                p2=(D1/2,0,a)
-                p3=(r0,0,p/2)
-                p4=(r0,0,-p/2)
-                edge1 = Part.makeLine(p1,p2)
-                edge2 = Part.makeLine(p2,p3)
-                edge3 = Part.makeLine(p3,p4)
-                edge4 = Part.makeLine(p4,p1)
-                #らせん_sweep
-                L3=L1-L2
-                if  L3>0:
-                    helix=Part.makeHelix(p,p+L2,D0/2,0,False)
-                    cutProfile = Part.Wire([edge1,edge2,edge3,edge4])
-                else:
-                    helix=Part.makeHelix(p,p+L2,D0/2,0,False)
-                    cutProfile = Part.Wire([edge1,edge2,edge3,edge4])
-                cutProfile.Placement=App.Placement(App.Vector(0,0,-0.5*p),App.Rotation(App.Vector(0,0,1),0))
-                makeSolid=True
-                isFrenet=True
-                pipe = Part.Wire(helix).makePipeShell([cutProfile],makeSolid,isFrenet)
-                c00=c00.cut(pipe)
-                c01= Part.makeCylinder(D0/2,L3,Base.Vector(0,0,L2),Base.Vector(0,0,1),360)
-                c00=c00.cut(c01)
-            else:
-                c00= Part.makeCylinder(D0/2,L2,Base.Vector(0,0,0),Base.Vector(0,0,1),360)
-                L3=L1-L2
+        
         sa=ScrData.brg_nut[dia]
         D0=float(sa[0])
         p=float(sa[1])
@@ -125,11 +67,12 @@ class BrgNut:
                 p1=(-(D0/2-x),0,-p/2)
                 p2=(-(D0/2-x),0,p/2)
                 p3=(-D0/2,0,a)
-                p4=(-D0/2,0,-a)
+                p4=(-D0/2-a/2,0,0)
+                p5=(-D0/2,0,-a)
                 edge1 = Part.makeLine(p1,p2)
                 edge2 = Part.makeLine(p2,p3)
-                edge3 = Part.makeLine(p3,p4)
-                edge4 = Part.makeLine(p4,p1)
+                edge3=Part.Arc(Base.Vector(p3),Base.Vector(p4),Base.Vector(p5)).toShape()
+                edge4 = Part.makeLine(p5,p1)
                 #らせん_sweep
                 helix=Part.makeHelix(p,2*p+H,D0/2,0,False)
                 helix.Placement=App.Placement(App.Vector(0,0,-p),App.Rotation(App.Vector(0,0,1),0))
