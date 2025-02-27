@@ -360,6 +360,7 @@ class Ui_Dialog(object):
                     pic='img_point_ahead.png'
                     #FC="六角穴付き止めねじ_とがり先_2欄"
             elif key=='13':
+                
                 pic='img_threadedHoll.png' 
                 #FC='ねじ穴'       
         elif key=='07':
@@ -463,6 +464,8 @@ class Ui_Dialog(object):
                 #sa = ScrData.regular[dia]
                 pass
             if key=='00' or key=='08':
+                size1=dia
+                sa = ScrData.regular[size1]
                 if key=='00':
                     label='hexagon_nut'
                 elif key=='08':
@@ -470,11 +473,17 @@ class Ui_Dialog(object):
                 obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
                 if key=='00':
-                    obj.dia=ScrData.size[3:]
+                    obj.dia=ScrData.size[5:]
                     i=self.comboBox_dia.currentIndex()
                     obj.dia=ScrData.size[i+3]
                     obj.addProperty("App::PropertyEnumeration", "st",label)
                     obj.st=ScrData.nut_st
+                    if st=='Type1':
+                        B=sa[6]
+                    else:    
+                        B=sa[7]
+                        
+                    obj.addProperty("App::PropertyFloat", "B",label).B=B
                 elif key=='08': 
                     obj.dia=ScrData.size[9:]
                     i=self.comboBox_dia.currentIndex()
@@ -663,55 +672,59 @@ class Ui_Dialog(object):
                 obj.ViewObject.Proxy=0
                 #FreeCAD.ActiveDocument.recompute() 
             elif key=='09':
+                global t0
                 label=st
-                print(st)
+                #print(st)
+                
+
                 obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
                 obj.addProperty("App::PropertyEnumeration", "dia",label)
-                obj.addProperty("App::PropertyFloat", "t",label)
+                #obj.addProperty("App::PropertyFloat", "t",label)
+
                 if st=='Small circle':
                     obj.dia=ScrData.size[:16]
                     i=self.comboBox_dia.currentIndex()
                     obj.dia=ScrData.size[i] 
                     sa=ScrData.p_washer[dia]
-                    t=sa[2]
+                    t0=sa[2]
                 elif st=='Polish circle' or st=='Spring_washer_general':
                     obj.dia=ScrData.size[3:16]
                     i=self.comboBox_dia.currentIndex()
                     obj.dia=ScrData.size[i+3]  
                     sa=ScrData.p_washer[dia]
                     if st=='Polish chircle':
-                        t=sa[5]
+                        t0=sa[5]
                     elif st=='Spring_washer_general':
-                        t=sa[17]    
+                        t0=sa[17]    
                 elif st=='Common circle' or st=='Small corner' or st=='Large angle' or st=='Spring_washer_heavy':
                     obj.dia=ScrData.size[8:16]
                     i=self.comboBox_dia.currentIndex()
                     obj.dia=ScrData.size[i+8] 
                     sa=ScrData.p_washer[dia]
                     if st=='Common circle':
-                        t=sa[8]
+                        t0=sa[8]
                     elif st=='Small corner':
-                        t=sa[11] 
+                        t0=sa[11] 
                     elif st=='Large angle':
-                        t=sa[14]  
+                        t0=sa[14]  
                     elif st=='Spring_washer_heavy':
-                        t=sa[20]         
+                        t0=sa[20]         
                 elif st=='Inclined_washer_5degrees' or st=='Inclined_washer_8degrees':
                     obj.dia=ScrData.size[10:]
                     i=self.comboBox_dia.currentIndex()
                     obj.dia=ScrData.size[i+10] 
                     sa=ScrData.inc_washer[dia]
                     if st=='Inclined_washer_5degrees':
-                        t=sa[3]
+                        t0=sa[3]
                     elif st=="Inclined_washer_8degrees":
-                        t=sa[7]
+                        t0=sa[7]
                     
                 obj.addProperty("App::PropertyEnumeration", "st",label)
                 obj.st=ScrData.bolt_st9
                 i=self.comboBox_standard.currentIndex()
                 obj.st=ScrData.bolt_st9[i]  
 
-                #obj.addProperty("App::PropertyEnumeration", "t",label)
+                obj.addProperty("App::PropertyFloat", "t0",label).t0=t0
                 #obj.t=t
                 #print(st,t)
                 ParamWasher.Washer(obj)
@@ -781,6 +794,10 @@ class Ui_Dialog(object):
                 FreeCAD.ActiveDocument.recompute()  
         elif key=='10':
                 #print(key)
+                dia=self.comboBox_dia.currentText()
+                sa=ScrData.brg_nut[dia]
+                Bn=sa[7]
+                t0=sa[11]
                 L1=float(self.lineEdit.text())
                 L2=float(self.lineEdit_2.text())
                 label=st
@@ -792,6 +809,11 @@ class Ui_Dialog(object):
                 obj.addProperty("App::PropertyEnumeration", "st",label)
                 obj.st=ScrData.brg_nut_st
                 i=self.comboBox_standard.currentIndex()
+                if i==0:
+                    obj.addProperty("App::PropertyFloat", "Bn",label).Bn=Bn
+                elif i==1:
+                    obj.addProperty("App::PropertyFloat", "t0",label).t0=t0  
+
                 obj.st=ScrData.brg_nut_st[i]  
                 if self.checkbox.isChecked():
                     obj.addProperty("App::PropertyBool",'Thread',label).Thread = True
@@ -799,6 +821,7 @@ class Ui_Dialog(object):
                     obj.addProperty("App::PropertyBool",'Thread',label).Thread = False
                 obj.addProperty("App::PropertyFloat", "L1",label).L1=L1
                 obj.addProperty("App::PropertyFloat", "L2",label).L2=L2
+                
                 ParamBrgNut.BrgNut(obj)
                 obj.ViewObject.Proxy=0
                 FreeCAD.ActiveDocument.recompute()   
