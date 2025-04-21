@@ -10,7 +10,7 @@ import FreeCAD as App
 from . import ScrData
 class ShBlt:#六角穴付きボルト
     def __init__(self, obj):
-        self.Type = 'Angle'
+        self.Type = ''
         obj.Proxy = self
         App.activeDocument().recompute(None,True,True)
     def execute(self, obj):
@@ -80,13 +80,15 @@ class ShBlt:#六角穴付きボルト
         #ボルト部
         cb= Part.makeCylinder(D0/2,L1,Base.Vector(0,0,0),Base.Vector(0,0,1),360)#首下長さ
         c00=cb
+        #先端カット
+        z=2*p
         p1=(-D0/2,0,0)
         p2=(-D0/2,0,z)
         p3=(-D0/2+z,0,0)
         plist=[p1,p2,p3,p1]
         w10=Part.makePolygon(plist)
         wface=Part.Face(w10)
-        c0=wface.revolve(Base.Vector(0,0.0,0),Base.Vector(0.0,0.0,1.0),360)#軸先端カット
+        c001x=wface.revolve(Base.Vector(0,0,0),Base.Vector(0,0,1),360)#軸先端カット
         #ソケットヘッド
         c1= Part.makeCylinder(dk1/2,k,Base.Vector(0,0,L1),Base.Vector(0,0,1),360)
         c00=c00.fuse(c1)
@@ -102,50 +104,45 @@ class ShBlt:#六角穴付きボルト
         c00=c00.cut(c1)
         hex_cutter(self)
         c01=c001
-        c01.Placement=App.Placement(App.Vector(-L1-t3,0,0),App.Rotation(App.Vector(0,1,0),-90))
+        c01.Placement=App.Placement(App.Vector(0,0,L1+t3),App.Rotation(App.Vector(0,1,0),0))
         c00=c00.cut(c01)
         #ねじ断面
         if Thread==True:
             p1=(D1/2,0,-a)
-            p2=(D1/2,0,a)
-            p3=(r0,0,p/2)
-            p4=(r0,0,-p/2)
-            edge1 = Part.makeLine(p1,p2)
-            edge2 = Part.makeLine(p2,p3)
-            edge3 = Part.makeLine(p3,p4)
-            edge4 = Part.makeLine(p4,p1)
+            p2=(D1/2-a/2,0,0)
+            p3=(D1/2,0,a)
+            p4=(r0,0,p/2)
+            p5=(r0,0,-p/2)
+            edge1=Part.Arc(Base.Vector(p1),Base.Vector(p2),Base.Vector(p3)).toShape()
+            edge2 = Part.makeLine(p3,p4)
+            edge3 = Part.makeLine(p4,p5)
+            edge4 = Part.makeLine(p5,p1)
+
             #らせん_sweep
             L3=L1-L2
             if  L3>0:
                 helix=Part.makeHelix(p,p+L2,D0/2,0,False)
+                cutProfile = Part.Wire([edge1,edge2,edge3,edge4])
             else:
-                helix=Part.makeHelix(p,L2,D0/2,0,False)
-            cutProfile = Part.Wire([edge1,edge2,edge3,edge4])
+                return
+            
+            cutProfile.Placement=App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),0))
+            helix.Placement=App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(1,0,0),180))
             makeSolid=True
             isFrenet=True
             pipe = Part.Wire(helix).makePipeShell([cutProfile],makeSolid,isFrenet)
+            
+            helix2=Part.makeHelix(p,p,D0/2,45,False)
+            helix2.Placement=App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),0))
+            cutProfile2=cutProfile
+            cutProfile2.Placement=App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),0))
+            pipe2 = Part.Wire(helix2).makePipeShell([cutProfile2],makeSolid,isFrenet)
+
+            pipe=pipe.fuse(pipe2)
+            pipe.Placement=App.Placement(App.Vector(0,0,p+L2+p),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.cut(pipe)
-            #if key=='02':
-            L3=L1-L2
-            if L3>0:
-                cb1= Part.makeCylinder(D0/2,L3,Base.Vector(0,0,L2),Base.Vector(0,0,1),360)
-                c00=c00.cut(cb1)
-                c00=c00.fuse(cb1)
-        else:
-            c1= Part.makeCylinder(D0/2,L2,Base.Vector(0,0,0),Base.Vector(0,0,1),360)
-            c00=c00.cut(c1)
-            c00=c00.fuse(c1)
-        L3=L1-L2
-        if L3<=0:
-            L3=0.1
-            c2= Part.makeCylinder(D0/2,L3,Base.Vector(0,0,0),Base.Vector(0,0,1),360)
-            c2.Placement=App.Placement(App.Vector(0,0,L2),App.Rotation(App.Vector(0,0,1),0))
-            c00=c00.cut(c2)
-        if z!=0:
-            c00=c00.cut(c0)
-        c00.Placement=App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,1,0),-90))
-        c00=c00.cut(c01)
+
+        c00=c00.cut(c001x)
         doc=App.ActiveDocument
         Gui.Selection.addSelection(doc.Name,obj.Name)
-        #Gui.runCommand('Draft_Move',0) 
         obj.Shape=c00

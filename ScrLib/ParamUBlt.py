@@ -110,6 +110,7 @@ class UBlt:
                 makeSolid=True
                 isFrenet=True
                 pipe = Part.Wire(helix).makePipeShell([cutProfile],makeSolid,isFrenet)
+                #Part.show(pipe)
                 if flange==True:
                     pipe.Placement=App.Placement(App.Vector(-C/2,0,0),App.Rotation(App.Vector(0,0,1),0))
                 else:

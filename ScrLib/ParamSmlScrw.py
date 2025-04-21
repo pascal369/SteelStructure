@@ -31,6 +31,7 @@ class SmlScrw:#05小ねじ
         D2=sa[3]
         D1=sa[4]
         dk=sa[5]
+        z=sa[10]
         n=sa[11]
         H0=0.86625*p
         x=H1+H0/8
@@ -38,44 +39,45 @@ class SmlScrw:#05小ねじ
         r0=D0/2+H0/8
         a=p/2-y
         #ボルト部
+        #らせん_sweep
+
         cb= Part.makeCylinder(D0/2,L1,Base.Vector(0,0,0),Base.Vector(0,0,1),360)
         c00=cb
-        z=p/2
-        p1=(-D0/2,0,0)
-        p2=(-D0/2,0,z)
-        p3=(-D0/2+z,0,0)
-        plist=[p1,p2,p3,p1]
-        w10=Part.makePolygon(plist)
-        wface=Part.Face(w10)
-        c01=wface.revolve(Base.Vector(0,0.0,0),Base.Vector(0.0,0.0,1.0),360)
+        e=L1-L2
+        #neck cut
+        p1=((D1-1.1*a)/2,0,0)
+        p2=((D1-1.1*a)/2,0,e)
+        p3=(D0/2,0,e)
+        p4=(D0/2,0,0)
+        plist=[p1,p2,p3,p4,p1]
+        w0=Part.makePolygon(plist)
+        wface=Part.Face(w0)
+        cbx=wface.revolve(Base.Vector(0,0,0),Base.Vector(0,0,1),360)
+        cbx.Placement=App.Placement(App.Vector(0,0,L2),App.Rotation(App.Vector(0,0,1),0))
+
         if Thread==True:
             p1=(D1/2,0,-a)
-            p2=(D1/2,0,a)
-            p3=(r0,0,p/2)
-            p4=(r0,0,-p/2)
-            edge1 = Part.makeLine(p1,p2)
-            edge2 = Part.makeLine(p2,p3)
-            edge3 = Part.makeLine(p3,p4)
-            edge4 = Part.makeLine(p4,p1)
-            #らせん_sweep
+            p2=(D1/2-a/2,0,0)
+            p3=(D1/2,0,a)
+            p4=(r0,0,p/2)
+            p5=(r0,0,-p/2)
+            edge1=Part.Arc(Base.Vector(p1),Base.Vector(p2),Base.Vector(p3)).toShape()
+            edge2 = Part.makeLine(p3,p4)
+            edge3 = Part.makeLine(p4,p5)
+            edge4 = Part.makeLine(p5,p1)
+            
             L3=L1-L2
             if  L3>0:
-                helix=Part.makeHelix(p,p+L2,D0/2,0,False)
+                helix=Part.makeHelix(p,L1-p,D0/2,0,False)
                 cutProfile = Part.Wire([edge1,edge2,edge3,edge4])
             else:
-                helix=Part.makeHelix(p,p+L2,D0/2,0,False)
-                cutProfile = Part.Wire([edge1,edge2,edge3,edge4])
-            cutProfile.Placement=App.Placement(App.Vector(0,0,-0.5*p),App.Rotation(App.Vector(0,0,1),0))
+                return
+            cutProfile.Placement=App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),0))
             makeSolid=True
             isFrenet=True
             pipe = Part.Wire(helix).makePipeShell([cutProfile],makeSolid,isFrenet)
             c00=c00.cut(pipe)
-        else:
-            c00= Part.makeCylinder(D0/2,L2,Base.Vector(0,0,0),Base.Vector(0,0,1),360)
-            c00=c00.cut(c01)
-            L3=L1-L2
-        cb1= Part.makeCylinder(D0/2,(L1-L2),Base.Vector(0,0,L2),Base.Vector(0,0,1),360)
-        c00=c00.cut(cb1)
+
         if st=='Pan_head':
             meishow='Pan_head_' + dia + 'x' + str(L1) + '_'
             sa=ScrData.pan_head[dia]
@@ -105,12 +107,11 @@ class SmlScrw:#05小ねじ
             c2=wface.revolve(Base.Vector(0,0,0),Base.Vector(0,0,1),360)
             c2.Placement=App.Placement(App.Vector(0,0,L1),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.fuse(c2)
-            c00=c00.cut(c01)
+            #c00=c00.cut(c01)
             c2=Part.makeBox(dk,n,t)
             c2.Placement=App.Placement(App.Vector(-dk/2,-n/2,L1+k-t),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.cut(c2)
-            c2= Part.makeCylinder(D0/2,(L1-L2),Base.Vector(0,0,L2),Base.Vector(0,0,1),360)
-            c00=c00.fuse(c2)
+
         elif st=='Flat_head':
             meishow='Flat_head_' + dia + 'x' + str(L1) + '_'
             sa=ScrData.flat_head[dia]
@@ -130,7 +131,6 @@ class SmlScrw:#05小ねじ
             c2=wface.revolve(Base.Vector(0,0.0,0),Base.Vector(0,0,1),360)
             c2.Placement=App.Placement(App.Vector(0,0,L1),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.fuse(c2)
-            c00=c00.cut(c01)
             c2=Part.makeBox(dk,n,1.5*t)
             c2.Placement=App.Placement(App.Vector(-dk/2,-n/2,L1+k-t),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.cut(c2)
@@ -171,7 +171,6 @@ class SmlScrw:#05小ねじ
             c2=wface.revolve(Base.Vector(0,0,0),Base.Vector(0,0,1),360)
             c2.Placement=App.Placement(App.Vector(0,0,L1),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.fuse(c2)
-            c00=c00.cut(c01)
             c2=Part.makeBox(dk,n,1.5*t)
             c2.Placement=App.Placement(App.Vector(-dk/2,-n/2,L1+k-t+f),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.cut(c2)
@@ -203,7 +202,6 @@ class SmlScrw:#05小ねじ
             c2=wface.revolve(Base.Vector(0,0,0),Base.Vector(0,0,1),360)
             c2.Placement=App.Placement(App.Vector(0,0,L1),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.fuse(c2)
-            c00=c00.cut(c01)
             c2=Part.makeBox(dk,n,1.5*t)
             c2.Placement=App.Placement(App.Vector(-dk/2,-n/2,L1+k-t),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.cut(c2)
@@ -230,7 +228,6 @@ class SmlScrw:#05小ねじ
             c2=wface.revolve(Base.Vector(0,0,0),Base.Vector(0,0,1),360)
             c2.Placement=App.Placement(App.Vector(0,0,L1),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.fuse(c2)
-            c00=c00.cut(c01)
             c2=Part.makeBox(dk,n,1.5*t)
             c2.Placement=App.Placement(App.Vector(-dk/2,-n/2,L1+k-t+f),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.cut(c2)
@@ -265,7 +262,6 @@ class SmlScrw:#05小ねじ
             c2=wface.revolve(Base.Vector(0,0,0),Base.Vector(0,0,1),360)
             c2.Placement=App.Placement(App.Vector(0,0,L1),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.fuse(c2)
-            c00=c00.cut(c01)
             c2=Part.makeBox(dk,n,t)
             c2.Placement=App.Placement(App.Vector(-dk/2,-n/2,L1+k-t),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.cut(c2)
@@ -287,14 +283,13 @@ class SmlScrw:#05小ねじ
             c2=wface.revolve(Base.Vector(0,0.0,0.0),Base.Vector(0.0,0.0,1.0),360)
             c2.Placement=App.Placement(App.Vector(0,0,L1),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.fuse(c2)
-            c00=c00.cut(c01)
             c2=Part.makeBox(dk,n,t)
             c2.Placement=App.Placement(App.Vector(-dk/2,-n/2,L1+k-t),App.Rotation(App.Vector(0,0,1),0))
             c00=c00.cut(c2)
             c2= Part.makeCylinder(D0/2,(L1-L2),Base.Vector(0,0,L2),Base.Vector(0,0,1),360)
             c00=c00.fuse(c2)
-        c00.Placement=App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,1,0),-90))
+        c00=c00.cut(cbx)
+        #Part.show(cbx)
         doc=App.ActiveDocument
         Gui.Selection.addSelection(doc.Name,obj.Name)
-        #Gui.runCommand('Draft_Move',0) 
         obj.Shape=c00

@@ -28,6 +28,7 @@ class EyNut:#08アイナット
         D2=sa[3]/2
         D1=sa[4]/2
         dk=sa[5]/2
+
         sa=ScrData.eye_nut[dia]
         a=float(sa[0])
         b=float(sa[1])
@@ -54,23 +55,29 @@ class EyNut:#08アイナット
             x0=H1+H0/4
             y0=x0*math.tan(math.pi/6)
             a0=p/2-y0
+
             p1=(-(D0-x0),0,-p/2)
             p2=(-(D0-x0),0,p/2)
             p3=(-D0,0,a0)
-            p4=(-D0,0,-a0)
+            p4=(-D0-a0/2,0,0)
+            p5=(-D0,0,-a0)
+            
             edge1 = Part.makeLine(p1,p2)
             edge2 = Part.makeLine(p2,p3)
-            edge3 = Part.makeLine(p3,p4)
-            edge4 = Part.makeLine(p4,p1)
+            edge3=Part.Arc(Base.Vector(p3),Base.Vector(p4),Base.Vector(p5)).toShape()
+            edge4 = Part.makeLine(p5,p1)
+
             #らせん_sweep
             helix=Part.makeHelix(p,p+x/1.1,D0,0,False)
-            helix.Placement=App.Placement(App.Vector(0,0,-0.5*p),App.Rotation(App.Vector(0,0,1),0))
+            #helix.Placement=App.Placement(App.Vector(0,0,-0.5*p),App.Rotation(App.Vector(0,0,1),0))
             cutProfile = Part.Wire([edge1,edge2,edge3,edge4])
             makeSolid=True
             isFrenet=True
             pipe = Part.Wire(helix).makePipeShell([cutProfile],makeSolid,isFrenet)
             c2= Part.makeCylinder(D1,4*p+x,Base.Vector(0,0,-p),Base.Vector(0,0,1),360)
             pipe=pipe.fuse(c2)
+            #Part.show(pipe)
+            #Part.show(c2)
             c1=c1.cut(pipe)
         else:
             c2=Part.makeCylinder(D0,x)
