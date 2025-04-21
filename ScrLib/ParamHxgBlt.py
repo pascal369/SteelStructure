@@ -23,7 +23,7 @@ class HxgBlt:
         sa=ScrData.regular[dia]
         p=sa[0]
         H1=sa[1]
-        m=sa[6]
+        m=sa[13]
         m1=sa[7]
         s0=sa[8]
         e0=sa[9]
