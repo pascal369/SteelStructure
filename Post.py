@@ -203,6 +203,7 @@ class Ui_Dialog(object):
         App.ActiveDocument.recompute()         
 
     def read_data(self):
+        return
         global myShape
         selection = Gui.Selection.getSelection()
         if selection:
@@ -212,28 +213,11 @@ class Ui_Dialog(object):
                  parts_group = selected_object
                  for obj in parts_group.Group:
                       print(obj.Label)  
-                      if obj.Label=='H_Shape':
+                      if obj.Label=='HShape':
                           myShape=obj
-                      elif obj.Label=='L_Shape':
+                      elif obj.Label=='LShape':
                           return    
-                            
-                          
-                     #if obj.TypeId == "Spreadsheet::Sheet":
-                         # スプレッドシートが見つかった場合の処理
-                         #spreadsheet = obj
-                          #print('aaaaaaaaaaaaaaaa')
-                          #selection = Gui.Selection.getSelection()
-                          #for obj in selection:
-                          #    print(obj.Label)
-                          #    try:
-                          #        myShape=obj
-                          #        L=int(myShape.L)
-                          #        size=myShape.size
-                          #        self.spinBoxL.setValue(int(L))
-                          #        self.comboBox_size.setCurrentText(size)
-                          #        self.comboBox_type.setCurrentText(myShape.type)
-                          #    except:
-                          #        myShape=None        
+
                       App.ActiveDocument.recompute()   
         
     def spinMove(self):

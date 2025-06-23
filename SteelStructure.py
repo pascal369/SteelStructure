@@ -68,7 +68,6 @@ class Ui_Dialog(object):
         self.le_gr.setGeometry(QtCore.QRect(180, 142, 50, 20))
         self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_gr.setText('7.85')
-
         #img
         self.img = QtGui.QLabel(Dialog)
         self.img.setGeometry(QtCore.QRect(30, 140, 250, 250))
@@ -131,7 +130,6 @@ class Ui_Dialog(object):
             obj.mass=g
 
     def massTally2(self):
-        #def get_object_mass():
         doc = App.ActiveDocument
         objects = doc.Objects
         mass_list = []
@@ -139,7 +137,6 @@ class Ui_Dialog(object):
             if Gui.ActiveDocument.getObject(obj.Name).Visibility:
                 if obj.isDerivedFrom("Part::Feature"):
                     if hasattr(obj, "mass"):
-                        # Add the object's name, count, and mass to the list
                         try: 
                             mass_list.append([obj.Label,obj.size,'','','','','','',1, obj.mass])
                         except:
@@ -149,7 +146,6 @@ class Ui_Dialog(object):
         doc_path = doc.FileName
         csv_filename = os.path.splitext(os.path.basename(doc_path))[0] + "_counts_and_masses.csv"
         csv_path = os.path.join(os.path.dirname(doc_path), csv_filename)
-        #print(doc_path)
         with open(csv_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(['部品名称'])
@@ -163,7 +159,7 @@ class Ui_Dialog(object):
          self.comboBox_element2.clear()
          key=self.comboBox_element.currentIndex()
          if key==0:#Post'
-              self.comboBox_element2.show()
+              self.comboBox_element2.hide()
               self.comboBox_element2.addItems(Post)  
          elif key==1:#ShapeSteel
               self.comboBox_element2.hide()   
@@ -199,9 +195,6 @@ class Ui_Dialog(object):
          elif key==12:#grating
               pic='grating.png'
               self.comboBox_element2.hide() 
-         
-           
-
 
     def onDia2(self):
          global fname
@@ -276,7 +269,6 @@ class Ui_Dialog(object):
              if key2==0:
                   try:
                       import SteelStair2
-                      #SteelStair2.main.d.show()
                   except:
                        SteelStair2.main.d.show()  
                        pass  
@@ -308,7 +300,6 @@ class Ui_Dialog(object):
                 import accodionGate       
          elif key==12:#grating
                 import grating  
-         
 
 class main():
         d = QtGui.QWidget()
@@ -316,11 +307,5 @@ class main():
         d.ui.setupUi(d)
         d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         d.show() 
-        try:
-            # スクリプトのウィンドウを取得
-            script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd')
-            # 閉じるボタンを無効にする
-            script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)
-        except:
-             pass
+        
            

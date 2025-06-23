@@ -29,18 +29,18 @@ from shpst_data import ParamLWChannel
 from shpst_data import ParamRipChannel
 from shpst_data import ParamSqurePipe
 
-import shpst_data.ShpstData
-import shpst_data.ParamAngle
-import shpst_data.ParamChannel
-import shpst_data.ParamHShape
-import shpst_data.ParamIShape
-import shpst_data.ParamCtShape
-import shpst_data.ParamPipeShape
-import shpst_data.ParamFlatShape
-import shpst_data.ParamLWAngle
-import shpst_data.ParamLWChannel
-import shpst_data.ParamRipChannel
-import shpst_data.ParamSqurePipe
+#import shpst_data.ShpstData
+#import shpst_data.ParamAngle
+#import shpst_data.ParamChannel
+#import shpst_data.ParamHShape
+#import shpst_data.ParamIShape
+#import shpst_data.ParamCtShape
+#import shpst_data.ParamPipeShape
+#import shpst_data.ParamFlatShape
+#import shpst_data.ParamLWAngle
+#import shpst_data.ParamLWChannel
+#import shpst_data.ParamRipChannel
+#import shpst_data.ParamSqurePipe
 
 #JIS G 3192
 class Ui_Dialog(object):
@@ -427,7 +427,6 @@ class Ui_Dialog(object):
 
             tt=self.comboBox_type.currentText()
             obj.addProperty("App::PropertyString", "type",label).type=tt
-
             obj.addProperty("App::PropertyEnumeration", "size",label)
             obj.size=size
             i=self.comboBox_size.currentIndex()

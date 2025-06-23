@@ -51,18 +51,16 @@ class Ui_Dialog(object):
         self.pushButton3 = QtGui.QPushButton('import',Dialog)
         self.pushButton3.setGeometry(QtCore.QRect(80, 150, 200, 22))
 
-
         self.comboBox_Shp.setEditable(True)
         self.comboBox_Size.setEditable(True)
-
         self.comboBox_Shp.addItems(Post)
-
         self.comboBox_Shp.setCurrentIndex(1)
         self.comboBox_Shp.currentIndexChanged[int].connect(self.onShape)
         self.comboBox_Shp.setCurrentIndex(0)
 
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.read)
+        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)
@@ -125,16 +123,13 @@ class Ui_Dialog(object):
                          self.comboBox_Size.setCurrentText(Pipe.size)   
                          self.lineEdit_H.setText(Pipe.L)
                      elif obj.Label[:3]=='plt':
-                         #print(obj.Label)
                          plt=obj
-                         #self.lineEdit_t.text=plt.Length
                    
     def update(self):
         key=self.comboBox_Shp.currentText()
         size=self.comboBox_Size.currentText()
         H=self.lineEdit_H.text()
         t=self.lineEdit_t.text()
-        print(t)
         if key=='Pst_H':
             HShapeSteel.size=size
             HShapeSteel.L=H
@@ -142,24 +137,21 @@ class Ui_Dialog(object):
             AngleSteel.size=size
             AngleSteel.L=H 
         elif key=='Pst_C':
-            AngleSteel.size=size
-            AngleSteel.L=H 
+            ChannelSteel.size=size
+            ChannelSteel.L=H 
         elif key=='Pst_SQ':
            SqurePipe.size=size
            SqurePipe.L=H 
         elif key=='Pst_Pip':
             Pipe.size=size
             Pipe.L=H 
-
         plt.Length=t
-
         App.ActiveDocument.recompute()       
          
     def create(self): 
          fname='03_'+self.comboBox_Shp.currentText()+'.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'StlStu_data',fname) 
-         print(joined_path)
          try:
              Gui.ActiveDocument.mergeProject(joined_path)
          except:
