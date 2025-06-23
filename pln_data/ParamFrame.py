@@ -43,6 +43,7 @@ class Frame:
         pface=Part.Face(polygon)
         c02=pface
         c00=c01.cut(c02)
+           
         #doc=App.ActiveDocument
         #Gui.Selection.addSelection(doc.Name,obj.Name)
         #Gui.runCommand('Draft_Move',0)  
