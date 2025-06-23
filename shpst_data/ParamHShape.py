@@ -28,11 +28,11 @@ class HShape:
         elif standard=='SUS':
             sa=ShpstData.H_sus[size]    
 
-        H=float(sa[0])
-        B=float(sa[1])
-        t1=float(sa[2])
-        t2=float(sa[3])
-        r=float(sa[4])
+        H=sa[0]
+        B=sa[1]
+        t1=sa[2]
+        t2=sa[3]
+        r=sa[4]
         L=App.ActiveDocument.getObject(label).L
         L=float(L)
         Solid=App.ActiveDocument.getObject(label).Solid
@@ -91,8 +91,8 @@ class HShape:
         else:    
             c00=pface
         obj.size=size
-        obj.H=H
-        obj.B=B    
+        obj.H=str(H)
+        obj.B=str(B)  
         g=c00.Volume*g0/10**9 
         label='mass[kg]'
         try:
