@@ -149,6 +149,7 @@ class ParametricLadder:
             cage(self)
             c2=c00
             c1=c1.fuse(c2)
+            
         g=c1.Volume*g0/10**9 
         label='mass[kg]'
         try:
