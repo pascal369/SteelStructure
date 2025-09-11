@@ -149,56 +149,37 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", 'steelStair', None))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", 'for the second floor', None))
     def on_mass(self):
-        # Get the active document
         doc = FreeCAD.ActiveDocument
-        # Create a list to store the object names, counts, and masses
         object_list = []
-        # Loop through all objects in the document
         for obj in doc.Objects:
-            # Check if the object has a Mass property
             if hasattr(obj, "mass"):
-                # Add the object's name, count, and mass to the list
                 object_list.append([obj.Label, 1, obj.mass])
             else:
-                # Add the object's name and count to the list
                 try:
                     object_list.append([obj.Label, 1, 0.0])
                 except:
                     pass
-        # Get the path of the active document
         doc_path = doc.FileName
-        
-        # Create a new filename for the CSV file
         csv_filename = os.path.splitext(os.path.basename(doc_path))[0] + "_counts_and_masses.csv"
-        
-        # Create a full path for the CSV file
         csv_path = os.path.join(os.path.dirname(doc_path), csv_filename)
-        
-        # Open the CSV file for writing
         try:
             with open(csv_path, 'w', newline='') as csvfile:
-                # Create a CSV writer object
                 writer = csv.writer(csvfile)
-            
                 # Write the header row
                 writer.writerow(['Object Name', 'Count', 'mass[kg]'])
-            
-                # Write the data rows
                 for obj in object_list:
                     writer.writerow(obj)
         except:
             pass        
-        # Print a message indicating the export was successful
-        print("Object counts and masses exported to '{}'".format(csv_path))    
 
     def onType(self):
         global key
         global key1
         global key2
         global y
-        #global sa
+
         self.comboBox_3.clear()
         key = self.comboBox.currentIndex()
         key1=self.comboBox_3.currentIndex()
@@ -255,10 +236,12 @@ class Ui_Dialog(object):
         t2=float(sa[3])
         t=float(self.comboBox_5.currentText())
 
+        JPN='鋼製階段'
+
         label = 'SteelStair'
         obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
 
-        #obj.addProperty("App::PropertyInteger", "key",'Type').key=key
+        obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
         #obj.addProperty("App::PropertyInteger", "key1",'Type').key1=key1
         obj.addProperty("App::PropertyEnumeration", "Position",'Type')
         obj.Position = StlStrdata2.ichi
@@ -286,10 +269,22 @@ class Ui_Dialog(object):
         i=self.comboBox_4.currentIndex()
         obj.size=StlStrdata2.channel_ss_size[i]
 
+        try:        
+            obj.addProperty("App::PropertyString", "Standard",'Standard')
+            Standard='H='+str(obj.H)+'  W='+str(obj.w)
+            obj.Standard=Standard
+        except:
+            pass 
+
         ParamStair2.ParamStaire20(obj)
         obj.ViewObject.Proxy=0
         FreeCAD.ActiveDocument.recompute() 
         Gui.SendMsgToActiveView("ViewFit") 
+
+        Gui.ActiveDocument.ActiveView.fitAll() 
+        Gui.activateWorkbench("DraftWorkbench")
+        Gui.Selection.addSelection(obj)
+        Gui.runCommand('Draft_Move',0)   
 
 class main():
         d = QtGui.QWidget()

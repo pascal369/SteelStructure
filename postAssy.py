@@ -1,6 +1,7 @@
 import os
 import sys
-import Import
+import FreeCAD
+import FreeCADGui
 import Spreadsheet
 import DraftVecUtils
 import Sketcher
@@ -11,7 +12,8 @@ from PySide import QtGui
 from PySide import QtUiTools
 from PySide import QtCore
 from shpst_data import ShpstData
-Post=['Pst_H','Pst_L','Pst_C','Pst_SQ','Pst_Pip',]
+import Draft,DraftGui
+Post=['Pst_H','Pst_L','Pst_C','Pst_SQ','Pst_Pipe',]
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -51,16 +53,18 @@ class Ui_Dialog(object):
         self.pushButton3 = QtGui.QPushButton('import',Dialog)
         self.pushButton3.setGeometry(QtCore.QRect(80, 150, 200, 22))
 
+
         self.comboBox_Shp.setEditable(True)
         self.comboBox_Size.setEditable(True)
+
         self.comboBox_Shp.addItems(Post)
+
         self.comboBox_Shp.setCurrentIndex(1)
         self.comboBox_Shp.currentIndexChanged[int].connect(self.onShape)
         self.comboBox_Shp.setCurrentIndex(0)
 
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.read)
-        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)
@@ -76,7 +80,7 @@ class Ui_Dialog(object):
             ta=ShpstData.channel_ss_size 
         elif key=='Pst_SQ':
             ta=ShpstData.Square_pipe_ss_size
-        elif key=='Pst_Pip':
+        elif key=='Pst_Pipe':
             ta=ShpstData.STK_ss_size
 
         self.comboBox_Size.clear()    
@@ -85,7 +89,7 @@ class Ui_Dialog(object):
         global HShapeSteel
         global AngleSteel
         global ChannelSteel
-        global SqurePipe
+        global SquarePipe
         global Pipe
         global plt
         selection = Gui.Selection.getSelection()
@@ -112,11 +116,11 @@ class Ui_Dialog(object):
                          self.comboBox_Shp.setCurrentIndex(2)
                          self.comboBox_Size.setCurrentText(ChannelSteel.size) 
                          self.lineEdit_H.setText(ChannelSteel.L)
-                     elif obj.Label[:9]=='SqurePipe':
-                         SqurePipe=obj  
+                     elif obj.Label[:10]=='SquarePipe':
+                         SquarePipe=obj  
                          self.comboBox_Shp.setCurrentIndex(3)
-                         self.comboBox_Size.setCurrentText(SqurePipe.size)
-                         self.lineEdit_H.setText(SqurePipe.L)
+                         self.comboBox_Size.setCurrentText(SquarePipe.size)
+                         self.lineEdit_H.setText(SquarePipe.L)
                      elif obj.Label[:4]=='Pipe':
                          Pipe=obj 
                          self.comboBox_Shp.setCurrentIndex(4)  
@@ -130,38 +134,68 @@ class Ui_Dialog(object):
         size=self.comboBox_Size.currentText()
         H=self.lineEdit_H.text()
         t=self.lineEdit_t.text()
+        print(t)
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
         if key=='Pst_H':
             HShapeSteel.size=size
             HShapeSteel.L=H
+            sz='H'+size
         elif key=='Pst_L':
             AngleSteel.size=size
             AngleSteel.L=H 
+            sz='L'+size
         elif key=='Pst_C':
             ChannelSteel.size=size
             ChannelSteel.L=H 
+            sz='C'+size
         elif key=='Pst_SQ':
-           SqurePipe.size=size
-           SqurePipe.L=H 
-        elif key=='Pst_Pip':
+            SquarePipe.size=size
+            SquarePipe.L=H 
+            sz='□'+size
+        elif key=='Pst_Pipe':
             Pipe.size=size
             Pipe.L=H 
+            sz='Φ'+size
         plt.Length=t
+        
+        try:
+            Standard=sz+' , H='+H
+            obj.addProperty("App::PropertyString", "Standard",'Standard')
+            obj.Standard=Standard
+        except:
+            obj.Standard=Standard   
+        try:
+            g0=obj.g0
+            g=obj.Shape.Volume*g0*1000/10**9 
+            label='mass[kg]'
+            obj.addProperty("App::PropertyFloat", "mass",label)
+            obj.mass=g
+        except:
+            g0=obj.g0
+            g=obj.Shape.Volume*g0*1000/10**9 
+            obj.mass=g  
+            App.ActiveDocument.recompute()       
         App.ActiveDocument.recompute()       
          
     def create(self): 
+         doc = App.ActiveDocument
          fname='03_'+self.comboBox_Shp.currentText()+'.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'StlStu_data',fname) 
-         try:
-             Gui.ActiveDocument.mergeProject(joined_path)
-         except:
-             doc=App.newDocument()
-             Gui.ActiveDocument.mergeProject(joined_path)    
-         App.ActiveDocument.recompute()  
-         Gui.ActiveDocument.ActiveView.fitAll()
-         pass   
-         Gui.SendMsgToActiveView("ViewFit")    
+         Gui.ActiveDocument.mergeProject(joined_path)
+         
+         objs=doc.Objects
+         if objs:
+             last_obj=objs[-1]   
+     
+         #last_obj.addProperty("App::PropertyString", "Standard",'Standard')
 
+         Gui.activateWorkbench("DraftWorkbench")
+         Gui.Selection.addSelection(last_obj)
+         Gui.runCommand('Draft_Move',0) 
+        
 class main():
         d = QtGui.QWidget()
         d.ui = Ui_Dialog()

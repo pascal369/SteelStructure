@@ -192,6 +192,11 @@ class Ui_Dialog(object):
 
             except:
                 myShape=None 
+        try:
+            obj.Standard='L1='+str(l1)+'  L2='+str(l2)  
+        except:
+            obj.Standard='L='+str(l1)  
+    
         App.ActiveDocument.recompute()  
         #Gui.runCommand('a2p_updateImportedParts',0) 
     def spinMove(self):
@@ -287,9 +292,13 @@ class Ui_Dialog(object):
         elif key=='05':
             label='Edge_L'  
         elif key=='06':
-            label='Channel'   
+            label='Channel'  
+
+        JPN='てすり'     
 
         obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
+        obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+        obj.addProperty("App::PropertyString", "Standard",'Standard')
         obj.addProperty("App::PropertyEnumeration", "spec",label)
         obj.addProperty("App::PropertyFloat", "g0",'Specific gravity').g0=g0
         obj.spec=HandData.siyo
@@ -313,14 +322,17 @@ class Ui_Dialog(object):
             obj.addProperty("App::PropertyBool",'Reverse',label).Reverse = False
             
         if key=='00' :
+            
             obj.addProperty("App::PropertyFloat", "l1",label).l1=l1
             obj.addProperty("App::PropertyEnumeration", "type",label)
+            
             obj.type=HandData.type
             i=self.comboBox_type.currentIndex()
             obj.type=HandData.type[i] 
             ParamStraight.StraightLine(obj) 
             obj.ViewObject.Proxy=0
             FreeCAD.ActiveDocument.recompute() 
+
         elif key=='01' or key=='02' or key=='06':  
             
             obj.addProperty("App::PropertyFloat", "l1",label).l1=l1
@@ -328,6 +340,7 @@ class Ui_Dialog(object):
             obj.addProperty("App::PropertyFloat", "k",label).k=float(k)
             obj.addProperty("App::PropertyEnumeration", "type",label)
             obj.type=HandData.type
+
             i=self.comboBox_type.currentIndex()
             obj.type=HandData.type[i] 
             ParamEndLine.EndLine(obj) 
@@ -351,6 +364,17 @@ class Ui_Dialog(object):
             ParamEdge.edge(obj) 
             obj.ViewObject.Proxy=0
             FreeCAD.ActiveDocument.recompute()  
+
+        try:
+            Standard='L1='+str(l1)+'  L2='+str(l2)  
+        except:
+            Standard='L='+str(l1)  
+        obj.Standard=Standard    
+
+        Gui.ActiveDocument.ActiveView.fitAll() 
+        Gui.activateWorkbench("DraftWorkbench")
+        Gui.Selection.addSelection(obj)
+        Gui.runCommand('Draft_Move',0)     
             
         
 

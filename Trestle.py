@@ -97,11 +97,8 @@ class Ui_Dialog(object):
                  # Partsグループ内のオブジェクトを走査してスプレッドシートを探す
                  for obj in parts_group.Group:
                      print(obj.Label)
-                     
-                     
                      if obj.Label[:10]=='SteelStair':
                          SteelStair=obj     
-
                      elif obj.TypeId == "Spreadsheet::Sheet":
                          # スプレッドシートが見つかった場合の処理
                          spreadsheet = obj  
@@ -112,6 +109,7 @@ class Ui_Dialog(object):
              self.lineEdit_H.setText(spreadsheet.getContents('H0'))  
              self.comboBox_type.setCurrentText(spreadsheet.getContents('key')[1:])
     def update(self):
+         mytype=self.comboBox_type.currentText()
          myW=self.lineEdit_W.text()
          myL=self.lineEdit_L.text()
          myH=self.lineEdit_H.text()
@@ -134,6 +132,20 @@ class Ui_Dialog(object):
              stair.L1=float(myW)    
              stair.w0=float(myL)  
 
+         doc = App.ActiveDocument
+         
+         for obj in doc.Objects:
+             if hasattr(obj, "l1") and hasattr(obj, "l2"):
+                 l1_val = getattr(obj, "l1")
+                 l2_val = getattr(obj, "l2")
+                 if not hasattr(obj, "Standard"):
+                     obj.addProperty("App::PropertyString", "Standard", "Standard", "L1,L2の情報")
+                 obj.Standard = f"L1={l1_val},L2={l2_val}"
+             elif hasattr(obj,'L'):
+                 L_val=getattr(obj,'L')  
+                 if not hasattr(obj, "Standard"):
+                     obj.addProperty("App::PropertyString", "Standard", "Standard", "L1,L2の情報")  
+                 obj.Standard=f'L={L_val}'
          App.ActiveDocument.recompute()
          
     def create(self): 
@@ -153,5 +165,5 @@ class main():
         d.ui.setupUi(d)
         d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         d.show()  
-        # 閉じるボタンを無効にする
+        script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd') 
         script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)            

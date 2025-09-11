@@ -10,6 +10,7 @@ from PySide import QtGui
 from PySide import QtUiTools
 from PySide import QtCore
 import importlib
+import FreeCAD,Part
 
 CDia=['Post','ShapedSteel','SteelPlate','SteelStairs','Ladder','Handrail','Trestle',
       'SteelBrace','LatticeBeam','TrussBeam','TurnBackle','accodionGate','grating',]
@@ -21,56 +22,110 @@ ShpStl=['Angle','Channel','H_Wide','H_medium','H_thin','I_beam','CT','STK',
         'LightAngle','LightChannel','RipChannel','SQ_Pipe']
 Trestle=['type01','type02','type03','type04','type05']
 turnBackle_data=['turnBackle','forkEnd_L','forkEnd_R','turnBackle_Assy']
-
+lang=['English','Japanese']
+mater=['SS41','SUS304','S45C','PVC','Neoprene rubber']
 class Ui_Dialog(object):
     global flag00
     flag00=0
     #print(flag00)
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(300, 410)
+        Dialog.resize(370, 550)
         Dialog.move(1000, 0)
         #部材　Element
         self.label_element = QtGui.QLabel(Dialog)
-        self.label_element.setGeometry(QtCore.QRect(10, 13, 100, 12))
+        self.label_element.setGeometry(QtCore.QRect(10, 10, 100, 23))
         self.comboBox_element = QtGui.QComboBox(Dialog)
-        self.comboBox_element.setGeometry(QtCore.QRect(80, 10, 200, 22))
+        self.comboBox_element.setGeometry(QtCore.QRect(80, 10, 130, 23))
+
+        #言語
+        self.pushButton_la=QtGui.QPushButton('language',Dialog)
+        self.pushButton_la.setGeometry(QtCore.QRect(210, 10, 130, 23))
+        self.comboBox_lan = QtGui.QComboBox(Dialog)
+        self.comboBox_lan.setGeometry(QtCore.QRect(210, 35, 130, 22))
+        self.comboBox_lan.setEditable(True)
+        self.comboBox_lan.lineEdit().setAlignment(QtCore.Qt.AlignCenter)  
+
         #部材2　Element2
         self.label_element2 = QtGui.QLabel(Dialog)
-        self.label_element2.setGeometry(QtCore.QRect(10, 38, 100, 12))
+        self.label_element2.setGeometry(QtCore.QRect(10, 35, 100, 23))
         self.comboBox_element2 = QtGui.QComboBox(Dialog)
-        self.comboBox_element2.setGeometry(QtCore.QRect(80, 35, 200, 22))
+        self.comboBox_element2.setGeometry(QtCore.QRect(80, 35, 200, 23))
 
-        #実行
-        self.pushButton = QtGui.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(80, 60, 100, 22))
+        #jpn text
+        self.pushButton_jpn = QtGui.QPushButton('Jpn Text',Dialog)
+        self.pushButton_jpn.setGeometry(QtCore.QRect(80, 60, 50, 23))
+        self.le_jpn = QtGui.QLineEdit(Dialog)
+        self.le_jpn.setGeometry(QtCore.QRect(170, 60, 170, 23))
+        self.le_jpn.setAlignment(QtCore.Qt.AlignCenter)  
 
-        #質量計算
+        #standard
+        self.pushButton_st = QtGui.QPushButton('Standard',Dialog)
+        self.pushButton_st.setGeometry(QtCore.QRect(80, 85, 50, 23))
+        self.le_st = QtGui.QLineEdit(Dialog)
+        self.le_st.setGeometry(QtCore.QRect(170, 85, 170, 20))
+        self.le_st.setAlignment(QtCore.Qt.AlignCenter) 
+
+        #material
+        self.pushButton_mt = QtGui.QPushButton('Material',Dialog)
+        self.pushButton_mt.setGeometry(QtCore.QRect(80, 110, 50, 23))
+        self.comboBox_mt = QtGui.QComboBox(Dialog)
+        self.comboBox_mt.setGeometry(QtCore.QRect(170, 110, 170, 23))
+        self.comboBox_mt.setEditable(True)
+        self.comboBox_mt.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
+
+         #質量計算
         self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
-        self.pushButton_m.setGeometry(QtCore.QRect(80, 85, 100, 23))
+        self.pushButton_m.setGeometry(QtCore.QRect(80, 135, 100, 23))
         self.pushButton_m.setObjectName("pushButton")  
+
         #質量集計
-        self.pushButton_m2 = QtGui.QPushButton('massTally',Dialog)
-        self.pushButton_m2.setGeometry(QtCore.QRect(180, 85, 100, 23))
-        self.pushButton_m2.setObjectName("pushButton")
+        self.pushButton_m2 = QtGui.QPushButton('massTally_spreadsheet',Dialog)
+        self.pushButton_m2.setGeometry(QtCore.QRect(180, 135, 160, 23))
+        self.pushButton_m2.setObjectName("pushButton")  
+
+        #count
+        self.pushButton_ct = QtGui.QPushButton('Count',Dialog)
+        self.pushButton_ct.setGeometry(QtCore.QRect(80, 160, 100, 23))
+        self.le_ct = QtGui.QLineEdit(Dialog)
+        self.le_ct.setGeometry(QtCore.QRect(180, 160, 50, 23))
+        self.le_ct.setAlignment(QtCore.Qt.AlignCenter)  
+        self.le_ct.setText('1')
+
+        #massUpdate
+        self.pushButton_mUp = QtGui.QPushButton('massUpdate',Dialog)
+        self.pushButton_mUp.setGeometry(QtCore.QRect(230, 185, 110, 23))
+
+        #sketchLength
+        self.pushButtonS = QtGui.QPushButton('SketchLength',Dialog)
+        self.pushButtonS.setGeometry(QtCore.QRect(230, 210, 110, 23))
+        self.pushButtonS.setObjectName("pushButton")
+
         #質量入力
         self.pushButton_m3 = QtGui.QPushButton('massImput[kg]',Dialog)
-        self.pushButton_m3.setGeometry(QtCore.QRect(80, 115, 100, 23))
+        self.pushButton_m3.setGeometry(QtCore.QRect(80, 185, 100, 23))
         self.pushButton_m3.setObjectName("pushButton")  
         self.le_mass = QtGui.QLineEdit(Dialog)
-        self.le_mass.setGeometry(QtCore.QRect(180, 115, 50, 20))
+        self.le_mass.setGeometry(QtCore.QRect(180, 185, 50, 23))
         self.le_mass.setAlignment(QtCore.Qt.AlignCenter)  
-        self.le_mass.setText('10.0')
+        self.le_mass.setText('10.0')  
+
         #密度
-        self.lbl_gr = QtGui.QLabel('SpecificGravity',Dialog)
-        self.lbl_gr.setGeometry(QtCore.QRect(80, 145, 80, 12))
+        self.pushButton_gr = QtGui.QPushButton('SpecificGravity',Dialog)
+        self.pushButton_gr.setGeometry(QtCore.QRect(80, 210, 100, 23))
+        self.pushButton_gr.setObjectName("pushButton")  
         self.le_gr = QtGui.QLineEdit(Dialog)
-        self.le_gr.setGeometry(QtCore.QRect(180, 142, 50, 20))
+        self.le_gr.setGeometry(QtCore.QRect(180, 210, 50, 23))
         self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
-        self.le_gr.setText('7.85')
+        self.le_gr.setText('7.85')  
+
+         #実行
+        self.pushButton = QtGui.QPushButton(Dialog)
+        self.pushButton.setGeometry(QtCore.QRect(130, 240, 100, 23))  
+
         #img
         self.img = QtGui.QLabel(Dialog)
-        self.img.setGeometry(QtCore.QRect(30, 140, 250, 250))
+        self.img.setGeometry(QtCore.QRect(80, 270, 250, 250))
         self.img.setAlignment(QtCore.Qt.AlignCenter)
 
         self.comboBox_element.addItems(CDia)
@@ -84,12 +139,22 @@ class Ui_Dialog(object):
         self.comboBox_element2.currentIndexChanged[int].connect(self.onDia2)
         self.comboBox_element2.setCurrentIndex(0)
 
+        self.comboBox_lan.addItems(lang)
+        self.comboBox_mt.addItems(mater)
+
         self.retranslateUi(Dialog)
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QObject.connect(self.pushButton_m, QtCore.SIGNAL("pressed()"), self.massCulc)
-        QtCore.QObject.connect(self.pushButton_m2, QtCore.SIGNAL("pressed()"), self.massTally2)
+        QtCore.QObject.connect(self.pushButton_m2, QtCore.SIGNAL("pressed()"), self.massTally)
         QtCore.QObject.connect(self.pushButton_m3, QtCore.SIGNAL("pressed()"), self.massImput)
+        QtCore.QObject.connect(self.pushButton_ct, QtCore.SIGNAL("pressed()"), self.countCulc)
+        QtCore.QObject.connect(self.pushButton_jpn, QtCore.SIGNAL("pressed()"), self.japan)
+        QtCore.QObject.connect(self.pushButton_st, QtCore.SIGNAL("pressed()"), self.standard)
+        QtCore.QObject.connect(self.pushButton_mt, QtCore.SIGNAL("pressed()"), self.material)
+        QtCore.QObject.connect(self.pushButtonS, QtCore.SIGNAL("pressed()"), self.sketchLength)
+        QtCore.QObject.connect(self.pushButton_mUp, QtCore.SIGNAL("pressed()"), self.massUpdate)
+        QtCore.QObject.connect(self.pushButton_gr, QtCore.SIGNAL("pressed()"), self.specificGr)
 
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -98,6 +163,86 @@ class Ui_Dialog(object):
         self.label_element.setText(QtGui.QApplication.translate("Dialog", "Element", None))  
         self.label_element2.setText(QtGui.QApplication.translate("Dialog", "Element2", None))   
         self.pushButton.setText(QtGui.QApplication.translate("Dialog", "Execution", None))  
+
+    def massUpdate(self):
+        doc = App.ActiveDocument
+        for i,obj in enumerate(doc.Objects):
+            
+            try:
+                if obj.count > 0 :
+                    obj.mass=obj.Shape.Volume*obj.g0/10**6
+            except:
+                pass
+
+    def specificGr(self):
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
+        label='mass[kg]'
+        g0=float(self.le_gr.text())
+        try:
+            obj.addProperty("App::PropertyFloat", "g0",label)
+            obj.g0=g0
+        except:
+            obj.g0=g0 
+
+    def japan(self):
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
+        label=obj.Label
+        JPN=self.le_jpn.text()
+        try:
+            obj.addProperty("App::PropertyString", "JPN",'Base')
+            obj.JPN=JPN
+        except:
+            obj.JPN=JPN
+
+    def standard(self):
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
+        Standard=self.le_st.text()
+        try:
+            obj.addProperty("App::PropertyString", "Standard",'Standard')
+            obj.Standard=Standard
+        except:
+            obj.Standard=Standard     
+
+    def material(self):
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
+        material=self.comboBox_mt.currentText()
+        print(material)
+        try:
+            obj.addProperty("App::PropertyString", 'material','material')
+            obj.material=material
+        except:
+            obj.material=material   
+
+    def countCulc(self):
+        c00 = Gui.Selection.getSelection()
+        if c00:
+            obj = c00[0]
+        label='mass[kg]'
+        count=int(self.le_ct.text())
+        try:
+            obj.addProperty("App::PropertyFloat", "count",label)
+            obj.count=count
+        except:
+            obj.count=count    
+
+    def sketchLength(self):
+        obj = Gui.Selection.getSelection()[0]  # 選択されたオブジェクトを取得
+        if obj is None or obj.TypeId != "Sketcher::SketchObject":
+            FreeCAD.Console.PrintError("スケッチを選択してください\n")
+        else:
+            total_length = 0.0
+            for geo in obj.Geometry:
+                if isinstance(geo, (Part.LineSegment, Part.ArcOfCircle )):
+                           total_length += geo.length()
+            FreeCAD.Console.PrintMessage(f"スケッチ '{obj.Label}' の合計エッジ長: {total_length} mm\n")
 
     def massImput(self):
          # 選択したオブジェクトを取得する
@@ -129,29 +274,68 @@ class Ui_Dialog(object):
         except:
             obj.mass=g
 
-    def massTally2(self):
+    def massTally(self):#spreadsheet
         doc = App.ActiveDocument
-        objects = doc.Objects
-        mass_list = []
-        for obj in objects:
-            if Gui.ActiveDocument.getObject(obj.Name).Visibility:
-                if obj.isDerivedFrom("Part::Feature"):
-                    if hasattr(obj, "mass"):
-                        try: 
-                            mass_list.append([obj.Label,obj.size,'','','','','','',1, obj.mass])
+        spreadsheet = doc.getObject("Parts_List") 
+        if spreadsheet is None:
+            spreadsheet = doc.addObject("Spreadsheet::Sheet", "Parts_List")
+        
+        # ヘッダー行を記入
+        gengo=self.comboBox_lan.currentText()
+        if gengo=='Japanese':
+            headers = ['No','名称','材質','規格', '数量','単重[kg]','重量[kg]']
+        elif gengo=='English':
+            headers = ['No','Name','Material','Standard', 'Count','Unit[kg]','Mass[kg]']
+        for header in enumerate(headers):
+            spreadsheet.set(f"A{1}", headers[0])
+            spreadsheet.set(f"B{1}", headers[1])
+            spreadsheet.set(f"C{1}", headers[2])
+            spreadsheet.set(f"D{1}", headers[3])
+            spreadsheet.set(f"E{1}", headers[4])
+            spreadsheet.set(f"F{1}", headers[5])
+            spreadsheet.set(f"G{1}", headers[6])
+        # パーツを列挙して情報を書き込む
+        row = 2
+        i=1
+        s=0
+        for i,obj in enumerate(doc.Objects):
+            if hasattr(obj, "count") and obj.count > 0:
+                try:
+                    spreadsheet.set(f"A{row}", str(row-1))  # No
+                    if gengo=='English':
+                        n=obj.count
+                        spreadsheet.set(f'B{row}',obj.Label)    
+                    elif gengo=='Japanese':
+                        #
+                        n=obj.count
+                        try:
+                            spreadsheet.set(f"B{row}", obj.JPN) 
                         except:
-                             pass 
-                else:
-                     pass
-        doc_path = doc.FileName
-        csv_filename = os.path.splitext(os.path.basename(doc_path))[0] + "_counts_and_masses.csv"
-        csv_path = os.path.join(os.path.dirname(doc_path), csv_filename)
-        with open(csv_path, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(['部品名称'])
-            writer.writerow(['部品個数'])
-            writer.writerow(["材料",'規格','材質','計算式','数量', "単位",'単質','単位','個数','質量'])
-            writer.writerows(mass_list) 
+                            spreadsheet.set(f"B{row}", obj.Base_JPN)  
+                    try:
+                        spreadsheet.set(f"C{row}", obj.material)
+                    except:
+                        pass
+                    try:
+                        spreadsheet.set(f"D{row}", obj.Standard)
+                    except:
+                        pass
+                    
+                    spreadsheet.set(f"E{row}", f"{n:.2f}")   # count
+                    try:
+                        obj.mass=obj.Shape.Volume*obj.g0/10**6
+                    except:
+                        #obj.mass=obj.Shape.Volume/10**6
+                        pass
+                    spreadsheet.set(f"F{row}", f"{obj.mass:.2f}")  # unit
+                    spreadsheet.set(f"G{row}", f"{obj.mass*n:.2f}")  # mass
+                except:
+                    pass    
+                s=obj.mass*n+s
+                row += 1
+                
+            spreadsheet.set(f'G{row}',str(s))
+        App.ActiveDocument.recompute()
                  
     def onDia(self):
          global key
@@ -256,6 +440,7 @@ class Ui_Dialog(object):
              pass                  
 
     def create(self): 
+         
          key=self.comboBox_element.currentIndex()
          key2=self.comboBox_element2.currentIndex()
          
@@ -266,13 +451,13 @@ class Ui_Dialog(object):
          elif key==2:#steelPlate
               import Pln_shape
          elif key==3:#steelStairs
-             if key2==0:
+             if key2==0:#2階用
                   try:
                       import SteelStair2
                   except:
                        SteelStair2.main.d.show()  
                        pass  
-             elif key2==1:
+             elif key2==1:#一般階用
                   import SteelStairs 
              elif key2==2:
                   import SplStairCase  
@@ -300,6 +485,8 @@ class Ui_Dialog(object):
                 import accodionGate       
          elif key==12:#grating
                 import grating  
+
+             
 
 class main():
         d = QtGui.QWidget()

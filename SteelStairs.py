@@ -251,6 +251,8 @@ class Ui_Dialog(object):
         t=float(self.comboBox_5.currentText())
         t0=float(self.comboBox_5.currentText())
 
+        JPN='鋼製階段'
+
         label = 'stair'
         obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
         obj.addProperty("App::PropertyEnumeration", "Rail",label)
@@ -265,6 +267,7 @@ class Ui_Dialog(object):
         obj.addProperty("App::PropertyFloat", "w2",'Dimension').w2=w2
         obj.addProperty("App::PropertyFloat", "w3",'Dimension').w3=w3
         obj.addProperty("App::PropertyFloat", "t",'Dimension').t=t
+        obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
 
         obj.addProperty("App::PropertyEnumeration", "size",'shape')
         obj.size=stlstrdata.channel_ss_size
@@ -291,11 +294,24 @@ class Ui_Dialog(object):
         obj.t0=stlstrdata.ch_t[i]
         
         obj.addProperty("App::PropertyInteger", "story",label).story=stry
+
+        try:        
+            obj.addProperty("App::PropertyString", "Standard",'Standard')
+            N=obj.story-1
+            Standard='H='+str(obj.H)+'  W='+str(obj.w0)+'  n='+str(N)
+            obj.Standard=Standard
+        except:
+            pass 
         
         ParamStStairs.Staires(obj)
         obj.ViewObject.Proxy=0
         FreeCAD.ActiveDocument.recompute() 
         Gui.SendMsgToActiveView("ViewFit")
+
+        Gui.ActiveDocument.ActiveView.fitAll() 
+        Gui.activateWorkbench("DraftWorkbench")
+        Gui.Selection.addSelection(obj)
+        Gui.runCommand('Draft_Move',0)  
 
 class main():
     d = QtGui.QWidget()

@@ -191,20 +191,24 @@ class Ui_Dialog(object):
         
     def upDate(self):
         selection = Gui.Selection.getSelection()
-        for obj in selection:
-            try:
-                myShape=obj
-                size=self.comboBox_size.currentText()
-                myShape.size=size
-                L=self.spinBoxL.value()
-                myShape.L=str(L)
-            except:
-                myShape=None 
-        App.ActiveDocument.recompute()         
+        if selection:
+             selected_object = selection[0]
+             if selected_object.TypeId == "App::Part":
+                 print('aaaaaaaaaaaa')
+                 parts_group = selected_object
+                 for obj in selection:
+                     try:
+                         size=self.comboBox_size.currentText()
+                         #L=self.spinBoxL.value()
+                         label='Standard'
+                         obj.addProperty("App::PropertyFloat", "Standard",label)
+                         obj.Standard=size
+                     except:
+                         obj.Standard=size
+                 App.ActiveDocument.recompute()         
 
     def read_data(self):
-        return
-        global myShape
+        global HShape
         selection = Gui.Selection.getSelection()
         if selection:
              selected_object = selection[0]
@@ -214,7 +218,7 @@ class Ui_Dialog(object):
                  for obj in parts_group.Group:
                       print(obj.Label)  
                       if obj.Label=='HShape':
-                          myShape=obj
+                          HShape=obj
                       elif obj.Label=='LShape':
                           return    
 
@@ -287,6 +291,8 @@ class Ui_Dialog(object):
         self.comboBox_size.addItems(ta)  
 
     def create(self):
+        
+        Gui.activateWorkbench("DraftWorkbench")
         key=self.comboBox_type.currentText()
         if key=='Pst_H':
             fname='03_Pst_H.FCStd'  
@@ -299,14 +305,11 @@ class Ui_Dialog(object):
         elif key=='Pst_Pipe':
             fname='03_Pst_Pip.FCStd'  
 
-        try:
-            base=os.path.dirname(os.path.abspath(__file__))
-            joined_path = os.path.join(base, "StlStu_data",fname)
-            Gui.ActiveDocument.mergeProject(joined_path)
-            #  
-        except:
-             pass    
-        return
+        
+        base=os.path.dirname(os.path.abspath(__file__))
+        joined_path = os.path.join(base, "StlStu_data",fname)
+        Gui.ActiveDocument.mergeProject(joined_path)
+
 
 class main():
     d = QtGui.QWidget()

@@ -27,25 +27,11 @@ from shpst_data import ParamFlatShape
 from shpst_data import ParamLWAngle
 from shpst_data import ParamLWChannel
 from shpst_data import ParamRipChannel
-from shpst_data import ParamSqurePipe
-
-#import shpst_data.ShpstData
-#import shpst_data.ParamAngle
-#import shpst_data.ParamChannel
-#import shpst_data.ParamHShape
-#import shpst_data.ParamIShape
-#import shpst_data.ParamCtShape
-#import shpst_data.ParamPipeShape
-#import shpst_data.ParamFlatShape
-#import shpst_data.ParamLWAngle
-#import shpst_data.ParamLWChannel
-#import shpst_data.ParamRipChannel
-#import shpst_data.ParamSqurePipe
+from shpst_data import ParamSquarePipe
 
 #JIS G 3192
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
-        
         Dialog.setObjectName("Dialog")
         Dialog.resize(280, 320)
         Dialog.move(1000, 0)
@@ -310,7 +296,6 @@ class Ui_Dialog(object):
 
     def create(self):
         key = self.comboBox_type.currentText()[:2]
-        #Type=self.comboBox_type.currentText()
         L=self.spinBoxL.value()
         g0=float(self.le_mtrl.text())
         
@@ -325,9 +310,12 @@ class Ui_Dialog(object):
             try:
                 if st=='SS_Equal' or st==['SS_Equal']:
                     sa=ShpstData.angle_ss_equal[dia]
+                    JPN='等辺山形鋼'
                 elif st=='SS_Unequal':
                     sa=ShpstData.angle_ss_unequal[dia]
+                    JPN='不等辺山形鋼'
                 elif st=='SUS_Equal':
+                    JPN='ステンレス等辺山形鋼'
                     sa=ShpstData.angle_sus_equal[dia]
             except:
                 pass
@@ -346,9 +334,15 @@ class Ui_Dialog(object):
             obj.size=size
             i=self.comboBox_size.currentIndex()
             obj.size=size[i]
-            
-            st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='L'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass    
+
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
@@ -368,7 +362,9 @@ class Ui_Dialog(object):
             b='C'
             if st=='SS':
                 sa=ShpstData.channel_ss[dia]
+                JPN='溝形鋼'
             elif st=='SUS':
+                PN='ステンレス溝形鋼'
                 sa=ShpstData.channel_sus[dia]
             H=sa[0]
             B=sa[1]
@@ -389,6 +385,15 @@ class Ui_Dialog(object):
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='C'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass   
+
             
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
@@ -409,12 +414,16 @@ class Ui_Dialog(object):
             b='H'+st
             if st=='SS_Wide':
                 sa=ShpstData.H_ss_w[dia]
+                JPN='広幅H形鋼'
             elif st=='SS_Medium':
                 sa=ShpstData.H_ss_m[dia]
+                JPN='中幅H形鋼'
             elif st=='SS_Thin':
                 sa=ShpstData.H_ss_t[dia]
+                JPN='細幅H形鋼'
             elif st=='SUS':
                 sa=ShpstData.H_sus[dia]
+                JPN='ステンレスH形鋼'
             H=sa[0]
             B=sa[1]
             t1=sa[2]
@@ -433,7 +442,16 @@ class Ui_Dialog(object):
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
-            
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='H'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass   
+
+
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
@@ -453,6 +471,7 @@ class Ui_Dialog(object):
             b='I'
             if st=='SS':
                 sa=ShpstData.I_ss[dia]
+                JPN='ステンレスH形鋼'
             H=sa[0]
             B=sa[1]
             t1=sa[2]
@@ -472,6 +491,15 @@ class Ui_Dialog(object):
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='I'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass  
+
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
@@ -492,6 +520,7 @@ class Ui_Dialog(object):
             b='CT'
             if st=='SS':
                 sa=ShpstData.CT_ss[dia]
+                JPN='CT形鋼'
             A=sa[0]
             B=sa[1]
             t1=sa[2]
@@ -511,6 +540,15 @@ class Ui_Dialog(object):
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='CT'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass   
+            
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
@@ -531,12 +569,16 @@ class Ui_Dialog(object):
             b='Pipe'#Pipe
             if st=='STK':
                 sa=ShpstData.STK_ss[dia]
+                JPN='一般構造用炭素鋼鋼管'
             elif st=='SUS_Sch20S':
                 sa=ShpstData.tubes[dia]
+                JPN='ステンレス鋼管'
             elif st=='SUS_Sch40':
                 sa=ShpstData.tubes[dia]
+                JPN='ステンレス鋼管'
             elif st=='SGP':
-                sa=ShpstData.tubes[dia]    
+                sa=ShpstData.tubes[dia]  
+                JPN='配管用鋼管'  
             D=sa[0]
             t=sa[1]
 
@@ -552,6 +594,15 @@ class Ui_Dialog(object):
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='Φ'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass   
+            
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
@@ -568,12 +619,14 @@ class Ui_Dialog(object):
             obj.addProperty("App::PropertyString", "L",'Dimension').L=str(L)
             dia=self.comboBox_size.currentText()
             st=self.comboBox_st.currentText()
-
+            JPN='平鋼'
             b='FB'
             if st=='SS':
                 sa=ShpstData.flat_ss[dia]
+                JPN='平鋼'
             elif st=='SUS':
                 sa=ShpstData.flat_sus[dia]
+                JPN='ステンレス平鋼'
             B=sa[1]
             t=sa[0]
 
@@ -589,6 +642,16 @@ class Ui_Dialog(object):
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='FB'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass   
+            
+
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
@@ -609,8 +672,10 @@ class Ui_Dialog(object):
             b='L'
             if st=='SS':
                 sa=ShpstData.LW_angle_ss[dia]
+                JPN='軽量山形鋼'
             elif st=='SUS':
                 sa=ShpstData.LW_angle_sus[dia]
+                JPN='ステンレス軽量山形鋼'
             A=sa[0]
             B=sa[1]
             t=sa[2]
@@ -628,6 +693,15 @@ class Ui_Dialog(object):
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='L'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass   
+
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
@@ -647,8 +721,10 @@ class Ui_Dialog(object):
             b='C'
             if st=='SS':
                 sa=ShpstData.LW_channel_ss[dia]
+                JPN='軽量溝形鋼'
             elif st=='SUS':
                 sa=ShpstData.LW_channel_sus[dia]
+                JPN='ステンレス軽量溝形鋼'
             H=sa[0]
             B=sa[1]
             t=sa[2]
@@ -666,6 +742,15 @@ class Ui_Dialog(object):
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='C'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass   
+            
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
@@ -685,8 +770,10 @@ class Ui_Dialog(object):
             b='C'
             if st=='SS':
                 sa=ShpstData.Rip_channel_ss[dia]
+                JPN='リップ溝形鋼'
             elif st=='SUS':
                 sa=ShpstData.Rip_channel_sus[dia]
+                JPN='ステンレスリップ溝形鋼'
 
             H=sa[0]
             A=sa[1]
@@ -707,6 +794,15 @@ class Ui_Dialog(object):
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='C'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass   
+            
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
@@ -726,8 +822,10 @@ class Ui_Dialog(object):
             b='Square_Pipe'
             if st=='SS':
                 sa=ShpstData.square_pipe_ss[dia]
+                JPN='角形鋼管'
             elif st=='SUS':
                 sa=ShpstData.square_pipe_sus[dia]
+                JPN='ステンレス角形鋼管'
             A=sa[0]
             B=sa[1]
             t=sa[2]
@@ -738,23 +836,36 @@ class Ui_Dialog(object):
 
             tt=self.comboBox_type.currentText()
             obj.addProperty("App::PropertyString", "type",label).type=tt
-
             obj.addProperty("App::PropertyEnumeration", "size",label)
             obj.size=size
             i=self.comboBox_size.currentIndex()
             obj.size=size[i]
             st=self.comboBox_st.currentText()
             obj.addProperty("App::PropertyString", "standard",label).standard=st
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
+
+            try:        
+                obj.addProperty("App::PropertyString", "Standard",'Standard')
+                Standard='□'+obj.size+'  L='+obj.L
+                obj.Standard=Standard
+            except:
+                pass   
+            
             if self.checkbox.isChecked():
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = True 
             else:    
                 obj.addProperty("App::PropertyBool", "Solid",label).Solid = False 
 
-            ParamSqurePipe.SqurePipe(obj) 
+            ParamSquarePipe.SquarePipe(obj) 
             obj.ViewObject.Proxy=0
+            FreeCAD.ActiveDocument.recompute() 
 
-        App.ActiveDocument.recompute() 
+        
         Gui.ActiveDocument.ActiveView.fitAll() 
+        Gui.activateWorkbench("DraftWorkbench")
+        Gui.Selection.addSelection(obj)
+        Gui.runCommand('Draft_Move',0)
+
 
 class main():
     d = QtGui.QWidget()

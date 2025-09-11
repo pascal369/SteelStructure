@@ -707,7 +707,12 @@ class Ui_Dialog(object):
         elif key==24:
             ParamChainCover.ChainCover(obj)
             obj.ViewObject.Proxy=0
-            FreeCAD.ActiveDocument.recompute()        
+            FreeCAD.ActiveDocument.recompute()  
+
+        Gui.ActiveDocument.ActiveView.fitAll() 
+        Gui.activateWorkbench("DraftWorkbench")
+        Gui.Selection.addSelection(obj)
+        Gui.runCommand('Draft_Move',0)          
         
 class Main():
         d = QtGui.QWidget()

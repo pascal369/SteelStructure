@@ -166,7 +166,9 @@ class Ui_Dialog(object):
                 label='LadderA'
             else:
                 label='LadderB'
+            JPN='ラダー'    
             obj = App.ActiveDocument.addObject("Part::FeaturePython",label)
+            obj.addProperty("App::PropertyString", "JPN",label).JPN=JPN  
             obj.addProperty("App::PropertyEnumeration", "type",label)
             obj.type=ladderdata.type
             i=self.comboBox_type.currentIndex()
@@ -194,8 +196,22 @@ class Ui_Dialog(object):
             obj.addProperty("App::PropertyFloat", "StepHeight",label).StepHeight=h
             obj.addProperty("App::PropertyFloat", "RailingHeight",label).RailingHeight=L
             obj.addProperty("App::PropertyFloat", "FloorHeight",label).FloorHeight=L0
+            
+        
             ParamLadder.ParametricLadder(obj) 
             obj.ViewObject.Proxy=0
+
+        try:        
+            obj.addProperty("App::PropertyString", "Standard",'Standard')
+            Standard='FloorHeight='+str(obj.FloorHeight)
+            obj.Standard=Standard
+        except:
+            pass  
+
+        Gui.ActiveDocument.ActiveView.fitAll() 
+        Gui.activateWorkbench("DraftWorkbench")
+        Gui.Selection.addSelection(obj)
+        Gui.runCommand('Draft_Move',0)      
 
 
 class main():
