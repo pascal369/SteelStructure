@@ -85,7 +85,6 @@ class HShape:
         pface.translate(Base.Vector(-B/2,H/2,0))
         pface.rotate(Base.Vector(-B/2,H/2,0),Base.Vector(1,0,0),90)
         if Solid==True:
-            #L=App.ActiveDocument.getObject(label).L
             c00=pface.extrude(Base.Vector(0,0,L))
             obj.Shape=c00
         else:    

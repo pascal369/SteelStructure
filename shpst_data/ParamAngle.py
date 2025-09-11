@@ -13,7 +13,6 @@ class Angle:
     def __init__(self, obj):
         self.Type = 'Angle'
         obj.Proxy = self
-        #App.activeDocument().recompute(None,True,True)
         return
     def execute(self, obj):
         label=obj.Name

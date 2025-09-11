@@ -44,8 +44,8 @@ class PipeShape:
             c00=c1.cut(c2)
             obj.Shape=c00
         else:
-            c1 = Part.makeCircle(D/2,Base.Vector(0,0,0),Base.Vector(0,1,0))
-            c2 = Part.makeCircle((D-2*t)/2,Base.Vector(0,0,0),Base.Vector(0,1,0))    
+            c1 = Part.makeCircle(D/2,Base.Vector(0,0,0),Base.Vector(0,0,1))
+            c2 = Part.makeCircle((D-2*t)/2,Base.Vector(0,0,0),Base.Vector(0,0,1))    
             c00=c1.fuse(c2)
         obj.size=size
         obj.D=D
