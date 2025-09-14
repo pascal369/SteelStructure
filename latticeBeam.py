@@ -105,6 +105,7 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.read_data)
+        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
         self.spinBoxH.valueChanged[int].connect(self.spinMoveH) 
         self.spinBoxL.valueChanged[int].connect(self.spinMoveL) 
 
@@ -195,7 +196,19 @@ class Ui_Dialog(object):
          spreadsheet.set('Gt0',Lt0)
          spreadsheet.set('Gb0',Gb0)
          spreadsheet.set('rn0',str(rn0))
-         App.ActiveDocument.recompute() 
+         #App.ActiveDocument.recompute() 
+
+         c00 = Gui.Selection.getSelection()
+         if c00:
+             obj = c00[0]
+         try:
+             obj.Standard='L'+Bshp+'  L='+str(Blength)+'  H='+str(Bhight)
+             print(Blength)
+         except:
+             print('error')
+             pass
+         obj.mass=obj.Shape.Volume*obj.g0*1000/10**9 
+         App.ActiveDocument.recompute()
                 
     def create(self): 
          fname='latticeBeam.FCStd'
@@ -206,7 +219,13 @@ class Ui_Dialog(object):
          except:
             doc=App.newDocument()
             Gui.ActiveDocument.mergeProject(joined_path)
-         Gui.SendMsgToActiveView("ViewFit")   
+            
+         objs=doc.Objects
+         if objs:
+             last_obj=objs[-1] 
+         Gui.activateWorkbench("DraftWorkbench")
+         Gui.Selection.addSelection(last_obj)
+         Gui.runCommand('Draft_Move',0)  
 
 class main():
         d = QtGui.QWidget()

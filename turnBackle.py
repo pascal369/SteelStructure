@@ -26,7 +26,6 @@ type_data=['A','B','C']
 class Ui_Dialog(object):
     global column_list
     alphabet_list = list(string.ascii_uppercase)
-
     column_list=[]
     for i in range(0,26):
         column_list.append(alphabet_list[i])
@@ -36,7 +35,7 @@ class Ui_Dialog(object):
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(250, 400)
+        Dialog.resize(250, 1400)
         Dialog.move(1000, 0)
 
         #type
@@ -110,9 +109,9 @@ class Ui_Dialog(object):
         self.pushButton2.setText(QtGui.QApplication.translate("Dialog", "Update", None))  
         
     def onType(self):
-        global fname
+        #global fname
         global key
-        #print('aaaaaaaaaaa')
+        print('aaaaaaaaaaa')
         key=self.comboBox_type.currentText()[1:]
         self.le_W.hide()
         if key=='C':
@@ -161,6 +160,7 @@ class Ui_Dialog(object):
                  App.ActiveDocument.recompute()
                      
     def update(self):
+           #print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
            key=self.comboBox_type.currentText()
            dia=self.comboBox_dia.currentText()#dia
            L=self.le_L.text()#Lengrh
@@ -204,7 +204,6 @@ class Ui_Dialog(object):
     
            for j in range(29,37):
                dia3=spreadsheet.getContents('A'+str(j))
-               
                if dia==dia3:
                    break
                #print(dia,dia3,j)
@@ -230,8 +229,6 @@ class Ui_Dialog(object):
                spreadsheet.set('J5',h)
                spreadsheet.set('K5',i)
                spreadsheet.set('L5',r)
-
-           
     
            for j in range(11,18):
                dia3=spreadsheet.getContents('A'+str(j))
@@ -252,7 +249,7 @@ class Ui_Dialog(object):
                spreadsheet.set('F6',c)
                #key=self.comboBox_type.currentText()
            App.ActiveDocument.recompute()  
-           return   
+           #return   
     
            if key=='B':
                spreadsheet.set('t0',t0)
@@ -265,6 +262,7 @@ class Ui_Dialog(object):
            App.ActiveDocument.recompute() 
            return
     def create(self): 
+         doc=App.activeDocument
          key=self.comboBox_type.currentText()
          if key=='A':
              fname='turnBackleA.FCStd'
@@ -273,15 +271,24 @@ class Ui_Dialog(object):
          elif key=='C':    
              fname='turnBackleC.FCStd'    
 
-
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'turnBackle_data',fname) 
-         #print(joined_path)
+         print(joined_path)
          Gui.ActiveDocument.mergeProject(joined_path)
-         return
+         
+         
+         
+         objs=doc.Objects
+         if objs:
+             last_obj=objs[-1] 
+         Gui.activateWorkbench("DraftWorkbench")
+         Gui.Selection.addSelection(last_obj)
+         Gui.runCommand('Draft_Move',0) 
 
 class main():
+        print('ccccccccccccccccccccccccccccccccccccccccccccccccccc')
         d = QtGui.QWidget()
+        
         d.ui = Ui_Dialog()
         d.ui.setupUi(d)
         d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)

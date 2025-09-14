@@ -222,7 +222,6 @@ class Ui_Dialog(object):
         except:
             pass
     def create(self):
-
         L=float(self.lineEdit_L.text())
         L1=float(self.lineEdit_L1.text())
         H=float(self.lineEdit_H.text())

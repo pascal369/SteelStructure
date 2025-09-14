@@ -188,10 +188,8 @@ class Ui_Dialog(object):
          
          objs=doc.Objects
          if objs:
-             last_obj=objs[-1]   
+             last_obj=objs[-1]  
      
-         #last_obj.addProperty("App::PropertyString", "Standard",'Standard')
-
          Gui.activateWorkbench("DraftWorkbench")
          Gui.Selection.addSelection(last_obj)
          Gui.runCommand('Draft_Move',0) 

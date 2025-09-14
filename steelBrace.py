@@ -77,6 +77,7 @@ class Ui_Dialog(object):
 
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.onImport)
+        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)
@@ -152,9 +153,20 @@ class Ui_Dialog(object):
                  #print(key,B0)
              except:
                   pass    
+             
+             c00 = Gui.Selection.getSelection()
+             if c00:
+                 obj = c00[0]
+             try:
+                 obj.Standard='L'+key+'  W0='+myW+'  H0='+myH
+                 print(obj.Standard)
+             except:
+                 pass
+             obj.mass=obj.Shape.Volume*obj.g0*1000/10**9 
              App.ActiveDocument.recompute()
          
     def create(self): 
+         doc = App.ActiveDocument
          mytype=self.comboBox_type.currentText()
          fname='steelBrace'+mytype+'.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
@@ -164,7 +176,14 @@ class Ui_Dialog(object):
          except:
             doc=App.newDocument()
             Gui.ActiveDocument.mergeProject(joined_path)
-         Gui.SendMsgToActiveView("ViewFit")
+
+         objs=doc.Objects
+         if objs:
+             last_obj=objs[-1] 
+         Gui.activateWorkbench("DraftWorkbench")
+         Gui.Selection.addSelection(last_obj)
+         Gui.runCommand('Draft_Move',0)      
+         
 class main():
         d = QtGui.QWidget()
         d.ui = Ui_Dialog()

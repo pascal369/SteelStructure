@@ -480,7 +480,9 @@ class Ui_Dialog(object):
                 import trussBeam 
                 trussBeam 
          elif key==10:#turnBackle
-                import turnBackle       
+                import turnBackle   
+                turnBackle.main.d.show()   
+                
          elif key==11:#accodionGate   
                 import accodionGate       
          elif key==12:#grating

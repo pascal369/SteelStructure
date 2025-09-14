@@ -146,18 +146,28 @@ class Ui_Dialog(object):
                  if not hasattr(obj, "Standard"):
                      obj.addProperty("App::PropertyString", "Standard", "Standard", "L1,L2の情報")  
                  obj.Standard=f'L={L_val}'
+             elif hasattr(obj,'L') :
+                 H_val=getattr(obj,'L')  
+                 if not hasattr(obj, "Standard"):
+                     obj.addProperty("App::PropertyString", "Standard", "Standard", "L1,L2の情報")  
+                 obj.Standard=f'H={H_val}'
          App.ActiveDocument.recompute()
          
     def create(self): 
+         doc = App.ActiveDocument
          mytype=self.comboBox_type.currentText()
          fname='trestle'+mytype+'.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'StlStu_data',fname) 
-         try:
-            Gui.ActiveDocument.mergeProject(joined_path)
-         except:
-            doc=App.newDocument()
-            Gui.ActiveDocument.mergeProject(joined_path)
+         Gui.ActiveDocument.mergeProject(joined_path)
+
+         objs=doc.Objects
+         if objs:
+             last_obj=objs[-1] 
+     
+         Gui.activateWorkbench("DraftWorkbench")
+         Gui.Selection.addSelection(last_obj)
+         Gui.runCommand('Draft_Move',0) 
 
 class main():
         d = QtGui.QWidget()

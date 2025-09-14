@@ -107,7 +107,7 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.spinMove)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.read_data)
-        
+        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
 
         fname='TrussBeam.png'
         base=os.path.dirname(os.path.abspath(__file__))
@@ -223,13 +223,64 @@ class Ui_Dialog(object):
                          self.le_GPL.setText(spreadsheet.getContents('Gb0')) 
                          self.spinBoxH.setValue(int(spreadsheet.getContents('H0')))
                          self.spinBoxL.setValue(int(spreadsheet.getContents('L0')))
-                         #print(self.spinBoxH.value())
 
-                         #print('aaaaaaaaaaaaaaaaaaaa')
+    def update(self):
+         Bshp=self.comboBox_BShp.currentText()#玄材
+         Lshp=self.comboBox_LShp.currentText()#ラチス材
+         Bhight=self.spinBoxH.value()#梁成
+         Blength=self.spinBoxL.value()#梁長
+         Gb0=self.le_GPL.text()#ガセットプレート幅
+         #print(angle,Bshp)
+         AngleSteel.size = str(Bshp)
+         #玄材ゲージライン 
+         for i in range(17,32):
+             Bshp3=spreadsheet.getContents('A'+str(i))
+             if Bshp==Bshp3[1:]:
+                 break
+         row_B=i  
+         GL0=spreadsheet.getContents('D'+str(row_B)) 
+         
+         #ラチス個数
+         for n in range(1,100):
+             rp03=(float(Blength)-2*float(GL0))/n
+             if float(rp03)<=float(Bhight):
+                 break
+         rn0=n  
+         #ラチス材幅、板厚
+         for i in range(34,46):
+             
+             Lshp3=spreadsheet.getContents('A'+str(i))
+             #print(Lshp,Lshp3)
+             if Lshp==Lshp3[1:]:
+                 break
+         row_L=i  
+         Lt0=spreadsheet.getContents('B'+str(row_L))     
+         Lb0=spreadsheet.getContents('C'+str(row_L))      
+         spreadsheet.set('H0',str(Bhight))
+         #spreadsheet.set('L0',Blength)
+         spreadsheet.set('shp',Bshp)
+         spreadsheet.set('GL0',GL0)
+         spreadsheet.set('Lshp',Lshp)
+         spreadsheet.set('Lb0',Lb0)
+         spreadsheet.set('Gt0',Lt0)
+         spreadsheet.set('Gb0',Gb0)
+         spreadsheet.set('rn0',str(rn0))
+         #App.ActiveDocument.recompute() 
 
-                         
+         c00 = Gui.Selection.getSelection()
+         if c00:
+             obj = c00[0]
+         try:
+             obj.Standard='L'+Bshp+'  L='+str(Blength)+'  H='+str(Bhight)
+             print(Blength)
+         except:
+             print('error')
+             pass
+         obj.mass=obj.Shape.Volume*obj.g0*1000/10**9 
+         App.ActiveDocument.recompute()
 
     def create(self): 
+         doc=App.activeDocument()
          fname='trussBeam.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'Beam_data',fname) 
@@ -238,7 +289,14 @@ class Ui_Dialog(object):
          except:
             #doc=App.newDocument()
             Gui.ActiveDocument.mergeProject(joined_path)
-         Gui.SendMsgToActiveView("ViewFit") 
+
+         objs=doc.Objects
+         if objs:
+             last_obj=objs[-1] 
+     
+         Gui.activateWorkbench("DraftWorkbench")
+         Gui.Selection.addSelection(last_obj)
+         Gui.runCommand('Draft_Move',0) 
 class main():
         d = QtGui.QWidget()
         d.ui = Ui_Dialog()
