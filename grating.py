@@ -21,18 +21,21 @@ class Ui_Dialog(object):
         #床面幅W
         self.label_W = QtGui.QLabel('W[mm',Dialog)
         self.label_W.setGeometry(QtCore.QRect(10, 18, 60, 12))
+        self.label_W.setStyleSheet("color: black;")
         self.lineEdit_W = QtGui.QLineEdit('500',Dialog)
         self.lineEdit_W.setGeometry(QtCore.QRect(80, 15, 80, 22))
         self.lineEdit_W.setAlignment(QtCore.Qt.AlignCenter)
         #床面長L
         self.label_L = QtGui.QLabel('L[mm',Dialog)
         self.label_L.setGeometry(QtCore.QRect(10, 38, 60, 12))
+        self.label_L.setStyleSheet("color: black;")
         self.lineEdit_L = QtGui.QLineEdit('500',Dialog)
         self.lineEdit_L.setGeometry(QtCore.QRect(80, 35, 80, 22))
         self.lineEdit_L.setAlignment(QtCore.Qt.AlignCenter)
         #床面高H
         self.label_H = QtGui.QLabel('t[mm',Dialog)
         self.label_H.setGeometry(QtCore.QRect(10, 73, 60, 12))
+        self.label_H.setStyleSheet("color: black;")
         self.lineEdit_H = QtGui.QLineEdit('44',Dialog)
         self.lineEdit_H.setGeometry(QtCore.QRect(80, 65, 80, 22))
         self.lineEdit_H.setAlignment(QtCore.Qt.AlignCenter)

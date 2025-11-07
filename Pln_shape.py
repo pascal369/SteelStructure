@@ -49,13 +49,15 @@ class Ui_Dialog(object):
         Dialog.move(1000, 0)
         #shape
         self.shape = QtGui.QLabel('shapes',Dialog)
-        self.shape.setGeometry(QtCore.QRect(10, 15, 50, 12))
+        self.shape.setGeometry(QtCore.QRect(50, 15, 50, 12))
+        self.shape.setStyleSheet("color: black;")
         self.combo_shape = QtGui.QComboBox(Dialog)
         self.combo_shape.setGeometry(QtCore.QRect(105, 10, 159, 22))
         
         #D
         self.lbl_D = QtGui.QLabel('D[mm]',Dialog)
-        self.lbl_D.setGeometry(QtCore.QRect(10, 65, 50, 12))
+        self.lbl_D.setGeometry(QtCore.QRect(50, 65, 50, 12))
+        self.lbl_D.setStyleSheet("color: black;")
         self.le_D = QtGui.QLineEdit(Dialog)
         self.le_D.setGeometry(QtCore.QRect(105, 65, 50, 20))
         self.le_D.setAlignment(QtCore.Qt.AlignCenter)
@@ -63,13 +65,15 @@ class Ui_Dialog(object):
         #d
         self.lbl_d = QtGui.QLabel('d[mm]',Dialog)
         self.lbl_d.setGeometry(QtCore.QRect(170, 65, 50, 12))
+        self.lbl_d.setStyleSheet("color: black;")
         self.le_d = QtGui.QLineEdit(Dialog)
         self.le_d.setGeometry(QtCore.QRect(220, 65, 50, 20))
         self.le_d.setAlignment(QtCore.Qt.AlignCenter)
 
         #B
         self.lbl_B = QtGui.QLabel('B[mm]',Dialog)
-        self.lbl_B.setGeometry(QtCore.QRect(10, 95, 50, 12))
+        self.lbl_B.setGeometry(QtCore.QRect(50, 95, 50, 12))
+        self.lbl_B.setStyleSheet("color: black;")
         self.le_B = QtGui.QLineEdit(Dialog)
         self.le_B.setGeometry(QtCore.QRect(105, 95, 50, 20))
         self.le_B.setAlignment(QtCore.Qt.AlignCenter)       
@@ -77,13 +81,15 @@ class Ui_Dialog(object):
         #H
         self.lbl_H = QtGui.QLabel('H[mm]',Dialog)
         self.lbl_H.setGeometry(QtCore.QRect(170, 95, 50, 12))
+        self.lbl_H.setStyleSheet("color: black;")
         self.le_H = QtGui.QLineEdit(Dialog)
         self.le_H.setGeometry(QtCore.QRect(220, 95, 50, 20))
         self.le_H.setAlignment(QtCore.Qt.AlignCenter)  
 
         #b1
         self.lbl_b1 = QtGui.QLabel('b1[mm]',Dialog)
-        self.lbl_b1.setGeometry(QtCore.QRect(10, 125, 50, 12))
+        self.lbl_b1.setGeometry(QtCore.QRect(50, 125, 50, 12))
+        self.lbl_b1.setStyleSheet("color: black;")
         self.le_b1 = QtGui.QLineEdit(Dialog)
         self.le_b1.setGeometry(QtCore.QRect(105, 125, 50, 20))
         self.le_b1.setAlignment(QtCore.Qt.AlignCenter) 
@@ -91,13 +97,15 @@ class Ui_Dialog(object):
         #h1
         self.lbl_h1 = QtGui.QLabel('h1[mm]',Dialog)
         self.lbl_h1.setGeometry(QtCore.QRect(170, 125, 50, 12))
+        self.lbl_h1.setStyleSheet("color: black;")
         self.le_h1 = QtGui.QLineEdit(Dialog)
         self.le_h1.setGeometry(QtCore.QRect(220, 125, 50, 20))
         self.le_h1.setAlignment(QtCore.Qt.AlignCenter)  
 
         #b2
         self.lbl_b2 = QtGui.QLabel('b2[mm]',Dialog)
-        self.lbl_b2.setGeometry(QtCore.QRect(10, 155, 50, 12))
+        self.lbl_b2.setGeometry(QtCore.QRect(50, 155, 50, 12))
+        self.lbl_b2.setStyleSheet("color: black;")
         self.le_b2 = QtGui.QLineEdit(Dialog)
         self.le_b2.setGeometry(QtCore.QRect(105, 155, 50, 20))
         self.le_b2.setAlignment(QtCore.Qt.AlignCenter)   
@@ -105,13 +113,15 @@ class Ui_Dialog(object):
         #h2
         self.lbl_h2 = QtGui.QLabel('h2[mm]',Dialog)
         self.lbl_h2.setGeometry(QtCore.QRect(170, 155, 50, 12))
+        self.lbl_h2.setStyleSheet("color: black;")
         self.le_h2 = QtGui.QLineEdit(Dialog)
         self.le_h2.setGeometry(QtCore.QRect(220, 155, 50, 20))
         self.le_h2.setAlignment(QtCore.Qt.AlignCenter)  
 
         #b3
         self.lbl_b3 = QtGui.QLabel('b3[mm]',Dialog)
-        self.lbl_b3.setGeometry(QtCore.QRect(10, 185, 50, 12))
+        self.lbl_b3.setGeometry(QtCore.QRect(50, 185, 50, 12))
+        self.lbl_b3.setStyleSheet("color: black;")
         self.le_b3 = QtGui.QLineEdit(Dialog)
         self.le_b3.setGeometry(QtCore.QRect(105, 185, 50, 20))
         self.le_b3.setAlignment(QtCore.Qt.AlignCenter)   
@@ -119,13 +129,15 @@ class Ui_Dialog(object):
         #h3
         self.lbl_h3 = QtGui.QLabel('h3[mm]',Dialog)
         self.lbl_h3.setGeometry(QtCore.QRect(170, 185, 50, 12))
+        self.lbl_h3.setStyleSheet("color: black;")
         self.le_h3 = QtGui.QLineEdit(Dialog)
         self.le_h3.setGeometry(QtCore.QRect(220, 185, 50, 20))
         self.le_h3.setAlignment(QtCore.Qt.AlignCenter)   
 
         #st
         self.lbl_st = QtGui.QLabel('θ[deg]',Dialog)
-        self.lbl_st.setGeometry(QtCore.QRect(10, 215, 70, 12))
+        self.lbl_st.setGeometry(QtCore.QRect(50, 215, 70, 12))
+        self.lbl_st.setStyleSheet("color: black;")
         self.le_st = QtGui.QLineEdit(Dialog)
         self.le_st.setGeometry(QtCore.QRect(105, 215, 50, 20))
         self.le_st.setAlignment(QtCore.Qt.AlignCenter)     
@@ -143,6 +155,7 @@ class Ui_Dialog(object):
         #密度
         self.lbl_gr = QtGui.QLabel('SpecificGravity',Dialog)
         self.lbl_gr.setGeometry(QtCore.QRect(90, 283, 100, 12))
+        self.lbl_gr.setStyleSheet("color: black;")
         self.le_gr = QtGui.QLineEdit(Dialog)
         self.le_gr.setGeometry(QtCore.QRect(170, 280, 50, 20))
         self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
@@ -164,7 +177,6 @@ class Ui_Dialog(object):
 
         #img
         self.img = QtGui.QLabel(Dialog)
-
         self.img = QtGui.QLabel(Dialog)
         self.img.setGeometry(QtCore.QRect(30, 305, 250, 140))
         self.img.setText("")
@@ -173,6 +185,7 @@ class Ui_Dialog(object):
         #作業面
         self.sface = QtGui.QLabel('Work surface',Dialog)
         self.sface.setGeometry(QtCore.QRect(90, 458, 100, 15))
+        self.sface.setStyleSheet("color: black;")
         self.combo_sface = QtGui.QComboBox(Dialog)
         self.combo_sface.setGeometry(QtCore.QRect(170, 455, 50, 22))
         self.combo_sface.addItems(plndata.sface)

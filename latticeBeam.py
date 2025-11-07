@@ -42,29 +42,32 @@ class Ui_Dialog(object):
         #玄材
         self.label_BShp = QtGui.QLabel('chordMember',Dialog)
         self.label_BShp.setGeometry(QtCore.QRect(10, 13, 100, 12))
+        self.label_BShp.setStyleSheet("color: black;")
         self.comboBox_BShp = QtGui.QComboBox(Dialog)
-        self.comboBox_BShp.setGeometry(QtCore.QRect(110, 10, 100, 22))
+        self.comboBox_BShp.setGeometry(QtCore.QRect(110, 8, 100, 22))
 
         #ラチス材
         self.label_LShp = QtGui.QLabel('latticeMember',Dialog)
         self.label_LShp.setGeometry(QtCore.QRect(10, 42, 100, 12))
+        self.label_LShp.setStyleSheet("color: black;")
         self.comboBox_LShp = QtGui.QComboBox(Dialog)
         self.comboBox_LShp.setGeometry(QtCore.QRect(110, 35, 100, 22))
 
         #梁成
         self.label_H = QtGui.QLabel('beamHight',Dialog)
-        self.label_H.setGeometry(QtCore.QRect(10, 63, 100, 22))
+        self.label_H.setGeometry(QtCore.QRect(10, 67, 100, 22))
+        self.label_H.setStyleSheet("color: black;")
         self.spinBoxH=QtGui.QSpinBox(Dialog)
-        self.spinBoxH.setGeometry(110, 60, 100, 30)
+        self.spinBoxH.setGeometry(110, 62, 100, 30)
         self.spinBoxH.setMinimum(500)  # 最小値を0.0に設定
         self.spinBoxH.setMaximum(1000.0)  # 最大値を100.0に設定
         self.spinBoxH.setSingleStep(10)
         self.spinBoxH.setAlignment(QtCore.Qt.AlignCenter)
 
-
         #梁長
         self.label_L = QtGui.QLabel('span',Dialog)
         self.label_L.setGeometry(QtCore.QRect(10, 98, 100, 22))
+        self.label_L.setStyleSheet("color: black;")
         self.spinBoxL=QtGui.QSpinBox(Dialog)
         self.spinBoxL.setGeometry(110, 95, 100, 30)
         self.spinBoxL.setMinimum(1000)  # 最小値
@@ -72,23 +75,23 @@ class Ui_Dialog(object):
         self.spinBoxL.setSingleStep(50) #step
         self.spinBoxL.setAlignment(QtCore.Qt.AlignCenter)
 
-
         #ガセットプレート幅
         self.label_GPL = QtGui.QLabel('GPL width',Dialog)
         self.label_GPL.setGeometry(QtCore.QRect(10, 133, 100, 22))
+        self.label_GPL.setStyleSheet("color: black;")
         self.le_GPL = QtGui.QLineEdit('150',Dialog)
         self.le_GPL.setGeometry(QtCore.QRect(110, 130, 100, 20))
         self.le_GPL.setAlignment(QtCore.Qt.AlignCenter)
 
         #作成
         self.pushButton = QtGui.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(50, 155, 60, 22))
+        self.pushButton.setGeometry(QtCore.QRect(45, 155, 60, 22))
         #更新
         self.pushButton2 = QtGui.QPushButton(Dialog)
         self.pushButton2.setGeometry(QtCore.QRect(140, 155, 60, 22))
         #データ読み込み
         self.pushButton3 = QtGui.QPushButton('Import Data',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(50, 180, 180, 22))
+        self.pushButton3.setGeometry(QtCore.QRect(45, 180, 185, 22))
         #図形
         self.label_6 = QtGui.QLabel(Dialog)
         self.label_6.setGeometry(QtCore.QRect(35, 205, 200, 200))
@@ -106,6 +109,7 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.read_data)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
+
         self.spinBoxH.valueChanged[int].connect(self.spinMoveH) 
         self.spinBoxL.valueChanged[int].connect(self.spinMoveL) 
 
@@ -215,6 +219,7 @@ class Ui_Dialog(object):
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'Beam_data',fname) 
          try:
+            doc=App.activeDocument()
             Gui.ActiveDocument.mergeProject(joined_path)
          except:
             doc=App.newDocument()

@@ -17,41 +17,49 @@ Post=['Pst_H','Pst_L','Pst_C','Pst_SQ','Pst_Pipe',]
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(300, 200)
+        Dialog.resize(300, 170)
         Dialog.move(1000, 0)
         #shapeSteel
-        self.label_shp = QtGui.QLabel('shapeSteel',Dialog)
-        self.label_shp.setGeometry(QtCore.QRect(10, 0, 60, 12))
+        self.label_shp = QtGui.QLabel('ShapeSteel',Dialog)
+        self.label_shp.setGeometry(QtCore.QRect(10, 0, 60, 22))
+        self.label_shp.setStyleSheet("color: black;")
         self.comboBox_Shp = QtGui.QComboBox(Dialog)
-        self.comboBox_Shp.setGeometry(QtCore.QRect(80, 0, 200, 22))
+        self.comboBox_Shp.setGeometry(QtCore.QRect(90, 0, 200, 22))
+        self.comboBox_Shp.setEditable(True)
+        self.comboBox_Shp.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
         #size
-        self.label_shp = QtGui.QLabel('shapeSteel',Dialog)
-        self.label_shp.setGeometry(QtCore.QRect(10, 25, 60, 12))
+        self.label_size = QtGui.QLabel('Size',Dialog)
+        self.label_size.setGeometry(QtCore.QRect(10, 28, 60, 12))
+        self.label_size.setStyleSheet("color: black;")
         self.comboBox_Size = QtGui.QComboBox(Dialog)
-        self.comboBox_Size.setGeometry(QtCore.QRect(80, 25, 200, 22))
+        self.comboBox_Size.setGeometry(QtCore.QRect(90, 28, 200, 22))
+        self.comboBox_Size.setEditable(True)
+        self.comboBox_Size.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
         #hight
-        self.label_H = QtGui.QLabel('H[mm',Dialog)
-        self.label_H.setGeometry(QtCore.QRect(10, 50, 60, 12))
+        self.label_H = QtGui.QLabel('Height H[mm]',Dialog)
+        self.label_H.setGeometry(QtCore.QRect(10, 55, 70, 12))
+        self.label_H.setStyleSheet("color: black;")
         self.lineEdit_H = QtGui.QLineEdit('500',Dialog)
-        self.lineEdit_H.setGeometry(QtCore.QRect(80, 50, 200, 22))
+        self.lineEdit_H.setGeometry(QtCore.QRect(90, 55, 200, 22))
         self.lineEdit_H.setAlignment(QtCore.Qt.AlignCenter)
         
         #basePlate thickness
-        self.label_t = QtGui.QLabel('t[mm',Dialog)
-        self.label_t.setGeometry(QtCore.QRect(10, 75 ,60, 12))
+        self.label_t = QtGui.QLabel('Plate t[mm]',Dialog)
+        self.label_t.setGeometry(QtCore.QRect(10, 80 ,70, 12))
+        self.label_t.setStyleSheet("color: black;")
         self.lineEdit_t = QtGui.QLineEdit('9',Dialog)
-        self.lineEdit_t.setGeometry(QtCore.QRect(80, 75, 200, 22))
+        self.lineEdit_t.setGeometry(QtCore.QRect(90, 80, 200, 22))
         self.lineEdit_t.setAlignment(QtCore.Qt.AlignCenter)
 
         #作成
-        self.pushButton = QtGui.QPushButton('create',Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(80, 100, 200, 22))
+        self.pushButton = QtGui.QPushButton('Create',Dialog)
+        self.pushButton.setGeometry(QtCore.QRect(90, 105, 95, 22))
         #更新
-        self.pushButton2 = QtGui.QPushButton('update',Dialog)
-        self.pushButton2.setGeometry(QtCore.QRect(80, 125, 200, 22))
+        self.pushButton2 = QtGui.QPushButton('upDate',Dialog)
+        self.pushButton2.setGeometry(QtCore.QRect(190, 105, 100, 22))
         #import
-        self.pushButton3 = QtGui.QPushButton('import',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(80, 150, 200, 22))
+        self.pushButton3 = QtGui.QPushButton('Import',Dialog)
+        self.pushButton3.setGeometry(QtCore.QRect(90, 130, 200, 22))
 
 
         self.comboBox_Shp.setEditable(True)
@@ -65,6 +73,7 @@ class Ui_Dialog(object):
 
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.read)
+        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)
@@ -184,6 +193,7 @@ class Ui_Dialog(object):
          fname='03_'+self.comboBox_Shp.currentText()+'.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'StlStu_data',fname) 
+         print(joined_path)
          Gui.ActiveDocument.mergeProject(joined_path)
          
          objs=doc.Objects

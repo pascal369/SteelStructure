@@ -30,98 +30,101 @@ class Ui_Dialog(object):
     #print(flag00)
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(370, 550)
+        Dialog.resize(370, 530)
         Dialog.move(1000, 0)
         #部材　Element
-        self.label_element = QtGui.QLabel(Dialog)
-        self.label_element.setGeometry(QtCore.QRect(10, 10, 100, 23))
+        self.label_element = QtGui.QLabel('Element',Dialog)
+        self.label_element.setGeometry(QtCore.QRect(5, 8, 100, 22))
+        self.label_element.setStyleSheet("color: black;")
         self.comboBox_element = QtGui.QComboBox(Dialog)
-        self.comboBox_element.setGeometry(QtCore.QRect(80, 10, 130, 23))
-
+        self.comboBox_element.setGeometry(QtCore.QRect(80, 8, 130, 22))
+        self.comboBox_element.setEditable(True)
+        self.comboBox_element.lineEdit().setAlignment(QtCore.Qt.AlignCenter)  
         #言語
         self.pushButton_la=QtGui.QPushButton('language',Dialog)
-        self.pushButton_la.setGeometry(QtCore.QRect(210, 10, 130, 23))
+        self.pushButton_la.setGeometry(QtCore.QRect(220, 8, 125, 22))
         self.comboBox_lan = QtGui.QComboBox(Dialog)
-        self.comboBox_lan.setGeometry(QtCore.QRect(210, 35, 130, 22))
+        self.comboBox_lan.setGeometry(QtCore.QRect(220, 35, 125, 22))
         self.comboBox_lan.setEditable(True)
         self.comboBox_lan.lineEdit().setAlignment(QtCore.Qt.AlignCenter)  
 
         #部材2　Element2
-        self.label_element2 = QtGui.QLabel(Dialog)
-        self.label_element2.setGeometry(QtCore.QRect(10, 35, 100, 23))
+        self.label_element2 = QtGui.QLabel('Element2',Dialog)
+        self.label_element2.setGeometry(QtCore.QRect(8, 35, 100, 22))
+        self.label_element2.setStyleSheet("color: black;")
         self.comboBox_element2 = QtGui.QComboBox(Dialog)
-        self.comboBox_element2.setGeometry(QtCore.QRect(80, 35, 200, 23))
+        self.comboBox_element2.setGeometry(QtCore.QRect(80, 35, 130, 22))
 
         #jpn text
         self.pushButton_jpn = QtGui.QPushButton('Jpn Text',Dialog)
-        self.pushButton_jpn.setGeometry(QtCore.QRect(80, 60, 50, 23))
+        self.pushButton_jpn.setGeometry(QtCore.QRect(80, 62, 50, 22))
         self.le_jpn = QtGui.QLineEdit(Dialog)
-        self.le_jpn.setGeometry(QtCore.QRect(170, 60, 170, 23))
+        self.le_jpn.setGeometry(QtCore.QRect(175, 62, 170, 22))
         self.le_jpn.setAlignment(QtCore.Qt.AlignCenter)  
 
         #standard
         self.pushButton_st = QtGui.QPushButton('Standard',Dialog)
-        self.pushButton_st.setGeometry(QtCore.QRect(80, 85, 50, 23))
+        self.pushButton_st.setGeometry(QtCore.QRect(80, 85, 50, 22))
         self.le_st = QtGui.QLineEdit(Dialog)
-        self.le_st.setGeometry(QtCore.QRect(170, 85, 170, 20))
+        self.le_st.setGeometry(QtCore.QRect(175, 85, 170, 22))
         self.le_st.setAlignment(QtCore.Qt.AlignCenter) 
 
         #material
         self.pushButton_mt = QtGui.QPushButton('Material',Dialog)
-        self.pushButton_mt.setGeometry(QtCore.QRect(80, 110, 50, 23))
+        self.pushButton_mt.setGeometry(QtCore.QRect(80, 110, 50, 22))
         self.comboBox_mt = QtGui.QComboBox(Dialog)
-        self.comboBox_mt.setGeometry(QtCore.QRect(170, 110, 170, 23))
+        self.comboBox_mt.setGeometry(QtCore.QRect(175, 108, 170, 22))
         self.comboBox_mt.setEditable(True)
         self.comboBox_mt.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
 
          #質量計算
         self.pushButton_m = QtGui.QPushButton('massCulculation',Dialog)
-        self.pushButton_m.setGeometry(QtCore.QRect(80, 135, 100, 23))
+        self.pushButton_m.setGeometry(QtCore.QRect(80, 135, 100, 22))
         self.pushButton_m.setObjectName("pushButton")  
 
         #質量集計
         self.pushButton_m2 = QtGui.QPushButton('massTally_spreadsheet',Dialog)
-        self.pushButton_m2.setGeometry(QtCore.QRect(180, 135, 160, 23))
+        self.pushButton_m2.setGeometry(QtCore.QRect(185, 135, 160, 22))
         self.pushButton_m2.setObjectName("pushButton")  
 
         #count
         self.pushButton_ct = QtGui.QPushButton('Count',Dialog)
-        self.pushButton_ct.setGeometry(QtCore.QRect(80, 160, 100, 23))
+        self.pushButton_ct.setGeometry(QtCore.QRect(80, 160, 100, 22))
         self.le_ct = QtGui.QLineEdit(Dialog)
-        self.le_ct.setGeometry(QtCore.QRect(180, 160, 50, 23))
+        self.le_ct.setGeometry(QtCore.QRect(185, 160, 50, 22))
         self.le_ct.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_ct.setText('1')
 
         #massUpdate
         self.pushButton_mUp = QtGui.QPushButton('massUpdate',Dialog)
-        self.pushButton_mUp.setGeometry(QtCore.QRect(230, 185, 110, 23))
+        self.pushButton_mUp.setGeometry(QtCore.QRect(235, 185, 110, 22))
 
         #sketchLength
         self.pushButtonS = QtGui.QPushButton('SketchLength',Dialog)
-        self.pushButtonS.setGeometry(QtCore.QRect(230, 210, 110, 23))
+        self.pushButtonS.setGeometry(QtCore.QRect(235, 210, 110, 22))
         self.pushButtonS.setObjectName("pushButton")
 
         #質量入力
         self.pushButton_m3 = QtGui.QPushButton('massImput[kg]',Dialog)
-        self.pushButton_m3.setGeometry(QtCore.QRect(80, 185, 100, 23))
+        self.pushButton_m3.setGeometry(QtCore.QRect(80, 185, 100, 22))
         self.pushButton_m3.setObjectName("pushButton")  
         self.le_mass = QtGui.QLineEdit(Dialog)
-        self.le_mass.setGeometry(QtCore.QRect(180, 185, 50, 23))
+        self.le_mass.setGeometry(QtCore.QRect(182, 185, 50, 22))
         self.le_mass.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_mass.setText('10.0')  
 
         #密度
         self.pushButton_gr = QtGui.QPushButton('SpecificGravity',Dialog)
-        self.pushButton_gr.setGeometry(QtCore.QRect(80, 210, 100, 23))
+        self.pushButton_gr.setGeometry(QtCore.QRect(80, 210, 100, 22))
         self.pushButton_gr.setObjectName("pushButton")  
         self.le_gr = QtGui.QLineEdit(Dialog)
-        self.le_gr.setGeometry(QtCore.QRect(180, 210, 50, 23))
+        self.le_gr.setGeometry(QtCore.QRect(182, 210, 50, 22))
         self.le_gr.setAlignment(QtCore.Qt.AlignCenter)  
         self.le_gr.setText('7.85')  
 
          #実行
-        self.pushButton = QtGui.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(130, 240, 100, 23))  
+        self.pushButton = QtGui.QPushButton('Execution',Dialog)
+        self.pushButton.setGeometry(QtCore.QRect(150, 240, 100, 22))  
 
         #img
         self.img = QtGui.QLabel(Dialog)
@@ -160,9 +163,6 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "SteelStructure", None))
-        self.label_element.setText(QtGui.QApplication.translate("Dialog", "Element", None))  
-        self.label_element2.setText(QtGui.QApplication.translate("Dialog", "Element2", None))   
-        self.pushButton.setText(QtGui.QApplication.translate("Dialog", "Execution", None))  
 
     def massUpdate(self):
         doc = App.ActiveDocument
@@ -447,7 +447,7 @@ class Ui_Dialog(object):
          if key==0:#Post
               import postAssy
          elif key==1:#shapedSteel
-                import Shaped_steel
+                import Shaped_steelS
          elif key==2:#steelPlate
               import Pln_shape
          elif key==3:#steelStairs

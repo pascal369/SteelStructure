@@ -27,14 +27,14 @@ class Ui_Dialog(object):
         #タイプ
         self.label_type = QtGui.QLabel('Type',Dialog)
         self.label_type.setGeometry(QtCore.QRect(30, 15, 60, 12))
-        self.label_type.setObjectName("label_type")
+        self.label_type.setStyleSheet("color: black;")
         self.comboBox_type = QtGui.QComboBox(Dialog)
-        self.comboBox_type.setGeometry(QtCore.QRect(90, 15, 160, 22))
+        self.comboBox_type.setGeometry(QtCore.QRect(90, 10, 160, 22))
         self.comboBox_type.setObjectName("comboBox_type")
         #仕様
         self.label_siyo = QtGui.QLabel('Spec',Dialog)
         self.label_siyo.setGeometry(QtCore.QRect(30, 40, 60, 12))
-        self.label_siyo.setObjectName("label_st")
+        self.label_siyo.setStyleSheet("color: black;")
         self.comboBox_siyo = QtGui.QComboBox(Dialog)
         self.comboBox_siyo.setGeometry(QtCore.QRect(90, 40, 160, 22))
         self.comboBox_siyo.setObjectName("comboBox_st")
@@ -42,8 +42,9 @@ class Ui_Dialog(object):
         #長さL1
         self.label_l1 = QtGui.QLabel('L1',Dialog)
         self.label_l1.setGeometry(QtCore.QRect(30, 67, 60, 12))
+        self.label_l1.setStyleSheet("color: black;")
         self.spinBoxL1=QtGui.QSpinBox(Dialog)
-        self.spinBoxL1.setGeometry(90, 65, 60, 40)
+        self.spinBoxL1.setGeometry(90, 70, 60, 40)
         self.spinBoxL1.setMinimum(100)  # 最小値
         self.spinBoxL1.setMaximum(50000)  # 最大値
         self.spinBoxL1.setValue(1500)  # 
@@ -52,18 +53,17 @@ class Ui_Dialog(object):
         #Step
         self.label_step = QtGui.QLabel('ステップ',Dialog)
         self.label_step.setGeometry(QtCore.QRect(30, 117, 50, 16))
+        self.label_step.setStyleSheet("color: black;")
         self.le_step = QtGui.QLineEdit('10',Dialog)
         self.le_step.setGeometry(QtCore.QRect(90, 115, 160, 16))
         self.le_step.setAlignment(QtCore.Qt.AlignCenter)
-        
-
 
         #長さL2
         self.label_l2 = QtGui.QLabel('L2',Dialog)
         self.label_l2.setGeometry(QtCore.QRect(163, 67, 60, 12))
-        
+        self.label_l2.setStyleSheet("color: black;")
         self.spinBoxL2=QtGui.QSpinBox(Dialog)
-        self.spinBoxL2.setGeometry(190, 65, 60, 40)
+        self.spinBoxL2.setGeometry(190, 70, 60, 40)
         self.spinBoxL2.setMinimum(100)  # 最小値
         self.spinBoxL2.setMaximum(50000)  # 最大値
         self.spinBoxL2.setValue(1500)  # 
@@ -73,9 +73,9 @@ class Ui_Dialog(object):
         #コーナー角度
         self.label_cn = QtGui.QLabel('angleK[deg]',Dialog)
         self.label_cn.setGeometry(QtCore.QRect(143, 142, 60, 12))
-        self.label_cn.setObjectName("label_cn")
+        self.label_cn.setStyleSheet("color: black;")
         self.lineEdit_cn = QtGui.QLineEdit(Dialog)
-        self.lineEdit_cn.setGeometry(QtCore.QRect(207, 140, 43, 20))
+        self.lineEdit_cn.setGeometry(QtCore.QRect(207, 135, 43, 20))
         self.lineEdit_cn.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_cn.setObjectName("lineEdit_cn")
         #実行 Create
@@ -84,30 +84,31 @@ class Ui_Dialog(object):
         #self.pushButton.setObjectName("pushButton")
         #更新 upDate
         self.pushButton2 = QtGui.QPushButton('upDate',Dialog)
-        self.pushButton2.setGeometry(QtCore.QRect(145, 185, 100, 22))
+        self.pushButton2.setGeometry(QtCore.QRect(145, 183, 100, 22))
         #self.pushButton.setObjectName("pushButton")
         #import
         self.pushButton3 = QtGui.QPushButton('Import',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(145, 205, 100, 22))
+        self.pushButton3.setGeometry(QtCore.QRect(145, 207, 100, 22))
 
         #リバース
         self.checkbox = QtGui.QCheckBox('Reverse',Dialog)
         self.checkbox.setGeometry(QtCore.QRect(30, 185, 60, 23))
         self.checkbox.setChecked(False)
+        self.checkbox.setStyleSheet("color: black;")
         #手すり高
         self.label_l = QtGui.QLabel('height h',Dialog)
         self.label_l.setGeometry(QtCore.QRect(30, 142, 115, 20))
         self.label_l.setAlignment(QtCore.Qt.AlignLeft)
-        self.label_l.setObjectName("label_l")
+        self.label_l.setStyleSheet("color: black;")
         self.lineEdit_l = QtGui.QLineEdit(Dialog)
-        self.lineEdit_l.setGeometry(QtCore.QRect(90, 140, 50, 20))
+        self.lineEdit_l.setGeometry(QtCore.QRect(90, 135, 50, 20))
         self.lineEdit_l.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_l.setObjectName("lineEdit_l")
         #手すりピッチ
         self.label_p = QtGui.QLabel('pitch p',Dialog)
         self.label_p.setGeometry(QtCore.QRect(30, 160, 115, 20))
         self.label_p.setAlignment(QtCore.Qt.AlignLeft)
-        self.label_p.setObjectName("label_p")
+        self.label_p.setStyleSheet("color: black;")
         self.lineEdit_p = QtGui.QLineEdit(Dialog)
         self.lineEdit_p.setGeometry(QtCore.QRect(90, 160, 50, 20))
         self.lineEdit_p.setAlignment(QtCore.Qt.AlignCenter)
@@ -120,6 +121,7 @@ class Ui_Dialog(object):
         #比重
         self.mtrl = QtGui.QLabel('Specific gravity of material',Dialog)
         self.mtrl.setGeometry(QtCore.QRect(30, 235, 150, 12))
+        self.mtrl.setStyleSheet("color: black;")
         self.le_mtrl = QtGui.QLineEdit(Dialog)
         self.le_mtrl.setGeometry(QtCore.QRect(185, 230, 60, 20))
         self.le_mtrl.setAlignment(QtCore.Qt.AlignCenter)
@@ -150,21 +152,20 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Handrail", None))
 
     def read_data(self):#管長
-        
         selection = Gui.Selection.getSelection()
         for obj in selection:
             try:
                 myShape=obj
                 l1=(myShape.l1)
-                #print('aaaaaaaaaaaaaaaaaaa')
+
                 try:
                     l2=(myShape.l2)
                 except:
                     pass
-                #print('aaaaaaaaaaaaaaaaaaa')
+
                 h=(myShape.h)
                 p=(myShape.p)
-                #print('aaaaaaaaaaaaaaaaaaa')
+
                 
                 self.spinBoxL1.setValue(int(l1))
                 self.spinBoxL2.setValue(int(l2))

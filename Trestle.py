@@ -26,23 +26,27 @@ class Ui_Dialog(object):
         #type
         self.label_type = QtGui.QLabel('Type',Dialog)
         self.label_type.setGeometry(QtCore.QRect(10, 13, 150, 12))
+        self.label_type.setStyleSheet("color: black;")
         self.comboBox_type = QtGui.QComboBox(Dialog)
-        self.comboBox_type.setGeometry(QtCore.QRect(80, 10, 80, 22))
+        self.comboBox_type.setGeometry(QtCore.QRect(80, 8, 80, 22))
         #床面幅W
         self.label_W = QtGui.QLabel('W[mm',Dialog)
         self.label_W.setGeometry(QtCore.QRect(10, 38, 60, 12))
+        self.label_W.setStyleSheet("color: black;")
         self.lineEdit_W = QtGui.QLineEdit('2500',Dialog)
         self.lineEdit_W.setGeometry(QtCore.QRect(80, 35, 80, 22))
         self.lineEdit_W.setAlignment(QtCore.Qt.AlignCenter)
         #床面長L
         self.label_L = QtGui.QLabel('L[mm',Dialog)
         self.label_L.setGeometry(QtCore.QRect(10, 68, 60, 12))
+        self.label_L.setStyleSheet("color: black;")
         self.lineEdit_L = QtGui.QLineEdit('2000',Dialog)
         self.lineEdit_L.setGeometry(QtCore.QRect(80, 60, 80, 22))
         self.lineEdit_L.setAlignment(QtCore.Qt.AlignCenter)
         #床面高H
         self.label_H = QtGui.QLabel('H[mm',Dialog)
         self.label_H.setGeometry(QtCore.QRect(10, 93, 60, 12))
+        self.label_H.setStyleSheet("color: black;")
         self.lineEdit_H = QtGui.QLineEdit('2200',Dialog)
         self.lineEdit_H.setGeometry(QtCore.QRect(80, 90, 80, 22))
         self.lineEdit_H.setAlignment(QtCore.Qt.AlignCenter)
@@ -67,6 +71,7 @@ class Ui_Dialog(object):
 
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.onImport)
+        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)

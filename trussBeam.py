@@ -3,16 +3,16 @@
 from ast import Delete
 import os
 from pickle import TRUE
-import sys
+#import sys
 import math
 import string
-from tkinter.tix import ComboBox
-import Import
-import Spreadsheet
-import DraftVecUtils
-import Sketcher
-import PartDesign
-import Draft
+#from tkinter.tix import ComboBox
+#import Import
+#import Spreadsheet
+#import DraftVecUtils
+#import Sketcher
+#import PartDesign
+#import Draft
 import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtGui
@@ -43,20 +43,23 @@ class Ui_Dialog(object):
         #玄材
         self.label_BShp = QtGui.QLabel('chordMember',Dialog)
         self.label_BShp.setGeometry(QtCore.QRect(10, 13, 100, 12))
+        self.label_BShp.setStyleSheet("color: black;")
         self.comboBox_BShp = QtGui.QComboBox(Dialog)
-        self.comboBox_BShp.setGeometry(QtCore.QRect(110, 10, 100, 22))
+        self.comboBox_BShp.setGeometry(QtCore.QRect(110, 8, 100, 22))
 
         #ラチス材
         self.label_LShp = QtGui.QLabel('latticeMember',Dialog)
         self.label_LShp.setGeometry(QtCore.QRect(10, 42, 100, 12))
+        self.label_LShp.setStyleSheet("color: black;")
         self.comboBox_LShp = QtGui.QComboBox(Dialog)
         self.comboBox_LShp.setGeometry(QtCore.QRect(110, 35, 100, 22))
 
         #梁成
         self.label_H = QtGui.QLabel('beamHight',Dialog)
         self.label_H.setGeometry(QtCore.QRect(10, 63, 100, 22))
+        self.label_H.setStyleSheet("color: black;")
         self.spinBoxH=QtGui.QSpinBox(Dialog)
-        self.spinBoxH.setGeometry(110, 60, 100, 30)
+        self.spinBoxH.setGeometry(110, 63, 100, 30)
         self.spinBoxH.setMinimum(500)  # 最小値を0.0に設定
         self.spinBoxH.setMaximum(5000.0)  # 最大値を100.0に設定
         self.spinBoxH.setSingleStep(50)
@@ -64,9 +67,10 @@ class Ui_Dialog(object):
 
         #梁長
         self.label_L = QtGui.QLabel('span',Dialog)
-        self.label_L.setGeometry(QtCore.QRect(10, 88, 100, 22))
+        self.label_L.setGeometry(QtCore.QRect(10, 100, 100, 22))
+        self.label_L.setStyleSheet("color: black;")
         self.spinBoxL=QtGui.QSpinBox(Dialog)
-        self.spinBoxL.setGeometry(110, 85, 100, 30)
+        self.spinBoxL.setGeometry(110, 95, 100, 30)
         self.spinBoxL.setMinimum(1000)  # 最小値
         self.spinBoxL.setMaximum(50000)  # 最大値
         self.spinBoxL.setSingleStep(50) #step
@@ -74,20 +78,21 @@ class Ui_Dialog(object):
 
         #端部ガセットプレート幅
         self.label_GPL = QtGui.QLabel('GPL_width',Dialog)
-        self.label_GPL.setGeometry(QtCore.QRect(10, 113, 100, 22))
+        self.label_GPL.setGeometry(QtCore.QRect(10, 130, 100, 22))
+        self.label_GPL.setStyleSheet("color: black;")
         self.le_GPL = QtGui.QLineEdit('150',Dialog)
-        self.le_GPL.setGeometry(QtCore.QRect(110, 115, 50, 20))
+        self.le_GPL.setGeometry(QtCore.QRect(110, 130, 50, 22))
         self.le_GPL.setAlignment(QtCore.Qt.AlignCenter)
 
         #作成
-        self.pushButton = QtGui.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(50, 135, 60, 22))
+        self.pushButton = QtGui.QPushButton('Create',Dialog)
+        self.pushButton.setGeometry(QtCore.QRect(50, 155, 60, 22))
         #更新
-        self.pushButton2 = QtGui.QPushButton(Dialog)
-        self.pushButton2.setGeometry(QtCore.QRect(140, 135, 60, 22))
+        self.pushButton2 = QtGui.QPushButton('upDate',Dialog)
+        self.pushButton2.setGeometry(QtCore.QRect(140, 155, 60, 22))
         #データ読み込み
         self.pushButton3 = QtGui.QPushButton('Import Data',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(50, 160, 180, 22))
+        self.pushButton3.setGeometry(QtCore.QRect(50, 180, 180, 22))
         #図形
         self.label_6 = QtGui.QLabel(Dialog)
         self.label_6.setGeometry(QtCore.QRect(35, 190, 200, 200))
@@ -97,17 +102,18 @@ class Ui_Dialog(object):
 
         self.comboBox_BShp.addItems(BShp)
         self.comboBox_BShp.setEditable(True)
-
+#
         self.comboBox_LShp.addItems(LShp)
         self.comboBox_LShp.setEditable(True)
-        
-        self.spinBoxH.valueChanged[int].connect(self.spinMove) 
-        self.spinBoxL.valueChanged[int].connect(self.spinMove) 
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.spinMove)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.read_data)
-        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
+        QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.select_objects_by_multiple_labels)
+        #QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.update)
+
+        self.spinBoxH.valueChanged[int].connect(self.spinMove) 
+        self.spinBoxL.valueChanged[int].connect(self.spinMove) 
 
         fname='TrussBeam.png'
         base=os.path.dirname(os.path.abspath(__file__))
@@ -118,35 +124,25 @@ class Ui_Dialog(object):
         
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Truss Beam", None))
-        self.pushButton.setText(QtGui.QApplication.translate("Dialog", "Create", None))  
-        self.pushButton2.setText(QtGui.QApplication.translate("Dialog", "Update", None)) 
-
+        
     def spinMove(self):
-         #
          try:
              H0=self.spinBoxH.value()
              L0=self.spinBoxL.value()
-             #print(H0,L0)
              Bshp=self.comboBox_BShp.currentText()#玄材
              Lshp=self.comboBox_LShp.currentText()#ラチス材
              Gb0=float(self.le_GPL.text())#端部ガセット幅
-             
              spreadsheet.set('shp',Bshp)#玄材
-             #print(Lshp,Gb0)
              spreadsheet.set('Gb0',str(Gb0))#端部ガセット幅
-             #print(Bshp)
              genzai.size = Bshp
-             #print(Bshp)
              #玄材
              for i in range(20,35):
                  Bshp3=spreadsheet.getContents('A'+str(i))
-                 #print(Bshp,Bshp3)
                  if Bshp==Bshp3[1:]:
                      break
              row_B=i  
              gL0=spreadsheet.getContents('D'+str(row_B))#ゲージ 
-             #print(gL0)
-             
+
              #ラチス材幅、板厚
              for i in range(20,35):
                  Lshp3=spreadsheet.getContents('A'+str(i))
@@ -154,27 +150,17 @@ class Ui_Dialog(object):
                  if Lshp==Lshp3[1:]:
                      break
              row_L=i 
-            
              Lt0=spreadsheet.getContents('B'+str(row_L))     
              Lb0=spreadsheet.getContents('C'+str(row_L)) 
-
              gL1=spreadsheet.getContents('D'+str(row_L))
-             
              H00=float(H0)-2.0*float(gL0)
              rp0=H00
-    
              sita=math.atan(H00*2/rp0)*57.3
- 
              lz=float(gL0)*math.sin(sita/57.3)
              l0=lz/math.sin(sita/57.3)
              lx=l0*math.cos(sita/57.3)
-             
              a0=spreadsheet.getContents('a0')
-             print(a0)
-             
              AngleSteel.size=str(Lshp)
-             
-            
              rp0=spreadsheet.getContents('rp0')
              m0=float(L0)/float(rp0)
              m0=int(m0)
@@ -195,34 +181,61 @@ class Ui_Dialog(object):
              spreadsheet.set('H0',str(H0))
              spreadsheet.set('L0',str(L0))
              App.ActiveDocument.recompute() 
-         except:   
-             pass  
+         except:
+             pass
         
     def read_data(self):
-         global AngleSteel
-         global genzai
-         global spreadsheet
-         selection = Gui.Selection.getSelection()
-         # Partsグループが選択されているかチェック
-         if selection:
+           global spreadsheet
+           selection = Gui.Selection.getSelection()
+           # Partsグループが選択されているかチェック
+           if selection:
              selected_object = selection[0]
              if selected_object.TypeId == "App::Part":
                  parts_group = selected_object
                  for obj in parts_group.Group:
                      print(obj.Label)
-                     if obj.Label=="AngleSteel20":
-                         AngleSteel=obj
-                     elif obj.Label=='genzai01':
-                         genzai=obj
-
                      if obj.TypeId == "Spreadsheet::Sheet":
                          spreadsheet = obj
-
                          self.comboBox_BShp.setCurrentText(spreadsheet.getContents('shp')[1:])
                          self.comboBox_LShp.setCurrentText(spreadsheet.getContents('Lshp')[1:])
                          self.le_GPL.setText(spreadsheet.getContents('Gb0')) 
                          self.spinBoxH.setValue(int(spreadsheet.getContents('H0')))
                          self.spinBoxL.setValue(int(spreadsheet.getContents('L0')))
+
+    def collect_objects_recursive(self,group, target_labels):
+        global AngleSteel
+        global genzai
+        matched = []
+        for obj in getattr(group, "Group", []):
+            print(obj.Label)
+            if obj.Label=='AngleSteel20':
+                AngleSteel=obj
+            elif obj.Label=='genzai01':
+                genzai=obj
+
+            # 下位フォルダなら再帰的に探索
+            if hasattr(obj, "Group"):
+                matched.extend(self.collect_objects_recursive(obj, target_labels))
+            else:
+                # ラベルが完全一致するオブジェクトを追加
+                if obj.Label == target_labels:
+                    matched.append(obj)
+        return matched  
+
+    def select_objects_by_multiple_labels(self):
+        sel = Gui.Selection.getSelection()
+        if not sel:
+            App.Console.PrintError("まずフォルダを選択してください。\n")
+            return     
+        root = sel[0]
+        if not hasattr(root, "Group"):
+            App.Console.PrintError("選択されたオブジェクトはフォルダ（Groupなど）ではありません。\n")
+            return
+        target_labels =['genzai01', 'AngleSteel20']   # ← ここを探したいラベル名に変更！
+        matched_objects = self.collect_objects_recursive(root, target_labels)
+        Gui.Selection.clearSelection()
+        for obj in matched_objects:
+            Gui.Selection.addSelection(obj)                        
 
     def update(self):
          Bshp=self.comboBox_BShp.currentText()#玄材
@@ -242,29 +255,33 @@ class Ui_Dialog(object):
          
          #ラチス個数
          for n in range(1,100):
-             rp03=(float(Blength)-2*float(GL0))/n
+             #print(n)
+             rp03=(float(Blength)-2*float(GL0))/(n*2)
+             print(rp03,Bhight,n)
              if float(rp03)<=float(Bhight):
                  break
-         rn0=n  
+         rn0=n 
+         print(rn0,'bbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
          #ラチス材幅、板厚
-         for i in range(34,46):
-             
+         for i in range(20,34):
              Lshp3=spreadsheet.getContents('A'+str(i))
-             #print(Lshp,Lshp3)
+             #print(Lshp,Lshp3[1:])
              if Lshp==Lshp3[1:]:
                  break
          row_L=i  
          Lt0=spreadsheet.getContents('B'+str(row_L))     
          Lb0=spreadsheet.getContents('C'+str(row_L))      
          spreadsheet.set('H0',str(Bhight))
+         #return
          #spreadsheet.set('L0',Blength)
          spreadsheet.set('shp',Bshp)
-         spreadsheet.set('GL0',GL0)
+         spreadsheet.set('gL0',GL0)
          spreadsheet.set('Lshp',Lshp)
-         spreadsheet.set('Lb0',Lb0)
-         spreadsheet.set('Gt0',Lt0)
          spreadsheet.set('Gb0',Gb0)
-         spreadsheet.set('rn0',str(rn0))
+         #return
+         spreadsheet.set('Lt0',Lt0)
+         spreadsheet.set('Lb0',Lb0)
+         #spreadsheet.set('rn0',str(rn0))
          #App.ActiveDocument.recompute() 
 
          c00 = Gui.Selection.getSelection()
@@ -276,7 +293,10 @@ class Ui_Dialog(object):
          except:
              print('error')
              pass
-         obj.mass=obj.Shape.Volume*obj.g0*1000/10**9 
+         try:
+             obj.mass=obj.Shape.Volume*obj.g0*1000/10**9 
+         except:
+             pass
          App.ActiveDocument.recompute()
 
     def create(self): 

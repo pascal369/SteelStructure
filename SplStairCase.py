@@ -19,21 +19,25 @@ class Ui_Dialog(object):
         #高さ H
         self.label_H = QtGui.QLabel('Height H[mm]',Dialog)
         self.label_H.setGeometry(QtCore.QRect(10, 10, 120, 21))
+        self.label_H.setStyleSheet("color: black;")
         self.lineEdit_H = QtGui.QLineEdit('2500',Dialog)
         self.lineEdit_H.setGeometry(QtCore.QRect(140, 10, 50, 22))
         #回転角度 a
         self.label_a = QtGui.QLabel('Rotation angle a[deg]',Dialog)
         self.label_a.setGeometry(QtCore.QRect(10, 35, 120, 21))
+        self.label_a.setStyleSheet("color: black;")
         self.lineEdit_a = QtGui.QLineEdit('360',Dialog)
         self.lineEdit_a.setGeometry(QtCore.QRect(140, 35, 50, 22))        
         #支柱径 d
         self.label_d = QtGui.QLabel('Prop diameter d[mm]',Dialog)
         self.label_d.setGeometry(QtCore.QRect(10, 60, 120, 21))
+        self.label_d.setStyleSheet("color: black;")
         self.lineEdit_d = QtGui.QLineEdit('165',Dialog)
         self.lineEdit_d.setGeometry(QtCore.QRect(140, 60, 50, 22))
         #外径 D
         self.label_D = QtGui.QLabel('Outer diameter D[mm]',Dialog)
         self.label_D.setGeometry(QtCore.QRect(10, 85, 120, 21))
+        self.label_D.setStyleSheet("color: black;")
         self.lineEdit_D = QtGui.QLineEdit('1600',Dialog)
         self.lineEdit_D.setGeometry(QtCore.QRect(140, 85, 50, 22))
         #ステップ高 hs
@@ -42,28 +46,33 @@ class Ui_Dialog(object):
         #ステップ厚 t
         self.label_t = QtGui.QLabel('Step thickness t',Dialog)
         self.label_t.setGeometry(QtCore.QRect(10, 135, 200, 21))
+        self.label_t.setStyleSheet("color: black;")
         self.lineEdit_t = QtGui.QLineEdit('50',Dialog)
         self.lineEdit_t.setGeometry(QtCore.QRect(140, 135, 50, 22))
         #段数 n
         self.label_n = QtGui.QLabel('No of step n',Dialog)
         self.label_n.setGeometry(QtCore.QRect(10, 160, 200, 21))
+        self.label_n.setStyleSheet("color: black;")
         self.lineEdit_n = QtGui.QLineEdit('12',Dialog)
         self.lineEdit_n.setGeometry(QtCore.QRect(140, 160, 50, 22))
         #w
-        self.label_w = QtGui.QLabel('Inside step width w[mm]',Dialog)
+        self.label_w = QtGui.QLabel('Inside step width [mm]',Dialog)
         self.label_w.setGeometry(QtCore.QRect(10, 185, 130, 21))
+        self.label_w.setStyleSheet("color: black;")
         self.lineEdit_w = QtGui.QLineEdit('200',Dialog)
         self.lineEdit_w.setGeometry(QtCore.QRect(140, 185, 50, 22))
         #w1
-        self.label_w1 = QtGui.QLabel('Outside step width w1[mm]',Dialog)
+        self.label_w1 = QtGui.QLabel('Outside step width [mm]',Dialog)
         self.label_w1.setGeometry(QtCore.QRect(10, 205, 130, 21))
+        self.label_w1.setStyleSheet("color: black;")
         self.lineEdit_w1 = QtGui.QLineEdit('400',Dialog)
-        self.lineEdit_w1.setGeometry(QtCore.QRect(140, 205, 50, 22))
+        self.lineEdit_w1.setGeometry(QtCore.QRect(140, 210, 50, 22))
         #create
         self.pushButton = QtGui.QPushButton('Create',Dialog)
         self.pushButton.setGeometry(QtCore.QRect(10, 350, 100, 25))
         self.label_create = QtGui.QLabel('It will take some time',Dialog)
         self.label_create.setGeometry(QtCore.QRect(150, 350, 150, 21))
+        self.label_create.setStyleSheet("color: black;")
         #img
         self.img = QtGui.QLabel(Dialog)
         self.img.setGeometry(QtCore.QRect(200, 0, 200, 300))

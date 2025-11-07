@@ -36,6 +36,7 @@ class Ui_Dialog(object):
         #高さ
         self.label_H = QtGui.QLabel('Hight',Dialog)
         self.label_H.setGeometry(QtCore.QRect(10, 13, 100, 22))
+        self.label_H.setStyleSheet("color: black;")
         self.le_H = QtGui.QLineEdit('800',Dialog)
         self.le_H.setGeometry(QtCore.QRect(110, 10, 50, 20))
         self.le_H.setAlignment(QtCore.Qt.AlignCenter)
@@ -43,30 +44,34 @@ class Ui_Dialog(object):
         #長さ
         self.label_L = QtGui.QLabel('Length',Dialog)
         self.label_L.setGeometry(QtCore.QRect(10, 38, 100, 22))
+        self.label_L.setStyleSheet("color: black;")
         self.le_L = QtGui.QLineEdit('1000',Dialog)
         self.le_L.setGeometry(QtCore.QRect(110, 35, 50, 20))
         self.le_L.setAlignment(QtCore.Qt.AlignCenter)
 
-        #作成
-        self.pushButton = QtGui.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(50, 60, 60, 22))
-        #更新
-        self.pushButton2 = QtGui.QPushButton(Dialog)
-        self.pushButton2.setGeometry(QtCore.QRect(140, 60, 60, 22))
-        #データ読み込み
-        self.pushButton3 = QtGui.QPushButton('Import Data',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(50, 85, 180, 22))
-
         #spinBox
         self.label_spin=QtGui.QLabel('Length',Dialog)
-        self.label_spin.setGeometry(QtCore.QRect(10, 110, 150, 22))
+        self.label_spin.setGeometry(QtCore.QRect(10, 60, 150, 22))
+        self.label_spin.setStyleSheet("color: black;")
         self.spinBox=QtGui.QSpinBox(Dialog)
-        self.spinBox.setGeometry(80, 110, 100, 30)
+        self.spinBox.setGeometry(80, 60, 100, 30)
         self.spinBox.setMinimum(100)  # 最小値を0.0に設定
         self.spinBox.setMaximum(10000.0)  # 最大値を100.0に設定
         self.spinBox.setValue(1000.0)
         self.spinBox.setSingleStep(50) #step
         self.spinBox.setAlignment(QtCore.Qt.AlignCenter)
+
+        #作成
+        self.pushButton = QtGui.QPushButton(Dialog)
+        self.pushButton.setGeometry(QtCore.QRect(50, 95, 60, 22))
+        #更新
+        self.pushButton2 = QtGui.QPushButton(Dialog)
+        self.pushButton2.setGeometry(QtCore.QRect(140, 95, 60, 22))
+        #データ読み込み
+        self.pushButton3 = QtGui.QPushButton('Import Data',Dialog)
+        self.pushButton3.setGeometry(QtCore.QRect(50, 120, 180, 22))
+
+        
 
         #図形
         self.label_6 = QtGui.QLabel(Dialog)

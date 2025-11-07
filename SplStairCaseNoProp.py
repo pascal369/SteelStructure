@@ -20,22 +20,26 @@ class Ui_Dialog(object):
         #高さ
         self.label_H = QtGui.QLabel('Height H[mm]',Dialog)
         self.label_H.setGeometry(QtCore.QRect(10, 10, 120, 21))
+        self.label_H.setStyleSheet("color: black;")
         self.lineEdit_H = QtGui.QLineEdit('2500',Dialog)
         self.lineEdit_H.setGeometry(QtCore.QRect(130, 10, 60, 22))
         #回転角度 st
         self.label_st = QtGui.QLabel('Rotation angle st[deg]',Dialog)
         self.label_st.setGeometry(QtCore.QRect(10, 35, 120, 21))
+        self.label_st.setStyleSheet("color: black;")
         self.lineEdit_st = QtGui.QLineEdit('360',Dialog)
         self.lineEdit_st.setGeometry(QtCore.QRect(140, 35, 50, 22))        
         #内径
         self.label_d = QtGui.QLabel('Inner diameter d[mm]',Dialog)
         self.label_d.setGeometry(QtCore.QRect(10, 60, 120, 21))
+        self.label_d.setStyleSheet("color: black;")
         self.lineEdit_d = QtGui.QLineEdit('1600',Dialog)
         self.lineEdit_d.setGeometry(QtCore.QRect(130, 60, 60, 22))
 
         #外径
         self.label_D = QtGui.QLabel('Outer diameter D[mm]',Dialog)
         self.label_D.setGeometry(QtCore.QRect(10, 85, 120, 21))
+        self.label_D.setStyleSheet("color: black;")
         self.lineEdit_D = QtGui.QLineEdit('3200',Dialog)
         self.lineEdit_D.setGeometry(QtCore.QRect(130, 85, 60, 22))
         '''
@@ -48,48 +52,55 @@ class Ui_Dialog(object):
         #段数
         self.label_n = QtGui.QLabel(Dialog)
         self.label_n.setGeometry(QtCore.QRect(10, 135, 200, 21))
+        self.label_n.setStyleSheet("color: black;")
 
         #a
         self.label_a = QtGui.QLabel('a[mm]',Dialog)
         self.label_a.setGeometry(QtCore.QRect(10, 155, 120, 21))
+        self.label_a.setStyleSheet("color: black;")
         self.lineEdit_a = QtGui.QLineEdit('50',Dialog)
         self.lineEdit_a.setGeometry(QtCore.QRect(130, 155, 60, 22))
 
         #t1
         self.label_t1 = QtGui.QLabel('t1[mm]',Dialog)
         self.label_t1.setGeometry(QtCore.QRect(10, 180, 120, 21))
+        self.label_t1.setStyleSheet("color: black;")
         self.lineEdit_t1 = QtGui.QLineEdit('50',Dialog)
         self.lineEdit_t1.setGeometry(QtCore.QRect(130, 180, 60, 22))
 
         #t2
         self.label_t2 = QtGui.QLabel('t2[mm]',Dialog)
         self.label_t2.setGeometry(QtCore.QRect(10, 205, 120, 21))
+        self.label_t2.setStyleSheet("color: black;")
         self.lineEdit_t2 = QtGui.QLineEdit('100',Dialog)
         self.lineEdit_t2.setGeometry(QtCore.QRect(130, 205, 60, 22))
 
         #h
         self.label_h = QtGui.QLabel('h[mm]',Dialog)
         self.label_h.setGeometry(QtCore.QRect(10, 230, 120, 21))
+        self.label_h.setStyleSheet("color: black;")
         self.lineEdit_h = QtGui.QLineEdit('400',Dialog)
         self.lineEdit_h.setGeometry(QtCore.QRect(130, 230, 60, 22))
         
         #C
         self.label_C = QtGui.QLabel(Dialog)
         self.label_C.setGeometry(QtCore.QRect(10, 255, 200, 21))
+        self.label_C.setStyleSheet("color: black;")
         #b
         self.label_b = QtGui.QLabel('b=(D-d)/2=',Dialog)
         self.label_b.setGeometry(QtCore.QRect(10, 280, 120, 21))
+        self.label_b.setStyleSheet("color: black;")
         #f
         self.label_f = QtGui.QLabel('f=b+2*a=',Dialog)
         self.label_f.setGeometry(QtCore.QRect(10, 305, 120, 21))
-        
+        self.label_f.setStyleSheet("color: black;")
         #create
         self.pushButton = QtGui.QPushButton('Create',Dialog)
         self.pushButton.setGeometry(QtCore.QRect(10, 355, 100, 25))
 
         self.label_create = QtGui.QLabel('It will take some time',Dialog)
         self.label_create.setGeometry(QtCore.QRect(150, 355, 150, 21))
-        
+        self.label_create.setStyleSheet("color: black;")
         #img
         self.img = QtGui.QLabel(Dialog)
         self.img.setGeometry(QtCore.QRect(200, 0, 200, 300))
@@ -97,7 +108,7 @@ class Ui_Dialog(object):
         #H0
         self.label_H0= QtGui.QLabel('H0=',Dialog)
         self.label_H0.setGeometry(QtCore.QRect(200, 305, 120, 21))
-
+        self.label_H0.setStyleSheet("color: black;")
         #self.img.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_d.setText('')
         self.lineEdit_d.textChanged.connect(self.on_dim)

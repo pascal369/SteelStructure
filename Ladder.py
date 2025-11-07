@@ -31,23 +31,24 @@ class Ui_Dialog(object):
         Dialog.move(1000, 0)
         #タイプ
         self.label_type = QtGui.QLabel(Dialog)
-        self.label_type.setGeometry(QtCore.QRect(10, 15, 60, 12))
+        self.label_type.setGeometry(QtCore.QRect(10, 15, 60, 22))
         self.label_type.setObjectName("label_type")
+        self.label_type.setStyleSheet("color: black;")
         self.comboBox_type = QtGui.QComboBox(Dialog)
         self.comboBox_type.setGeometry(QtCore.QRect(80, 10, 160, 22))
         self.comboBox_type.setObjectName("comboBox_type")
         self.comboBox_type.setEditable(True)
         #ステップ高
         self.label_st = QtGui.QLabel('stepHeight',Dialog)
-        self.label_st.setGeometry(QtCore.QRect(10, 40, 60, 12))
-        self.label_st.setObjectName("label_st")
+        self.label_st.setGeometry(QtCore.QRect(10, 43, 60, 22))
+        self.label_st.setStyleSheet("color: black;")
         self.comboBox_st = QtGui.QComboBox(Dialog)
-        self.comboBox_st.setGeometry(QtCore.QRect(80, 35, 50, 22))
+        self.comboBox_st.setGeometry(QtCore.QRect(80, 38, 50, 22))
         self.comboBox_st.setObjectName("comboBox_st")
         #床面高さ
         self.label_size = QtGui.QLabel('floorHeight',Dialog)
-        self.label_size.setGeometry(QtCore.QRect(10, 65, 60, 12))
-        self.label_size.setObjectName("label_size")
+        self.label_size.setGeometry(QtCore.QRect(10, 65, 60, 22))
+        self.label_size.setStyleSheet("color: black;")
 
         self.spinBoxL=QtGui.QSpinBox(Dialog)
         self.spinBoxL.setGeometry(80, 65, 60, 32)
@@ -58,9 +59,10 @@ class Ui_Dialog(object):
         self.spinBoxL.setAlignment(QtCore.Qt.AlignCenter)
         #heightStep
         self.label_step = QtGui.QLabel('step',Dialog)
-        self.label_step.setGeometry(QtCore.QRect(145, 65, 50, 16))
+        self.label_step.setGeometry(QtCore.QRect(145, 65, 50, 22))
+        self.label_step.setStyleSheet("color: black;")
         self.le_step = QtGui.QLineEdit('10',Dialog)
-        self.le_step.setGeometry(QtCore.QRect(180, 65, 40, 16))
+        self.le_step.setGeometry(QtCore.QRect(180, 65, 40, 22))
         self.le_step.setAlignment(QtCore.Qt.AlignCenter)
         #Create
         self.pushButton = QtGui.QPushButton('Create',Dialog)
@@ -74,18 +76,19 @@ class Ui_Dialog(object):
 
         #手すり高
         self.label_l = QtGui.QLabel('railingHeight',Dialog)
-        self.label_l.setGeometry(QtCore.QRect(10, 115, 81, 20))
+        self.label_l.setGeometry(QtCore.QRect(10, 115, 81, 22))
         self.label_l.setAlignment(QtCore.Qt.AlignLeft)
-        self.label_l.setObjectName("label_l")
+        self.label_l.setStyleSheet("color: black;")
         self.lineEdit_l = QtGui.QLineEdit('1100',Dialog)
-        self.lineEdit_l.setGeometry(QtCore.QRect(80, 110, 50, 20))
+        self.lineEdit_l.setGeometry(QtCore.QRect(80, 110, 50, 22))
         self.lineEdit_l.setAlignment(QtCore.Qt.AlignCenter)
 
         #比重
         self.mtrl = QtGui.QLabel('Specific gravity of material',Dialog)
-        self.mtrl.setGeometry(QtCore.QRect(10, 135, 150, 12))
+        self.mtrl.setGeometry(QtCore.QRect(10, 135, 150, 22))
+        self.mtrl.setStyleSheet("color: black;")
         self.le_mtrl = QtGui.QLineEdit('7.85',Dialog)
-        self.le_mtrl.setGeometry(QtCore.QRect(180, 135, 40, 20))
+        self.le_mtrl.setGeometry(QtCore.QRect(180, 135, 40, 22))
         self.le_mtrl.setAlignment(QtCore.Qt.AlignCenter)
 
         #img
