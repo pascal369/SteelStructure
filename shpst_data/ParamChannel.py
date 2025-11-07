@@ -91,30 +91,32 @@ class Channel:
         edge11=Part.makeLine(p15,p16)
         edge12=Part.makeLine(p16,p1)
         awire=Part.Wire([edge1,edge2,edge3,edge4,edge5,edge6,edge7,edge8,edge9,edge10,edge11,edge12])
-        #Part.show(awire)
         pface=Part.Face(awire)
-        pface.translate(Base.Vector(-B/2,H/2,0))
-        pface.rotate(Base.Vector(-B/2,H/2,0),Base.Vector(1,0,0),90)
+        #Part.show(pface)
         if Solid==True:
-            c00=pface.extrude(Base.Vector(0,0,L))
+            pface.translate(Base.Vector(-B/2,0,-H/2))
+            c00=pface.extrude(Base.Vector(0,L,0))
+            g=c00.Volume*g0/10**9 
+            label='mass[kg]'
             obj.Shape=c00
-        else:    
+        else:  
+            pface.translate(Base.Vector(-B/2,0,-H/2)) 
             c00=pface
-        g=c00.Volume*g0/10**9 
-        label='mass[kg]'
+            obj.Shape=c00
+            
+        
         obj.size=size
         obj.H=H
         obj.B=B
         
         try:
             obj.addProperty("App::PropertyFloat", "mass",label)
-            #print(H)
             obj.mass=g
             obj.ViewObject.Proxy=0
         except:
-            obj.mass=g
-            obj.ViewObject.Proxy=0
+            #obj.mass=g
+            #obj.ViewObject.Proxy=0
             pass    
-        obj.Shape=c00
+        #obj.Shape=c00
        
    

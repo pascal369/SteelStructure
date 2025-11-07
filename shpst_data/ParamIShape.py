@@ -104,6 +104,7 @@ class IShape:
         edge20=Part.makeLine(p28,p1)
         awire=Part.Wire([edge1,edge2,edge3,edge4,edge5,edge6,edge7,edge8,edge9,edge10,edge11,edge12,edge13,edge14,edge15,edge16,edge17,edge18,edge19,edge20])
         pface=Part.Face(awire)
+        pface.translate(Base.Vector(-B/2,0,-H/2))
         if Solid==True:
             #L=App.ActiveDocument.getObject(label).L
             c00=pface.extrude(Base.Vector(0,L,0))

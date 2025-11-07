@@ -54,6 +54,7 @@ class LWAngle:
         edge8=Part.Arc(Base.Vector(p9),Base.Vector(p10),Base.Vector(p1)).toShape()
         awire=Part.Wire([edge1,edge2,edge3,edge4,edge5,edge6,edge7,edge8])
         pface=Part.Face(awire)
+        pface.translate(Base.Vector(-B/2,0,-A/2))
         if Solid==True:
             c00=pface.extrude(Base.Vector(0,L,0))
             obj.Shape=c00

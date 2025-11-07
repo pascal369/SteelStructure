@@ -65,7 +65,7 @@ class LWChannel:
         awire=Part.Wire([edge1,edge2,edge3,edge4,edge5,edge6,edge7,edge8,edge9,edge10,edge11,edge12])
         pface=Part.Face(awire)
         if Solid==True:
-            #L=App.ActiveDocument.getObject(label).L
+            pface.translate(Base.Vector(-B/2,0,-H/2))
             c00=pface.extrude(Base.Vector(0,L,0))
             obj.Shape=c00
         else:    

@@ -67,13 +67,11 @@ class Angle:
         edge9=Part.makeLine(p12,p1)
         awire=Part.Wire([edge1,edge2,edge3,edge4,edge5,edge6,edge7,edge8,edge9])
         pface=Part.Face(awire)
-
-        pface.translate(Base.Vector(-A/2,A/2,0))
-        pface.rotate(Base.Vector(-A/2,A/2,0),Base.Vector(1,0,0),90)
         if Solid==True:
-            c00=pface.extrude(Base.Vector(0,0,L))
-            obj.Shape=c00
-        else:    
+            pface.translate(Base.Vector(-A/2,0,-A/2))
+            c00=pface.extrude(Base.Vector(0,L,0))
+        else:  
+            pface.translate(Base.Vector(-A/2,0,-A/2))
             c00=pface
         obj.size=size
         obj.A=A

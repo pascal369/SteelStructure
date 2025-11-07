@@ -82,10 +82,10 @@ class HShape:
         edge16=Part.makeLine(p20,p1)
         awire=Part.Wire([edge1,edge2,edge3,edge4,edge5,edge6,edge7,edge8,edge9,edge10,edge11,edge12,edge13,edge14,edge15,edge16])
         pface=Part.Face(awire)
-        pface.translate(Base.Vector(-B/2,H/2,0))
-        pface.rotate(Base.Vector(-B/2,H/2,0),Base.Vector(1,0,0),90)
+        pface.translate(Base.Vector(-B/2,0,-H/2))
+        #pface.rotate(Base.Vector(-B/2,H/2,0),Base.Vector(1,0,0),90)
         if Solid==True:
-            c00=pface.extrude(Base.Vector(0,0,L))
+            c00=pface.extrude(Base.Vector(0,L,0))
             obj.Shape=c00
         else:    
             c00=pface

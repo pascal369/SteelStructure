@@ -82,10 +82,10 @@ class SquarePipe:
         pface1=Part.Face(awire1)
         pface2=Part.Face(awire2)
         pface=pface1.cut(pface2)
-        pface.translate(Base.Vector(-A/2,A/2,0))
-        pface.rotate(Base.Vector(-A/2,A/2,0),Base.Vector(1,0,0),90)
+        pface.translate(Base.Vector(-A/2,0,-A/2))
+        #pface.rotate(Base.Vector(-A/2,A/2,0),Base.Vector(1,0,0),90)
         if Solid==True:
-            c00=pface.extrude(Base.Vector(0,0,L))
+            c00=pface.extrude(Base.Vector(0,L,0))
             obj.Shape=c00
         else:    
             c00=pface

@@ -33,6 +33,7 @@ class FlatShape:
         p4=(B,0,0)
         awire=Part.makePolygon([p1,p2,p3,p4,p1])
         pface=Part.Face(awire)
+        pface.translate(Base.Vector(-B/2,0,-t/2))
         c00=pface
         if Solid==True:
             #L=App.ActiveDocument.getObject(label).L
