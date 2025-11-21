@@ -265,7 +265,7 @@ class Ui_Dialog(object):
         obj.Rail = stlstrdata.ichi[i]
         obj.addProperty("App::PropertyFloat", "L",'Dimension').L=L
         obj.addProperty("App::PropertyFloat", "L1",'Dimension').L1=L1
-        obj.addProperty("App::PropertyFloat", "H",'Dimension').H=H
+        obj.addProperty("App::PropertyFloat", "H0",'Dimension').H0=H
         obj.addProperty("App::PropertyFloat", "w0",'Dimension').w0=w0
         obj.addProperty("App::PropertyFloat", "w1",'Dimension').w1=w1
         obj.addProperty("App::PropertyFloat", "w2",'Dimension').w2=w2
@@ -324,7 +324,7 @@ class main():
     d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
     d.show()
     # スクリプトのウィンドウを取得
-    script_window = FreeCADGui.getMainWindow().findChild(QtGui.QDialog, 'd')
+    script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd')
     # 閉じるボタンを無効にする
     script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)
         

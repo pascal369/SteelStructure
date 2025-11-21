@@ -269,7 +269,7 @@ class Ui_Dialog(object):
         
         obj.addProperty("App::PropertyFloat", "L",'Dimension').L=L
         obj.addProperty("App::PropertyFloat", "L1",'Dimension').L1=L1
-        obj.addProperty("App::PropertyFloat", "H",'Dimension').H=H
+        obj.addProperty("App::PropertyFloat", "H0",'Dimension').H0=H
         obj.addProperty("App::PropertyFloat", "w",'Dimension').w=w
         obj.addProperty("App::PropertyFloat", "t",'Dimension').t=t
 
