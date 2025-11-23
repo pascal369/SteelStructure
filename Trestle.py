@@ -123,13 +123,13 @@ class Ui_Dialog(object):
          spreadsheet.set('H0',myH)
          #print(myW)
          if mytype=='01':
-             stair.H=float(myH)
+             stair.H0=float(myH)
              stair.L=float(myH)
          elif mytype=='02':
-             SteelStair.H=float(myH)
+             SteelStair.H0=float(myH)
              SteelStair.L=float(myH)   
          elif mytype=='03':
-             SteelStair.H=float(myH)
+             SteelStair.H0=float(myH)
              SteelStair.L=float(myH) 
              SteelStair.w=float(myL) 
              stair.H=float(myH)
