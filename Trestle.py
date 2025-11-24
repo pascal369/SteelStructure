@@ -132,7 +132,7 @@ class Ui_Dialog(object):
              SteelStair.H0=float(myH)
              SteelStair.L=float(myH) 
              SteelStair.w=float(myL) 
-             stair.H=float(myH)
+             stair.H0=float(myH)
              stair.L=float(myH)  
              stair.L1=float(myW)    
              stair.w0=float(myL)  
