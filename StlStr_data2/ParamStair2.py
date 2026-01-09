@@ -35,20 +35,11 @@ class ParamStaire20:
         g25=2.43
         #L=App.ActiveDocument.getObject(label).L
         L1=App.ActiveDocument.getObject(label).L1
-        H=App.ActiveDocument.getObject(label).H
+        H=App.ActiveDocument.getObject(label).H0
         L=H
         w=App.ActiveDocument.getObject(label).w
         t=App.ActiveDocument.getObject(label).t
 
-        '''
-        H0=App.ActiveDocument.getObject(label).H0
-        B=App.ActiveDocument.getObject(label).B
-        t1=App.ActiveDocument.getObject(label).t1
-        r1=App.ActiveDocument.getObject(label).r1
-        r2=App.ActiveDocument.getObject(label).r2
-        Cy=App.ActiveDocument.getObject(label).Cy
-        t2=App.ActiveDocument.getObject(label).t2
-        '''
         size=App.ActiveDocument.getObject(label).size
         sa=StlStrdata2.channel_ss[size]
         H0=float(sa[0])
@@ -642,28 +633,7 @@ class ParamStaire20:
                 pface=Part.Face(aWire)
                 c01=pface.extrude(Base.Vector(0,-B1,0))
                 c001=c001.fuse(c01)
-                
-            '''
-            #上部プレート
-            for i in range(2):
-                if i==0:
-                    y=0
-                else:
-                    y=w0+B1
-                p1=(0,B1-y,0)
-                p2=(0,B1-y,H1)
-                p3=(6,B1-y,H1)
-                p4=(6,B1-y,0)
-                edge1=Part.makeLine(p1,p2)
-                edge2=Part.makeLine(p2,p3)
-                edge3=Part.makeLine(p3,p4)
-                edge4=Part.makeLine(p1,p4)
-                aWire=Part.Wire([edge1,edge2,edge3,edge4])
-                pface=Part.Face(aWire)
-                c01=pface.extrude(Base.Vector(0,-B1,0))
-                c01.Placement=App.Placement(App.Vector(-x1+L+L1,0,y1-H1+H),App.Rotation(App.Vector(1,0,1),0))
-                c001=c001.fuse(c01)
-            '''
+
             #ステップ
             n1=int(H/200)+1
             h=H/n1
