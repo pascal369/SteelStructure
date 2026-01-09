@@ -214,7 +214,7 @@ class Ui_Dialog(object):
         if c00:
             obj = c00[0]
         material=self.comboBox_mt.currentText()
-        print(material)
+        #print(material)
         try:
             obj.addProperty("App::PropertyString", 'material','material')
             obj.material=material
@@ -445,48 +445,126 @@ class Ui_Dialog(object):
          key2=self.comboBox_element2.currentIndex()
          
          if key==0:#Post
-              import postAssy
+              import importlib
+              import sys
+              if 'postAssy' not in sys.modules:
+                   import postAssy
+              else:
+                   importlib.reload(sys.modules['postAssy'])
+
          elif key==1:#shapedSteel
-                import Shaped_steelS
+                import importlib
+                import sys
+                if 'Shaped_steelS' not in sys.modules:
+                     import Shaped_steelS
+                else:
+                     importlib.reload(sys.modules['Shaped_steelS'])
          elif key==2:#steelPlate
-              import Pln_shape
+              import importlib
+              import sys
+              if 'Pln_shape' not in sys.modules:
+                   import Pln_shape
+              else:
+                   importlib.reload(sys.modules['Pln_shape'])
          elif key==3:#steelStairs
              if key2==0:#2階用
-                  try:
+                  import importlib
+                  import sys
+                  if 'SteelStair2' not in sys.modules:
                       import SteelStair2
-                  except:
-                       SteelStair2.main.d.show()  
-                       pass  
+                  else:
+                      importlib.reload(sys.modules['SteelStair2'])
              elif key2==1:#一般階用
-                  import SteelStairs 
+                  import importlib
+                  import sys 
+                  if 'SteelStairs' not in sys.modules:
+                      import SteelStairs
+                  else:
+                      importlib.reload(sys.modules['SteelStairs'])  
              elif key2==2:
-                  import SplStairCase  
-                  SplStairCase.Main_P.w.show()   
+                  import importlib
+                  import sys 
+                  if 'SplStairCase' not in sys.modules:
+                      import SplStairCase
+                  else:
+                      importlib.reload(sys.modules['SplStairCase'])  
              elif key2==3:
-                  import SplStairCaseNoProp     
-                  SplStairCaseNoProp.Main_P.w.show()   
+                  import importlib
+                  import sys 
+                  if 'SplStairCaseNoProp' not in sys.modules:
+                      import SplStairCaseNoProp
+                  else:
+                      importlib.reload(sys.modules['SplStairCaseNoProp'])
          elif key==4:#ladder
-                import Ladder
-                Ladder.main.d.show() 
+                import importlib
+                import sys 
+                if 'Ladder' not in sys.modules:
+                    import Ladder
+                else:
+                    importlib.reload(sys.modules['Ladder'])
          elif key==5:#handrails
-                import Handrails
-         elif key==6:#pipSuport
-                import Trestle  
+                import importlib
+                import sys 
+                if 'Handrails' not in sys.modules:
+                    import Handrails
+                else:
+                    importlib.reload(sys.modules['Handrails'])
+         elif key==6:#Trestle
+                import importlib
+                import sys 
+                if 'Trestle' not in sys.modules:
+                    import Trestle
+                else:
+                    importlib.reload(sys.modules['Trestle'])
          elif key==7:#steelBrace
-                import steelBrace  
+                import importlib
+                import sys 
+                if 'steelBrace' not in sys.modules:
+                    import steelBrace
+                else:
+                    importlib.reload(sys.modules['steelBrace']) 
          elif key==8:#latticeBeam
-                import latticeBeam   
+                import importlib
+                import sys 
+                if 'latticeBeam' not in sys.modules:
+                    import latticeBeam
+                else:
+                    importlib.reload(sys.modules['latticeBeam'])
          elif key==9:#trussBeam
-                import trussBeam 
-                trussBeam 
+                import importlib
+                import sys 
+                if 'trussBeam' not in sys.modules:
+                    import trussBeam
+                else:
+                    importlib.reload(sys.modules['trussBeam'])
          elif key==10:#turnBackle
-                import turnBackle   
-                turnBackle.main.d.show()   
+                import importlib
+                import sys 
+                if 'turnBackleS' not in sys.modules:
+                    import turnBackleS
+                else:
+                    importlib.reload(sys.modules['turnBackleS'])
                 
          elif key==11:#accodionGate   
-                import accodionGate       
+                #import accodionGate 
+
+                import importlib
+                import sys 
+                if 'accodionGate' not in sys.modules:
+                    import accodionGate
+                else:
+                    importlib.reload(sys.modules['accodionGate'])
+                
          elif key==12:#grating
-                import grating  
+                #import grating 
+                import importlib
+                import sys 
+                if 'grating' not in sys.modules:
+                    import grating
+                else:
+                    importlib.reload(sys.modules['grating'])
+                
+
 
              
 

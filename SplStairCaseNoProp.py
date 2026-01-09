@@ -42,13 +42,7 @@ class Ui_Dialog(object):
         self.label_D.setStyleSheet("color: black;")
         self.lineEdit_D = QtGui.QLineEdit('3200',Dialog)
         self.lineEdit_D.setGeometry(QtCore.QRect(130, 85, 60, 22))
-        '''
-        #ステップ高
-        self.label_hs = QtGui.QLabel('Step height hs',Dialog)
-        self.label_hs.setGeometry(QtCore.QRect(10, 110, 120, 21))
-        self.lineEdit_hs = QtGui.QLineEdit('150',Dialog)
-        self.lineEdit_hs.setGeometry(QtCore.QRect(130, 110, 60, 22))
-        '''
+
         #段数
         self.label_n = QtGui.QLabel(Dialog)
         self.label_n.setGeometry(QtCore.QRect(10, 135, 200, 21))
@@ -235,8 +229,4 @@ class Main_P():
         w.ui.setupUi(w)
         w.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         w.show()
-        # スクリプトのウィンドウを取得
-        script_window = FreeCADGui.getMainWindow().findChild(QtGui.QDialog, 'd')
-        # 閉じるボタンを無効にする
-        script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)
-
+        

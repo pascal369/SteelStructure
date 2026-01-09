@@ -153,8 +153,4 @@ class Main_P():
         w.ui.setupUi(w)
         w.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         w.show()
-        # スクリプトのウィンドウを取得
-        script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd')
-        # 閉じるボタンを無効にする
-        script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)
-
+        

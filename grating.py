@@ -42,13 +42,13 @@ class Ui_Dialog(object):
 
         #作成
         self.pushButton = QtGui.QPushButton('create',Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(75, 90, 50, 22))
+        self.pushButton.setGeometry(QtCore.QRect(25, 90, 150, 22))
         #更新
         self.pushButton2 = QtGui.QPushButton('update',Dialog)
-        self.pushButton2.setGeometry(QtCore.QRect(75, 115, 50, 22))
+        self.pushButton2.setGeometry(QtCore.QRect(25, 115, 150, 22))
         #データ読み込み
         self.pushButton3 = QtGui.QPushButton('Import Data',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(75, 140, 50, 22))
+        self.pushButton3.setGeometry(QtCore.QRect(25, 140, 150, 22))
 
         #図形
         self.label_6 = QtGui.QLabel(Dialog)
@@ -142,5 +142,4 @@ class main():
         d.ui.setupUi(d)
         d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         d.show()  
-        script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd') 
-        script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)            
+        

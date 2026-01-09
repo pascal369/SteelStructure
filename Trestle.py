@@ -25,27 +25,27 @@ class Ui_Dialog(object):
 
         #type
         self.label_type = QtGui.QLabel('Type',Dialog)
-        self.label_type.setGeometry(QtCore.QRect(10, 13, 150, 12))
+        self.label_type.setGeometry(QtCore.QRect(10, 13, 150, 22))
         self.label_type.setStyleSheet("color: black;")
         self.comboBox_type = QtGui.QComboBox(Dialog)
         self.comboBox_type.setGeometry(QtCore.QRect(80, 8, 80, 22))
         #床面幅W
         self.label_W = QtGui.QLabel('W[mm',Dialog)
-        self.label_W.setGeometry(QtCore.QRect(10, 38, 60, 12))
+        self.label_W.setGeometry(QtCore.QRect(10, 38, 60, 22))
         self.label_W.setStyleSheet("color: black;")
         self.lineEdit_W = QtGui.QLineEdit('2500',Dialog)
         self.lineEdit_W.setGeometry(QtCore.QRect(80, 35, 80, 22))
         self.lineEdit_W.setAlignment(QtCore.Qt.AlignCenter)
         #床面長L
         self.label_L = QtGui.QLabel('L[mm',Dialog)
-        self.label_L.setGeometry(QtCore.QRect(10, 68, 60, 12))
+        self.label_L.setGeometry(QtCore.QRect(10, 68, 60, 22))
         self.label_L.setStyleSheet("color: black;")
         self.lineEdit_L = QtGui.QLineEdit('2000',Dialog)
         self.lineEdit_L.setGeometry(QtCore.QRect(80, 60, 80, 22))
         self.lineEdit_L.setAlignment(QtCore.Qt.AlignCenter)
         #床面高H
         self.label_H = QtGui.QLabel('H[mm',Dialog)
-        self.label_H.setGeometry(QtCore.QRect(10, 93, 60, 12))
+        self.label_H.setGeometry(QtCore.QRect(10, 93, 60, 22))
         self.label_H.setStyleSheet("color: black;")
         self.lineEdit_H = QtGui.QLineEdit('2200',Dialog)
         self.lineEdit_H.setGeometry(QtCore.QRect(80, 90, 80, 22))
@@ -53,13 +53,13 @@ class Ui_Dialog(object):
 
         #作成
         self.pushButton = QtGui.QPushButton('create',Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(80, 115, 80, 22))
+        self.pushButton.setGeometry(QtCore.QRect(30, 115, 130, 22))
         #インポート
         self.pushButton3 = QtGui.QPushButton('import',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(80, 140, 80, 22))
+        self.pushButton3.setGeometry(QtCore.QRect(30, 140, 130, 22))
         #更新
         self.pushButton2 = QtGui.QPushButton('update',Dialog)
-        self.pushButton2.setGeometry(QtCore.QRect(80, 165, 80, 22))
+        self.pushButton2.setGeometry(QtCore.QRect(30, 165, 130, 22))
 
         self.comboBox_type.addItems(type)
 
@@ -180,5 +180,4 @@ class main():
         d.ui.setupUi(d)
         d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         d.show()  
-        script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd') 
-        script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)            
+        

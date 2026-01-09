@@ -65,13 +65,13 @@ class Ui_Dialog(object):
 
         #作成
         self.pushButton = QtGui.QPushButton('create',Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(75, 135, 50, 22))
+        self.pushButton.setGeometry(QtCore.QRect(25, 135, 150, 22))
         #インポート
         self.pushButton3 = QtGui.QPushButton('import',Dialog)
-        self.pushButton3.setGeometry(QtCore.QRect(75, 160, 50, 22))
+        self.pushButton3.setGeometry(QtCore.QRect(25, 160, 150, 22))
         #更新
         self.pushButton2 = QtGui.QPushButton('update',Dialog)
-        self.pushButton2.setGeometry(QtCore.QRect(75, 185, 50, 22))
+        self.pushButton2.setGeometry(QtCore.QRect(25, 185, 150, 22))
 
         self.comboBox_type.addItems(type)
         self.comboBox_angle.addItems(angle)
@@ -102,6 +102,7 @@ class Ui_Dialog(object):
         return
     def onImport(self):
         global spreadsheet
+        #global AngleSteel
         selection = Gui.Selection.getSelection()
         #self.comboBox_angle.clear()
         if selection:
@@ -116,6 +117,8 @@ class Ui_Dialog(object):
                      if obj.TypeId == "Spreadsheet::Sheet":
                          # スプレッドシートが見つかった場合の処理
                          spreadsheet = obj 
+                     elif obj.Label[:10]=='AngleSteel':
+                         AngleSteel=obj    
 
         self.lineEdit_W.setText(spreadsheet.getContents('W0'))    
         self.lineEdit_L.setText(spreadsheet.getContents('La'))          
@@ -130,10 +133,10 @@ class Ui_Dialog(object):
         matched = []
         for obj in getattr(group, "Group", []):
             print(obj.Label)
-            if obj.Label=='AngleSteel':
+            if obj.Label[:10]=='AngleSteel':
                 AngleSteel=obj
             try:
-                if obj.Label=='AngleSteelB':
+                if obj.Label[:11]=='AngleSteelB':
                     AngleSteelB=obj  
             except:
                 pass
@@ -222,7 +225,4 @@ class main():
         d.ui.setupUi(d)
         d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         d.show() 
-        # スクリプトのウィンドウを取得
-        script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd') 
-        # 閉じるボタンを無効にする
-        script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)            
+        

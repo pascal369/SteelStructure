@@ -1,18 +1,10 @@
 # -*- coding: utf-8 -*-
-#from curses import keyname
 from ast import Delete
 import os
 from pickle import TRUE
 #import sys
 import math
 import string
-#from tkinter.tix import ComboBox
-#import Import
-#import Spreadsheet
-#import DraftVecUtils
-#import Sketcher
-#import PartDesign
-#import Draft
 import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtGui
@@ -261,7 +253,7 @@ class Ui_Dialog(object):
              if float(rp03)<=float(Bhight):
                  break
          rn0=n 
-         print(rn0,'bbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
+         #print(rn0,'bbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
          #ラチス材幅、板厚
          for i in range(20,34):
              Lshp3=spreadsheet.getContents('A'+str(i))
@@ -323,7 +315,4 @@ class main():
         d.ui.setupUi(d)
         d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         d.show() 
-        # スクリプトのウィンドウを取得
-        script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd') 
-        # 閉じるボタンを無効にする
-        script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)            
+        

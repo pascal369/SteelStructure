@@ -193,7 +193,7 @@ class Ui_Dialog(object):
          fname='03_'+self.comboBox_Shp.currentText()+'.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'StlStu_data',fname) 
-         print(joined_path)
+         #print(joined_path)
          Gui.ActiveDocument.mergeProject(joined_path)
          
          objs=doc.Objects
@@ -210,8 +210,4 @@ class main():
         d.ui.setupUi(d)
         d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         d.show()  
-        # スクリプトのウィンドウを取得
-        script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd') 
-        # 閉じるボタンを無効にする
-        script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)                   
         
