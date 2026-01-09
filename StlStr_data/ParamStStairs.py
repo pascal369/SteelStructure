@@ -29,7 +29,7 @@ class Staires:
         size=App.ActiveDocument.getObject(label).size
         L=App.ActiveDocument.getObject(label).L
         L1=App.ActiveDocument.getObject(label).L1
-        H=App.ActiveDocument.getObject(label).H
+        H=App.ActiveDocument.getObject(label).H0
         w0=App.ActiveDocument.getObject(label).w0
         w1=App.ActiveDocument.getObject(label).w1
         w2=App.ActiveDocument.getObject(label).w2
