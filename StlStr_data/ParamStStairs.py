@@ -287,7 +287,8 @@ class Staires:
             c00=c01
             #mass
             hand_w=hand_w1+hand_w2+hand_w3
-            #print(hand_w)
+            shape=c00
+            return shape
         def handrail_1(self):#手すり1
             global c00
             global c
@@ -416,6 +417,8 @@ class Staires:
             c00=c01
             #mass
             hand_w=hand_w1+hand_w2+hand_w3+hand_w4
+            shape=c00
+            return shape
         def handrail_2(self):#手すり2
             global c00
             global c
@@ -543,6 +546,8 @@ class Staires:
             c00=c01
             #mass
             hand_w=hand_w1+hand_w2+hand_w3+hand_w4
+            shape=c00
+            return shape
         def hontai(self):
             global c001
             global L0
@@ -920,6 +925,8 @@ class Staires:
             c001=c001.fuse(c1)
             #body_w=c001.Volume*7850/10**9
 
+        doc = App.ActiveDocument
+        
         if key==0:#階段のみ
             hand_w=0
             if stry>2:
@@ -957,6 +964,7 @@ class Staires:
                             c2.Placement=App.Placement(App.Vector(L-g1,2*B+w3,(i-2)*H-g),App.Rotation(App.Vector(0,0,1),180))     
                         c1=c1.fuse(c2)
 
+            obj.Shape = c1
 
             body_w=c1.Volume*7850/10**9
             label='mass[kg]'
@@ -974,7 +982,11 @@ class Staires:
                 obj.mass=body_w
                 obj.ViewObject.Proxy=0
                 pass
-        elif key==1 or key==2 or key==3:#手すり付き階段   
+            
+        elif key==1 or key==2 or key==3:#手すり付き階段 
+            # メインコンテナ
+            assy = doc.getObject(obj.Name + "_Assy") or doc.addObject("App::Part", obj.Name + "_Assy") 
+            handrail_list=[]
             if stry>2:
                 Mdlfloor=False
             for i in range(2,stry+1):
@@ -1007,6 +1019,10 @@ class Staires:
                         else:
                             c2.Placement=App.Placement(App.Vector(L-g1,2*B+w3,(i-2)*H-g),App.Rotation(App.Vector(0,0,1),180))     
                         c1=c1.fuse(c2)
+
+            obj.Shape=c1            
+            assy.addObject(obj)
+
             body_w=c1.Volume*7850/10**9 
             for j in range(stry-1): 
                 hand_w=0
@@ -1030,11 +1046,25 @@ class Staires:
                         elif Rail=='Left':
                             y=0
                     if key==1:        
-                        handrail(self)
+                        shape=handrail(self)
                     elif key==2:
-                        handrail_1(self)
+                        shape=handrail_1(self)
                     elif key==3:
-                        handrail_2(self)
+                        shape=handrail_2(self)
+                    hr_name=f"{obj.Name}_Handrail_{j}_{i}"
+                    obj2=doc.getObject(hr_name)
+
+                    if obj2:
+                        # 既にあるなら形状を更新するだけ（これで消えなくなる）
+                        obj2.Shape = shape
+                    else:
+                        # ない時だけ新しく作る
+                        obj2 = doc.addObject("Part::Feature", hr_name)
+                        obj2.Shape = shape
+
+                    if obj2 not in assy.OutList:
+                        assy.addObject(obj2)
+                            
                     #mass    
                     hand_w=hand_w*(stry-1)
                     #print(hand_w)
@@ -1048,28 +1078,33 @@ class Staires:
                         z=30*math.tan(s)
                     c3=c00
                     if j % 2==0:
-                        c3.Placement=App.Placement(App.Vector(x,y,z+(j)*H),App.Rotation(App.Vector(0,0,1),0))
+                        obj2.Placement=App.Placement(App.Vector(x,y,z+(j)*H),App.Rotation(App.Vector(0,0,1),0))
+                        
                     else:
                         if ClockWise==True:
                             if Rail=='Right':
-                                c3.Placement=App.Placement(App.Vector(L-2*g1-30,y,(j)*H+z),App.Rotation(App.Vector(0,0,1),180))
+                                obj2.Placement=App.Placement(App.Vector(L-2*g1-30,y,(j)*H+z),App.Rotation(App.Vector(0,0,1),180))
                             elif Rail=='Left':
-                                c3.Placement=App.Placement(App.Vector(L-2*g1-30,-y-2*(W-B),j*H+z),App.Rotation(App.Vector(0,0,1),180))
+                                obj2.Placement=App.Placement(App.Vector(L-2*g1-30,-y-2*(W-B),j*H+z),App.Rotation(App.Vector(0,0,1),180))
                             else:
-                                c3.Placement=App.Placement(App.Vector(L-2*g1-30,-y-2*(W-B-w3/2),(j)*H+z),App.Rotation(App.Vector(0,0,1),180))
+                                obj2.Placement=App.Placement(App.Vector(L-2*g1-30,-y-2*(W-B-w3/2),(j)*H+z),App.Rotation(App.Vector(0,0,1),180))
+                            
                         else:
                             if Rail=='Right':
-                                c3.Placement=App.Placement(App.Vector(L-2*g1-30,y+2*W+w3/2-2*B,(j)*H+z),App.Rotation(App.Vector(0,0,1),180))
+                               obj2 .Placement=App.Placement(App.Vector(L-2*g1-30,y+2*W+w3/2-2*B,(j)*H+z),App.Rotation(App.Vector(0,0,1),180))
                             elif Rail=='Left':
-                                c3.Placement=App.Placement(App.Vector(L-2*g1-30,y+2*B+w3/2+c,j*H+z),App.Rotation(App.Vector(0,0,1),180))
+                                obj2.Placement=App.Placement(App.Vector(L-2*g1-30,y+2*B+w3/2+c,j*H+z),App.Rotation(App.Vector(0,0,1),180))
                             else:
-                                c3.Placement=App.Placement(App.Vector(L-2*g1-30,y+(B+W),(j)*H+z),App.Rotation(App.Vector(0,0,1),180))
+                               obj2 .Placement=App.Placement(App.Vector(L-2*g1-30,y+(B+W),(j)*H+z),App.Rotation(App.Vector(0,0,1),180))
+                            
+                    handrail_list.append(obj2)
 
-                    c1=c1.fuse(c3) 
+            # 余分な手すりを削除する
+            for obj_in_assy in assy.OutList:
+                if obj_in_assy.Name.startswith(f"{obj.Name}_Handrail_") and obj_in_assy not in handrail_list:
+                    doc.removeObject(obj_in_assy.Name)
 
-            
             total=body_w+hand_w*n
-
             label='mass[kg]'
             try:
                 obj.addProperty("App::PropertyFloat", "body",label)
@@ -1085,4 +1120,4 @@ class Staires:
                 obj.mass=total
                 obj.ViewObject.Proxy=0
                 pass
-        obj.Shape=c1
+        #obj.Shape=c1
