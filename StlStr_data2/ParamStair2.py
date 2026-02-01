@@ -28,8 +28,6 @@ class ParamStaire20:
         elif type=='With handrail_2' :
             key=3    
 
-        #key=App.ActiveDocument.getObject(label).key   
-        #key1=App.ActiveDocument.getObject(label).key1
         Position=App.ActiveDocument.getObject(label).Position
         g32=3.38
         g25=2.43
@@ -277,6 +275,8 @@ class ParamStaire20:
             c00=c01
             #mass
             hand_w=hand_w1+hand_w2+hand_w3
+            shape=c00
+            return shape
         def handrail_1(self):#手すり1
             global c00
             global c
@@ -409,6 +409,8 @@ class ParamStaire20:
             c00=c01
             #mass
             hand_w=hand_w1+hand_w2+hand_w3+hand_w4
+            shape=c00
+            return shape
         def handrail_2(self):#手すり2
             global c00
             global c
@@ -538,7 +540,8 @@ class ParamStaire20:
             c00=c01
             #mass
             hand_w=hand_w1+hand_w2+hand_w3+hand_w4
-
+            shape=c00
+            return shape
         def hontai(self):
             global c001
             global L0
@@ -672,11 +675,15 @@ class ParamStaire20:
             x=H1*math.sin(math.radians(45))
             z=H1*math.cos(math.radians(45))
             c001.Placement=App.Placement(App.Vector(x,0,-z),App.Rotation(App.Vector(0,1,0),0))
+   
+        doc = App.ActiveDocument
 
         if key==0:
             hontai(self)
             c1=c001
+            obj.Shape=c1
 
+            
             body_w=c1.Volume*7850/10**9
             label='mass[kg]'
             try:
@@ -695,8 +702,19 @@ class ParamStaire20:
                 pass 
 
         elif key==1 or key==2 or key==3:
+            # メインコンテナ
+            assy = doc.getObject(obj.Name + "_Assy") or doc.addObject("App::Part", obj.Name + "_Assy")
             hontai(self)
+            obj.Shape=c001
             c1=c001
+            H1 = float(sa[0])
+            x_offset = H1 * math.sin(math.radians(45))
+            z_offset = H1 * math.cos(math.radians(45)) 
+            new_placement = App.Placement(App.Vector(x_offset, 0, -z_offset),App.Rotation(App.Vector(0, 1, 0), 0))
+            obj.Placement = new_placement
+            assy.addObject(obj)
+            handrail_list=[]
+
             if size[:2]=='125':
                 c=35.0
             else:
@@ -721,24 +739,59 @@ class ParamStaire20:
                     elif Position=='Left':
                         y=0 
                 if key==1:        
-                    handrail(self)
+                    shape =handrail(self)
                 elif key==2:
-                    handrail_1(self)
+                    shape =handrail_1(self)
                 elif key==3:
-                    handrail_2(self)
+                    shape =handrail_2(self)
+
+                # 手すりを作成したら、hr_group に入れる
+                hr_name = f"{obj.Name}_Handrail_{i}" 
+                #obj2 = update_or_create_handrail(doc, hr_name, shape)
+                obj2=doc.getObject(hr_name)
+
+                if obj2:
+                    # 既にあるなら形状を更新するだけ（これで消えなくなる）
+                    obj2.Shape = shape
+                else:
+                    # ない時だけ新しく作る
+                    obj2 = doc.addObject("Part::Feature", hr_name)
+                    obj2.Shape = shape
+                    assy.addObject(obj2)
+
                 s=float(math.atan(H/L))
                 x=30
                 z=30*math.tan(s)
                 
-                if i==0:
-                    c2=c00
-                    c2.Placement=App.Placement(App.Vector(x,y,z),App.Rotation(App.Vector(0,1,0),0))
-                    c1=c1.fuse(c2)   
+                obj2.Placement=App.Placement(App.Vector(x,y,z),App.Rotation(App.Vector(0,1,0),0))
+                handrail_list.append(obj2)    
+
+                # --- 4. Fusion (手すりの合体) の処理 ---
+                fusion_name = obj.Name + "_HandrailFusion"
+                fuse = doc.getObject(fusion_name)
+
+                if len(handrail_list) >= 2:
+                    # 2つ以上ある場合のみFusionを作成/更新
+                    if fuse is None:
+                        fuse = doc.addObject("Part::MultiFuse", fusion_name)
+                        assy.addObject(fuse)
+
+                     # Shapesをセットしてからrecomputeを呼ぶ
+                    fuse.Shapes = handrail_list
+                    fuse.recompute()
+                    fuse.ViewObject.show() # 表示を確実にする
+                
+                elif len(handrail_list) == 1:
+                    # 1つしかない場合はFusionは不要（エラーの原因になるため）
+                    if fuse:
+                        fuse.ViewObject.hide() # 既存のFusionがあれば隠す
+                    handrail_list[0].ViewObject.show()
+                    
                 else:
-                    c2=c00
-                    c2.Placement=App.Placement(App.Vector(x,y,z),App.Rotation(App.Vector(0,1,0),0))
-                    c1=c1.fuse(c2)    
-            
+                    # 手すりがゼロの場合
+                    if fuse:
+                        fuse.ViewObject.hide()
+       
             total=body_w+hand_w*n
 
             label='mass[kg]'
@@ -758,7 +811,7 @@ class ParamStaire20:
                 pass
 
         #c1.Placement=App.Placement(App.Vector(-H,0,-H),App.Rotation(App.Vector(0,0,0),0))
-        obj.Shape=c1
+        
         
 class ViewProvider:
     def __init__(self, obj):
