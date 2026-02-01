@@ -211,10 +211,47 @@ class Ui_Dialog(object):
         except:
             pass  
 
-        Gui.ActiveDocument.ActiveView.fitAll() 
-        Gui.activateWorkbench("DraftWorkbench")
-        Gui.Selection.addSelection(obj)
-        Gui.runCommand('Draft_Move',0)      
+        # 1. 作成したアセンブリを確実に取得
+        assy_name = obj.Name + "_Assy"
+        target_assy = App.ActiveDocument.getObject(assy_name)
+        # もしアセンブリがまだなければ、階段本体を動かすようにフォールバック
+        move_target = target_assy if target_assy else obj
+        view = Gui.ActiveDocument.ActiveView
+        
+        # ドラッグ中、元の位置にあるアセンブリを一時的に隠すと見やすくなります
+        # move_target.ViewObject.Visibility = False
+
+        callbacks = {}
+        # --- マウス移動時の処理 ---
+        def move_cb(info):
+            pos = info["Position"]
+            p = view.getPoint(pos)
+            # アセンブリの座標をマウス位置に即座に反映
+            move_target.Placement.Base = p
+            # 表示を更新（これがないと動いて見えない場合があります）
+            view.softRedraw()
+
+        # --- クリック時の処理 ---
+        def click_cb(info):
+            if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
+                # タイマーを使って終了処理を呼ぶ（FreeCADの安定のため）
+                QtCore.QTimer.singleShot(0, finish)
+
+        # --- 終了処理 ---
+        def finish():
+            try:
+                view.removeEventCallback("SoLocation2Event", callbacks["move"])
+                view.removeEventCallback("SoMouseButtonEvent", callbacks["click"])
+            except:
+                pass
+            
+            move_target.ViewObject.Visibility = True
+            App.ActiveDocument.recompute()
+            FreeCAD.Console.PrintMessage("配置が完了しました。\n")
+
+        # --- イベントの登録 ---
+        callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
+        callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)      
 
 
 class main():

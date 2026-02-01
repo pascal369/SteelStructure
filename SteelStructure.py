@@ -187,6 +187,7 @@ class Ui_Dialog(object):
             obj.g0=g0 
 
     def japan(self):
+        return
         c00 = Gui.Selection.getSelection()
         if c00:
             obj = c00[0]

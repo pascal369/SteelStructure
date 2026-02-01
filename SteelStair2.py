@@ -19,6 +19,8 @@ import FreeCAD as App
 import FreeCADGui
 from StlStr_data2 import ParamStair2
 from StlStr_data2 import StlStrdata2
+from pivy import coin
+from PySide2 import QtCore
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -137,9 +139,11 @@ class Ui_Dialog(object):
         self.combo_ichi.setGeometry(QtCore.QRect(120, 200, 61, 22))
         self.combo_ichi.setMaxVisibleItems(10)
         self.combo_ichi.setObjectName("combo_ichi")
+        self.combo_ichi.setCurrentText('Both')
 
         self.comboBox.addItems(StlStrdata2.type)
         self.combo_ichi.addItems(StlStrdata2.ichi)
+        self.combo_ichi.setCurrentIndex(2)
         self.comboBox_3.addItems(StlStrdata2.katakou)
         self.comboBox_5.addItems(StlStrdata2.ita_t)
         self.comboBox_5.setCurrentIndex(3)
@@ -232,6 +236,10 @@ class Ui_Dialog(object):
         except:
             pass
     def create(self):
+        if Gui.ActiveDocument is None:
+            App.newDocument("Unnamed")
+            Gui.ActiveDocument = Gui.getDocument("Unnamed")
+            
         L=float(self.lineEdit_L.text())
         L1=float(self.lineEdit_L1.text())
         H=float(self.lineEdit_H.text())
@@ -287,13 +295,52 @@ class Ui_Dialog(object):
 
         ParamStair2.ParamStaire20(obj)
         obj.ViewObject.Proxy=0
-        FreeCAD.ActiveDocument.recompute() 
-        Gui.SendMsgToActiveView("ViewFit") 
 
-        Gui.ActiveDocument.ActiveView.fitAll() 
-        Gui.activateWorkbench("DraftWorkbench")
-        Gui.Selection.addSelection(obj)
-        Gui.runCommand('Draft_Move',0)   
+        
+        # 1. 作成したアセンブリを確実に取得
+        assy_name = obj.Name + "_Assy"
+        target_assy = App.ActiveDocument.getObject(assy_name)
+        
+        # もしアセンブリがまだなければ、階段本体を動かすようにフォールバック
+        move_target = target_assy if target_assy else obj
+
+        view = Gui.ActiveDocument.ActiveView
+        
+        # ドラッグ中、元の位置にあるアセンブリを一時的に隠すと見やすくなります
+        # move_target.ViewObject.Visibility = False
+
+        callbacks = {}
+        
+        # --- マウス移動時の処理 ---
+        def move_cb(info):
+            pos = info["Position"]
+            p = view.getPoint(pos)
+            # アセンブリの座標をマウス位置に即座に反映
+            move_target.Placement.Base = p
+            # 表示を更新（これがないと動いて見えない場合があります）
+            view.softRedraw()
+
+        # --- クリック時の処理 ---
+        def click_cb(info):
+            if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
+                # タイマーを使って終了処理を呼ぶ（FreeCADの安定のため）
+                QtCore.QTimer.singleShot(0, finish)
+
+        # --- 終了処理 ---
+        def finish():
+            try:
+                view.removeEventCallback("SoLocation2Event", callbacks["move"])
+                view.removeEventCallback("SoMouseButtonEvent", callbacks["click"])
+            except:
+                pass
+            
+            move_target.ViewObject.Visibility = True
+            App.ActiveDocument.recompute()
+            FreeCAD.Console.PrintMessage("配置が完了しました。\n")
+
+        # --- イベントの登録 ---
+        callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
+        callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)
 
 class main():
         d = QtGui.QWidget()

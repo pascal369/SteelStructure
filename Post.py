@@ -320,9 +320,7 @@ class main():
     d.ui.setupUi(d)
     d.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
     d.show()
-    script_window = Gui.getMainWindow().findChild(QtGui.QDialog, 'd')
-    script_window.setWindowFlags(script_window.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)  
-
+    
     
     
     

@@ -121,21 +121,6 @@ class Ui_Dialog(object):
          spreadsheet.set('W0',myW)
          spreadsheet.set('L0',myL)
          spreadsheet.set('H0',myH)
-         #print(myW)
-         if mytype=='01':
-             stair.H0=float(myH)
-             stair.L=float(myH)
-         elif mytype=='02':
-             SteelStair.H0=float(myH)
-             SteelStair.L=float(myH)   
-         elif mytype=='03':
-             SteelStair.H0=float(myH)
-             SteelStair.L=float(myH) 
-             SteelStair.w=float(myL) 
-             stair.H0=float(myH)
-             stair.L=float(myH)  
-             stair.L1=float(myW)    
-             stair.w0=float(myL)  
 
          doc = App.ActiveDocument
          
@@ -166,13 +151,58 @@ class Ui_Dialog(object):
          joined_path = os.path.join(base, 'StlStu_data',fname) 
          Gui.ActiveDocument.mergeProject(joined_path)
 
-         objs=doc.Objects
-         if objs:
-             last_obj=objs[-1] 
+         obj=doc.Objects
+         if obj:
+             last_obj=obj[-1] 
      
-         Gui.activateWorkbench("DraftWorkbench")
-         Gui.Selection.addSelection(last_obj)
-         Gui.runCommand('Draft_Move',0) 
+         #Gui.activateWorkbench("DraftWorkbench")
+         #Gui.Selection.addSelection(last_obj)
+         #Gui.runCommand('Draft_Move',0) 
+
+         # 1. 作成したアセンブリを確実に取得
+         assy_name = obj.Name + "_Assy"
+         target_assy = App.ActiveDocument.getObject(assy_name)
+         
+         # もしアセンブリがまだなければ、階段本体を動かすようにフォールバック
+         move_target = target_assy if target_assy else obj
+ 
+         view = Gui.ActiveDocument.ActiveView
+         
+         # ドラッグ中、元の位置にあるアセンブリを一時的に隠すと見やすくなります
+         # move_target.ViewObject.Visibility = False
+ 
+         callbacks = {}
+         
+         # --- マウス移動時の処理 ---
+         def move_cb(info):
+             pos = info["Position"]
+             p = view.getPoint(pos)
+             # アセンブリの座標をマウス位置に即座に反映
+             move_target.Placement.Base = p
+             # 表示を更新（これがないと動いて見えない場合があります）
+             view.softRedraw()
+ 
+         # --- クリック時の処理 ---
+         def click_cb(info):
+             if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
+                 # タイマーを使って終了処理を呼ぶ（FreeCADの安定のため）
+                 QtCore.QTimer.singleShot(0, finish)
+ 
+         # --- 終了処理 ---
+         def finish():
+             try:
+                 view.removeEventCallback("SoLocation2Event", callbacks["move"])
+                 view.removeEventCallback("SoMouseButtonEvent", callbacks["click"])
+             except:
+                 pass
+             
+             move_target.ViewObject.Visibility = True
+             App.ActiveDocument.recompute()
+             #FreeCAD.Console.PrintMessage("配置が完了しました。\n")
+ 
+         # --- イベントの登録 ---
+         callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
+         callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)
 
 class main():
         d = QtGui.QWidget()

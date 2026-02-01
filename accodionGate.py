@@ -123,13 +123,14 @@ class Ui_Dialog(object):
              spreadsheet.set('L0',length)
              App.ActiveDocument.recompute() 
                     
-             return
+             
 
     def create(self): 
          fname='accodionGate.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'accodionGate_data',fname) 
          try:
+            doc=App.ActiveDocument
             Gui.ActiveDocument.mergeProject(joined_path)
          except:
             doc=App.newDocument()
