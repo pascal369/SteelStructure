@@ -14,6 +14,8 @@ from hdrl_data import ParamCircular
 from hdrl_data import ParamEdge
 #from hdrl_data import ParamChannel
 from hdrl_data import HandData
+from pivy import coin
+from PySide2 import QtCore
         
 class ViewProvider:
     def __init__(self, obj):
@@ -47,7 +49,7 @@ class Ui_Dialog(object):
         self.spinBoxL1.setGeometry(90, 70, 60, 40)
         self.spinBoxL1.setMinimum(100)  # 最小値
         self.spinBoxL1.setMaximum(50000)  # 最大値
-        self.spinBoxL1.setValue(1500)  # 
+        self.spinBoxL1.setValue(1600)  # 
         self.spinBoxL1.setSingleStep(10) #step
         self.spinBoxL1.setAlignment(QtCore.Qt.AlignCenter)
         #Step
@@ -66,7 +68,7 @@ class Ui_Dialog(object):
         self.spinBoxL2.setGeometry(190, 70, 60, 40)
         self.spinBoxL2.setMinimum(100)  # 最小値
         self.spinBoxL2.setMaximum(50000)  # 最大値
-        self.spinBoxL2.setValue(1500)  # 
+        self.spinBoxL2.setValue(1600)  # 
         self.spinBoxL2.setSingleStep(10) #step
         self.spinBoxL2.setAlignment(QtCore.Qt.AlignCenter)
 
@@ -157,26 +159,20 @@ class Ui_Dialog(object):
             try:
                 myShape=obj
                 l1=(myShape.l1)
-
                 try:
                     l2=(myShape.l2)
                 except:
                     pass
-
                 h=(myShape.h)
                 p=(myShape.p)
-
-                
                 self.spinBoxL1.setValue(int(l1))
                 self.spinBoxL2.setValue(int(l2))
                 self.lineEdit_l.setText(h)
                 self.lineEdit_p.setText(p)
-
                 self.comboBox_type.setCurrentText(myShape.type)
             except:
                 myShape=None        
         App.ActiveDocument.recompute()   
-        #Gui.runCommand('a2p_updateImportedParts',0)
     def upDate(self):
         selection = Gui.Selection.getSelection()
         for obj in selection:
@@ -190,7 +186,6 @@ class Ui_Dialog(object):
                 myShape.l2=l2
                 myShape.h=h
                 myShape.p=p
-
             except:
                 myShape=None 
         try:
@@ -199,9 +194,7 @@ class Ui_Dialog(object):
             obj.Standard='L='+str(l1)  
     
         App.ActiveDocument.recompute()  
-        #Gui.runCommand('a2p_updateImportedParts',0) 
     def spinMove(self):
-        #print('aaaaaaaaaaaaaaaaaa')
         step=self.le_step.text()
         self.spinBoxL1.setSingleStep(int(step)) 
         self.spinBoxL2.setSingleStep(int(step))
@@ -215,25 +208,19 @@ class Ui_Dialog(object):
                 myShape.l2=l2
             except:
                 myShape=None  
-        #Gui.runCommand('a2p_updateImportedParts',0)        
         App.ActiveDocument.recompute()      
     def on_type(self):
         global key
         global spec_siyo
-        
         key = self.comboBox_type.currentText()[:2]
         try:
-            #l=float(self.lineEdit_l.text())
             h=float(self.lineEdit_l.text())
             l1=float(self.spinBoxL1.value())
             l2=float(self.spinBoxL2.value())
             k=float(self.lineEdit_cn.text())
             p=float(self.lineEdit_p.text())
-            #print(p)
-
         except:
             pass
-
         spec_siyo=self.comboBox_siyo.currentIndex()
 
         if key=='00':
@@ -371,48 +358,71 @@ class Ui_Dialog(object):
         except:
             Standard='L='+str(l1)  
         obj.Standard=Standard    
-
-        # 1. 作成したアセンブリを確実に取得
-        assy_name = obj.Name + "_Assy"
-        target_assy = App.ActiveDocument.getObject(assy_name)
-        # もしアセンブリがまだなければ、階段本体を動かすようにフォールバック
-        move_target = target_assy if target_assy else obj
-        view = Gui.ActiveDocument.ActiveView
         
-        # ドラッグ中、元の位置にあるアセンブリを一時的に隠すと見やすくなります
-        # move_target.ViewObject.Visibility = False
+        doc = App.ActiveDocument
+        new_obj = doc.ActiveObject
+        #'Assembly' オブジェクトを探して追加する
+        target_folder = doc.getObject('Assembly')
+        if target_folder:
+            target_folder.addObject(new_obj)
+            doc.recompute()
 
+        view = Gui.ActiveDocument.ActiveView
+        obj.ViewObject.Visibility = True
+        sep = coin.SoSeparator()
+        trans = coin.SoTranslation()
+        sep.addChild(trans)
+        view.getSceneGraph().addChild(sep)
         callbacks = {}
-        # --- マウス移動時の処理 ---
+        
+        # -----------------------------
         def move_cb(info):
             pos = info["Position"]
             p = view.getPoint(pos)
-            # アセンブリの座標をマウス位置に即座に反映
-            move_target.Placement.Base = p
-            # 表示を更新（これがないと動いて見えない場合があります）
-            #view.softRedraw()
-
-        # --- クリック時の処理 ---
+            trans.translation.setValue(p)
+            obj.Placement.Base = p
+        
+        # -----------------------------
         def click_cb(info):
             if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
-                # タイマーを使って終了処理を呼ぶ（FreeCADの安定のため）
+                # ★ 直接 finish() を呼ばない
                 QtCore.QTimer.singleShot(0, finish)
-
-        # --- 終了処理 ---
+        
+        # -----------------------------
+        def key_cb(info):
+            if info.get("Key") == "ESCAPE":
+                QtCore.QTimer.singleShot(0, cancel)
+        
+        # -----------------------------
         def finish():
             try:
                 view.removeEventCallback("SoLocation2Event", callbacks["move"])
                 view.removeEventCallback("SoMouseButtonEvent", callbacks["click"])
+                view.removeEventCallback("SoKeyboardEvent", callbacks["key"])
             except:
                 pass
-            
-            move_target.ViewObject.Visibility = True
+        
+            obj.ViewObject.Visibility = True
+        
+            try:
+                view.getSceneGraph().removeChild(sep)
+            except:
+                pass
+        
             App.ActiveDocument.recompute()
-            FreeCAD.Console.PrintMessage("配置が完了しました。\n")
-
-        # --- イベントの登録 ---
-        callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
-        callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)   
+        
+        # -----------------------------
+        def cancel():
+            finish()
+            try:
+                App.ActiveDocument.removeObject(obj.Name)
+            except:
+                pass
+        
+        # -----------------------------
+        callbacks["move"]  = view.addEventCallback("SoLocation2Event", move_cb)
+        callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)
+        callbacks["key"]   = view.addEventCallback("SoKeyboardEvent", key_cb)   
         
 
 class Main():
