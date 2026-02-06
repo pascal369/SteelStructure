@@ -747,7 +747,6 @@ class ParamStaire20:
 
                 # 手すりを作成したら、hr_group に入れる
                 hr_name = f"{obj.Name}_Handrail_{i}" 
-                #obj2 = update_or_create_handrail(doc, hr_name, shape)
                 obj2=doc.getObject(hr_name)
 
                 if obj2:
@@ -810,8 +809,6 @@ class ParamStaire20:
                 obj.ViewObject.Proxy=0
                 pass
 
-        #c1.Placement=App.Placement(App.Vector(-H,0,-H),App.Rotation(App.Vector(0,0,0),0))
-        
         
 class ViewProvider:
     def __init__(self, obj):
