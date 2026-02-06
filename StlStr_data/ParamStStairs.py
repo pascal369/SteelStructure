@@ -1067,8 +1067,6 @@ class Staires:
                             
                     #mass    
                     hand_w=hand_w*(stry-1)
-                    #print(hand_w)
-
                     s=float(math.atan(H/L))
                     if MdlFloor==True:
                         x=30
@@ -1120,4 +1118,3 @@ class Staires:
                 obj.mass=total
                 obj.ViewObject.Proxy=0
                 pass
-        #obj.Shape=c1
