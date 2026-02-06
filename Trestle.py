@@ -142,67 +142,64 @@ class Ui_Dialog(object):
                      obj.addProperty("App::PropertyString", "Standard", "Standard", "L1,L2の情報")  
                  obj.Standard=f'H={H_val}'
          App.ActiveDocument.recompute()
-         
+
     def create(self): 
-         doc = App.ActiveDocument
-         mytype=self.comboBox_type.currentText()
-         fname='trestle'+mytype+'.FCStd'
-         base=os.path.dirname(os.path.abspath(__file__))
-         joined_path = os.path.join(base, 'StlStu_data',fname) 
-         Gui.ActiveDocument.mergeProject(joined_path)
+        doc = App.ActiveDocument
+        mytype = self.comboBox_type.currentText()
+        fname = 'trestle' + mytype + '.FCStd'
+        base = os.path.dirname(os.path.abspath(__file__))
+        joined_path = os.path.join(base, 'StlStu_data', fname) 
+    
+        # --- インポート前のオブジェクトリストを取得 ---
+        old_obj_names = [o.Name for o in doc.Objects]
+        
+        # マージ実行
+        Gui.ActiveDocument.mergeProject(joined_path)
+        doc.recompute() # 一旦再計算して内部IDを確定させる
+    
+        # --- インポート後に増えたオブジェクトを特定 ---
+        new_objs = [o for o in doc.Objects if o.Name not in old_obj_names]
+        
+        if not new_objs:
+            print("Error: オブジェクトが読み込まれませんでした。")
+            return
+    
+        # trstleAssyというラベルを持つものを優先的に探す
+        move_target = None
+        for o in new_objs:
+            if "trestleAssy" in o.Label or "trestleAssy" in o.Name:
+                move_target = o
+                break
+        
+        # 見つからなければ、新しく入ってきた最初のオブジェクトをターゲットにする
+        if not move_target:
+            move_target = new_objs[0]
+    
+        view = Gui.ActiveDocument.ActiveView
+        callbacks = {}
+    
+        def move_cb(info):
+            pos = info["Position"]
+            # 重要：ビュー平面上の3D座標を取得
+            p = view.getPoint(pos)
+            if move_target:
+                move_target.Placement.Base = p
+                view.softRedraw()
+    
+        def click_cb(info):
+            if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
+                # コールバック解除
+                view.removeEventCallback("SoLocation2Event", callbacks["move"])
+                view.removeEventCallback("SoMouseButtonEvent", callbacks["click"])
+                App.ActiveDocument.recompute()
+                print("Placed: " + move_target.Label)
+    
+        # イベント登録
+        callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
+        callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb) 
 
-         obj=doc.Objects
-         if obj:
-             last_obj=obj[-1] 
-     
-         #Gui.activateWorkbench("DraftWorkbench")
-         #Gui.Selection.addSelection(last_obj)
-         #Gui.runCommand('Draft_Move',0) 
-
-         # 1. 作成したアセンブリを確実に取得
-         assy_name = obj.Name + "_Assy"
-         target_assy = App.ActiveDocument.getObject(assy_name)
-         
-         # もしアセンブリがまだなければ、階段本体を動かすようにフォールバック
-         move_target = target_assy if target_assy else obj
- 
-         view = Gui.ActiveDocument.ActiveView
-         
-         # ドラッグ中、元の位置にあるアセンブリを一時的に隠すと見やすくなります
-         # move_target.ViewObject.Visibility = False
- 
-         callbacks = {}
-         
-         # --- マウス移動時の処理 ---
-         def move_cb(info):
-             pos = info["Position"]
-             p = view.getPoint(pos)
-             # アセンブリの座標をマウス位置に即座に反映
-             move_target.Placement.Base = p
-             # 表示を更新（これがないと動いて見えない場合があります）
-             view.softRedraw()
- 
-         # --- クリック時の処理 ---
-         def click_cb(info):
-             if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
-                 # タイマーを使って終了処理を呼ぶ（FreeCADの安定のため）
-                 QtCore.QTimer.singleShot(0, finish)
- 
-         # --- 終了処理 ---
-         def finish():
-             try:
-                 view.removeEventCallback("SoLocation2Event", callbacks["move"])
-                 view.removeEventCallback("SoMouseButtonEvent", callbacks["click"])
-             except:
-                 pass
-             
-             move_target.ViewObject.Visibility = True
-             App.ActiveDocument.recompute()
-             #FreeCAD.Console.PrintMessage("配置が完了しました。\n")
- 
-         # --- イベントの登録 ---
-         callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
-         callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)
+        
+        
 
 class main():
         d = QtGui.QWidget()

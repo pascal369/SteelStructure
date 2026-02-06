@@ -216,7 +216,7 @@ class Ui_Dialog(object):
         if selection:
              selected_object = selection[0]
              if selected_object.TypeId == "App::Part":
-                 print('aaaaaaaaaaaa')
+                 #print('aaaaaaaaaaaa')
                  parts_group = selected_object
                  for obj in parts_group.Group:
                       print(obj.Label)  

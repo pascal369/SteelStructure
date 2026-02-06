@@ -186,18 +186,7 @@ class Ui_Dialog(object):
                  AngleSteelB.size=key
              except:
                  pass
-             #except:
-             #     pass    
              
-             #c00 = Gui.Selection.getSelection()
-             #if c00:
-             #    obj = c00[0]
-             #try:
-             #    obj.Standard='L'+key+'  W0='+myW+'  H0='+myH
-             #    print(obj.Standard)
-             #except:
-             #    pass
-             #obj.mass=obj.Shape.Volume*obj.g0*1000/10**9 
              App.ActiveDocument.recompute()
          
     def create(self): 
@@ -205,19 +194,68 @@ class Ui_Dialog(object):
          mytype=self.comboBox_type.currentText()
          fname='steelBrace'+mytype+'.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
-         joined_path = os.path.join(base, 'StlStu_data',fname) 
-         try:
-            Gui.ActiveDocument.mergeProject(joined_path)
-         except:
-            doc=App.newDocument()
-            Gui.ActiveDocument.mergeProject(joined_path)
+         joined_path = os.path.join(base, 'StlStu_data',fname)
 
-         objs=doc.Objects
-         if objs:
-             last_obj=objs[-1] 
-         Gui.activateWorkbench("DraftWorkbench")
-         Gui.Selection.addSelection(last_obj)
-         Gui.runCommand('Draft_Move',0)      
+          # --- インポート前のオブジェクトリストを取得 ---
+         old_obj_names = [o.Name for o in doc.Objects]
+         
+         # マージ実行
+         Gui.ActiveDocument.mergeProject(joined_path)
+         doc.recompute() # 一旦再計算して内部IDを確定させる
+     
+         # --- インポート後に増えたオブジェクトを特定 ---
+         new_objs = [o for o in doc.Objects if o.Name not in old_obj_names]
+         
+         if not new_objs:
+             print("Error: オブジェクトが読み込まれませんでした。")
+             return
+     
+         # trstleAssyというラベルを持つものを優先的に探す
+         move_target = None
+         for o in new_objs:
+             if "steelBraceAssy" in o.Label or "steelBraceAssy" in o.Name:
+                 move_target = o
+                 break
+         
+         # 見つからなければ、新しく入ってきた最初のオブジェクトをターゲットにする
+         if not move_target:
+             move_target = new_objs[0]
+     
+         view = Gui.ActiveDocument.ActiveView
+         callbacks = {}
+     
+         def move_cb(info):
+             pos = info["Position"]
+             # 重要：ビュー平面上の3D座標を取得
+             p = view.getPoint(pos)
+             if move_target:
+                 move_target.Placement.Base = p
+                 view.softRedraw()
+     
+         def click_cb(info):
+             if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
+                 # コールバック解除
+                 view.removeEventCallback("SoLocation2Event", callbacks["move"])
+                 view.removeEventCallback("SoMouseButtonEvent", callbacks["click"])
+                 App.ActiveDocument.recompute()
+                 print("Placed: " + move_target.Label)
+     
+         # イベント登録
+         callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
+         callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb) 
+          
+         # try:
+         #    Gui.ActiveDocument.mergeProject(joined_path)
+         # except:
+         #    doc=App.newDocument()
+         #    Gui.ActiveDocument.mergeProject(joined_path)
+# 
+         # objs=doc.Objects
+         # if objs:
+         #     last_obj=objs[-1] 
+         # Gui.activateWorkbench("DraftWorkbench")
+         # Gui.Selection.addSelection(last_obj)
+         # Gui.runCommand('Draft_Move',0)      
          
 class main():
         d = QtGui.QWidget()

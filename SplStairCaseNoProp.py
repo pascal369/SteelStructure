@@ -103,19 +103,18 @@ class Ui_Dialog(object):
         self.label_H0= QtGui.QLabel('H0=',Dialog)
         self.label_H0.setGeometry(QtCore.QRect(200, 305, 120, 21))
         self.label_H0.setStyleSheet("color: black;")
-        #self.img.setAlignment(QtCore.Qt.AlignCenter)
+
         self.lineEdit_d.setText('')
         self.lineEdit_d.textChanged.connect(self.on_dim)
         self.lineEdit_d.setText('1600')
         self.lineEdit_D.textChanged.connect(self.on_dim)
         self.lineEdit_a.textChanged.connect(self.on_dim)
         self.lineEdit_H.textChanged.connect(self.on_dim)
-        #self.lineEdit_hs.textChanged.connect(self.on_dim)
+
         self.lineEdit_t1.textChanged.connect(self.on_dim)
         self.lineEdit_t2.textChanged.connect(self.on_dim)
         self.lineEdit_h.textChanged.connect(self.on_dim)
         self.lineEdit_st.textChanged.connect(self.on_dim)
-        #self.lineEdit_p.textChanged.connect(self.on_dim)
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         pic='スパイラル.jpg'
@@ -126,8 +125,6 @@ class Ui_Dialog(object):
             self.img.setPixmap(QtGui.QPixmap(joined_path))
         except:
             return
-
-       
         
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.retranslateUi(Dialog)
@@ -159,7 +156,6 @@ class Ui_Dialog(object):
         H=float(self.lineEdit_H.text())
         st=float(self.lineEdit_st.text())
         p=H*360/st
-        #m=p/H
         m=1
         D=float(self.lineEdit_D.text())
         d=float(self.lineEdit_d.text())
@@ -167,13 +163,10 @@ class Ui_Dialog(object):
         t1=float(self.lineEdit_t1.text())
         t2=float(self.lineEdit_t2.text())
         h=float(self.lineEdit_h.text())
-        #hs=int(self.lineEdit_hs.text())
         C=d/2+(D-d)/4
         b=(D-d)/2
         f=b+2*a
         D1=(D-d)/2
-        #k1=float(math.atan(p/(D)))
-        #self.label_H.setText(QtGui.QApplication.translate("Dialog", str(math.degrees(k1)), None))
         label='C=d/2+(D-d)/4=' + str(C) + '[mm]'
         self.label_C.setText(QtGui.QApplication.translate("Dialog", str(label), None))
         label='b=(D-d)/2=' + str(b) + '[mm]'
@@ -182,18 +175,13 @@ class Ui_Dialog(object):
         self.label_f.setText(QtGui.QApplication.translate("Dialog", str(label), None))
         hs=150.0
         n=int(H/hs)
-
-        #hs=H/n
         ra=math.radians(st/n)
         rd=float(st/n)
-        #n=int((H+hs-h-t1)/hs)
         label='Number of steps n=' + str(n) 
         self.label_n.setText(QtGui.QApplication.translate("Dialog", str(label), None))
         h0=h+t1+hs
 
         k=float(st/360*math.radians(st*p/(H*n)))
-        #k=ra
-        #self.label_H.setText(QtGui.QApplication.translate("Dialog", str(math.degrees(k)), None))
         H0=(n-1)*hs+h+t1
         label='H0='+str(H0)+'[mm]'
         self.label_H0.setText(QtGui.QApplication.translate("Dialog", str(label), None))
@@ -204,7 +192,6 @@ class Ui_Dialog(object):
         obj.addProperty("App::PropertyFloat", "st",label).st=st
         obj.addProperty("App::PropertyFloat", "d",label).d=d
         obj.addProperty("App::PropertyFloat", "D",label).D=D
-        #obj.addProperty("App::PropertyFloat", "hs",label).hs=hs
         obj.addProperty("App::PropertyFloat", "a",label).a=a
         obj.addProperty("App::PropertyFloat", "t1",label).t1=t1
         obj.addProperty("App::PropertyFloat", "t2",label).t2=t2
@@ -213,15 +200,57 @@ class Ui_Dialog(object):
         obj.addProperty("App::PropertyFloat", "b",label).b=b
         obj.addProperty("App::PropertyFloat", "f",label).f=f
         obj.addProperty("App::PropertyFloat", "H0",label).H0=H0
-        #obj.addProperty("App::PropertyFloat", "p",label).p=p
         obj.addProperty("App::PropertyInteger", "n",label).n=n
         obj.addProperty("App::PropertyFloat", "k",label).k=k
         obj.addProperty("App::PropertyFloat", "m",label).m=m
         ParamSplCaseNP.SplCaseNP(obj) 
         obj.ViewObject.Proxy=0
-        Gui.SendMsgToActiveView("ViewFit")
-        #FreeCAD.ActiveDocument.recompute()    
+
+        # 1. 作成したアセンブリを確実に取得
+        assy_name = obj.Name + "_Assy"
+        target_assy = App.ActiveDocument.getObject(assy_name)
+        
+        # もしアセンブリがまだなければ、階段本体を動かすようにフォールバック
+        move_target = target_assy if target_assy else obj
+
+        view = Gui.ActiveDocument.ActiveView
+        
+        # ドラッグ中、元の位置にあるアセンブリを一時的に隠すと見やすくなります
+        # move_target.ViewObject.Visibility = False
+
+        callbacks = {}
+        
+        # --- マウス移動時の処理 ---
+        def move_cb(info):
+            pos = info["Position"]
+            p = view.getPoint(pos)
+            # アセンブリの座標をマウス位置に即座に反映
+            move_target.Placement.Base = p
+            # 表示を更新（これがないと動いて見えない場合があります）
+            #view.softRedraw()
+
+        # --- クリック時の処理 ---
+        def click_cb(info):
+            if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
+                # タイマーを使って終了処理を呼ぶ（FreeCADの安定のため）
+                QtCore.QTimer.singleShot(0, finish)
+
+        # --- 終了処理 ---
+        def finish():
+            try:
+                view.removeEventCallback("SoLocation2Event", callbacks["move"])
+                view.removeEventCallback("SoMouseButtonEvent", callbacks["click"])
+            except:
+                pass
             
+            move_target.ViewObject.Visibility = True
+            App.ActiveDocument.recompute()
+            FreeCAD.Console.PrintMessage("配置が完了しました。\n")
+
+        # --- イベントの登録 ---
+        callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
+        callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)
+
         
 class Main_P():
         w = QtGui.QWidget()
