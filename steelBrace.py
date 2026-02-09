@@ -102,7 +102,6 @@ class Ui_Dialog(object):
         return
     def onImport(self):
         global spreadsheet
-        #global AngleSteel
         selection = Gui.Selection.getSelection()
         #self.comboBox_angle.clear()
         if selection:
@@ -112,13 +111,12 @@ class Ui_Dialog(object):
                  parts_group = selected_object
                  # Partsグループ内のオブジェクトを走査してスプレッドシートを探す
                  for obj in parts_group.Group:
-                     print(obj.Label)
+                     #print(obj.Label)
 
                      if obj.TypeId == "Spreadsheet::Sheet":
                          # スプレッドシートが見つかった場合の処理
                          spreadsheet = obj 
-                     elif obj.Label[:10]=='AngleSteel':
-                         AngleSteel=obj    
+                        
 
         self.lineEdit_W.setText(spreadsheet.getContents('W0'))    
         self.lineEdit_L.setText(spreadsheet.getContents('La'))          
@@ -132,21 +130,24 @@ class Ui_Dialog(object):
         global AngleSteelB
         matched = []
         for obj in getattr(group, "Group", []):
-            print(obj.Label)
-            if obj.Label[:10]=='AngleSteel':
+            if obj.Label=='AngleSteel':
                 AngleSteel=obj
-            try:
-                if obj.Label[:11]=='AngleSteelB':
-                    AngleSteelB=obj  
-            except:
-                pass
-            # 下位フォルダなら再帰的に探索
+            elif obj.Label=='AngleSteelB':
+                AngleSteelB=obj    
+             # 下位フォルダなら再帰的に探索
             if hasattr(obj, "Group"):
                 matched.extend(self.collect_objects_recursive(obj, target_labels))
             else:
                 # ラベルが完全一致するオブジェクトを追加
                 if obj.Label == target_labels:
                     matched.append(obj)
+            size=self.comboBox_angle.currentText()
+            try:
+                
+                AngleSteel.size=size 
+                AngleSteelB.size=size   
+            except:
+                pass            
         return matched  
     def select_objects_by_multiple_labels(self):
         sel = Gui.Selection.getSelection()
@@ -157,20 +158,19 @@ class Ui_Dialog(object):
         if not hasattr(root, "Group"):
             App.Console.PrintError("選択されたオブジェクトはフォルダ（Groupなど）ではありません。\n")
             return
-        target_labels =['Carrier', 'Return']   # ← ここを探したいラベル名に変更！
+        target_labels =['AngleSteel','AngleSteelB']   # ← ここを探したいラベル名に変更！
         matched_objects = self.collect_objects_recursive(root, target_labels)
         Gui.Selection.clearSelection()
         for obj in matched_objects:
-            Gui.Selection.addSelection(obj)   
-
+            Gui.Selection.addSelection(obj)  
+                
     def update(self):
              global B0
              key=self.comboBox_angle.currentText()
              for i in range(13,40):
-                 print(key,spreadsheet.getContents('A'+str(i)))
+                 #print(key,spreadsheet.getContents('A'+str(i)))
                  if key==spreadsheet.getContents('A'+str(i))[1:]:
                      B0=spreadsheet.getContents('B'+str(i))
-                     
                      break
              #try:
              myW=self.lineEdit_W.text()
@@ -181,12 +181,13 @@ class Ui_Dialog(object):
              spreadsheet.set('B5',myL)
              spreadsheet.set('B11',B0)
              spreadsheet.set('myAngle',key)
-             AngleSteel.size=key
+             size=self.comboBox_angle.currentText()
              try:
-                 AngleSteelB.size=key
+                 AngleSteel.size=size 
+                 AngleSteelB.size=size  
              except:
+                 
                  pass
-             
              App.ActiveDocument.recompute()
          
     def create(self): 
@@ -194,9 +195,9 @@ class Ui_Dialog(object):
          mytype=self.comboBox_type.currentText()
          fname='steelBrace'+mytype+'.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
-         joined_path = os.path.join(base, 'StlStu_data',fname)
+         joined_path = os.path.join(base, 'StlStu_data',fname) 
 
-          # --- インポート前のオブジェクトリストを取得 ---
+         # --- インポート前のオブジェクトリストを取得 ---
          old_obj_names = [o.Name for o in doc.Objects]
          
          # マージ実行
@@ -242,20 +243,7 @@ class Ui_Dialog(object):
      
          # イベント登録
          callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
-         callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb) 
-          
-         # try:
-         #    Gui.ActiveDocument.mergeProject(joined_path)
-         # except:
-         #    doc=App.newDocument()
-         #    Gui.ActiveDocument.mergeProject(joined_path)
-# 
-         # objs=doc.Objects
-         # if objs:
-         #     last_obj=objs[-1] 
-         # Gui.activateWorkbench("DraftWorkbench")
-         # Gui.Selection.addSelection(last_obj)
-         # Gui.runCommand('Draft_Move',0)      
+         callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)
          
 class main():
         d = QtGui.QWidget()
