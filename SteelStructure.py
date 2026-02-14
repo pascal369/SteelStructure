@@ -13,7 +13,7 @@ import importlib
 import FreeCAD,Part
 
 CDia=['Post','ShapedSteel','SteelPlate','SteelStairs','Ladder','Handrail','Trestle',
-      'SteelBrace','LatticeBeam','TrussBeam','TurnBackle','accodionGate','grating',]
+      'SteelBrace','steelBeam','TurnBackle','accodionGate','grating',]
 Stair=['for 2F','2F or higher','spiral staircase with stanchions','spiral staircase']
 Ladder=['LadderA','LadderA with cage','LadderB','LadderB with cage']
 Handrail=['Straight line','Coner with end','Coner','Circular_arc','Edge','Channel']
@@ -273,7 +273,8 @@ class Ui_Dialog(object):
             obj.addProperty("App::PropertyFloat", "mass",label)
             obj.mass=g
         except:
-            obj.mass=g
+            #obj.mass=g
+            pass
 
     def massTally(self):#spreadsheet
         doc = App.ActiveDocument
@@ -425,12 +426,10 @@ class Ui_Dialog(object):
          elif key==8:  
               pic='LatticeBeam.png'  
          elif key==9:  
-              pic='trussBeam.png' 
-         elif key==10:  
               pic='turnBackle.png'   
-         elif key==11:  
+         elif key==10:  
               pic='accodionGate.png'
-         elif key==12:  
+         elif key==11:  
               pic='grating.png'   
 
          try:
@@ -524,21 +523,14 @@ class Ui_Dialog(object):
                     import steelBrace
                 else:
                     importlib.reload(sys.modules['steelBrace']) 
-         elif key==8:#latticeBeam
+         elif key==8:#steelBeam
                 import importlib
                 import sys 
-                if 'latticeBeam' not in sys.modules:
-                    import latticeBeam
+                if 'steelBeam' not in sys.modules:
+                    import steelBeam
                 else:
-                    importlib.reload(sys.modules['latticeBeam'])
-         elif key==9:#trussBeam
-                import importlib
-                import sys 
-                if 'trussBeam' not in sys.modules:
-                    import trussBeam
-                else:
-                    importlib.reload(sys.modules['trussBeam'])
-         elif key==10:#turnBackle
+                    importlib.reload(sys.modules['steelBeam'])
+         elif key==9:#turnBackle
                 import importlib
                 import sys 
                 if 'turnBackleS' not in sys.modules:
@@ -546,7 +538,7 @@ class Ui_Dialog(object):
                 else:
                     importlib.reload(sys.modules['turnBackleS'])
                 
-         elif key==11:#accodionGate   
+         elif key==10:#accodionGate   
                 #import accodionGate 
 
                 import importlib
@@ -556,7 +548,7 @@ class Ui_Dialog(object):
                 else:
                     importlib.reload(sys.modules['accodionGate'])
                 
-         elif key==12:#grating
+         elif key==11:#grating
                 #import grating 
                 import importlib
                 import sys 
