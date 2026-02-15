@@ -6,7 +6,6 @@ from pickle import TRUE
 import sys
 import math
 import string
-from tkinter.tix import ComboBox
 import Import
 #import mySht
 import DraftVecUtils
@@ -18,10 +17,11 @@ import FreeCADGui as Gui
 from PySide import QtGui
 from PySide import QtUiTools
 from PySide import QtCore
-
+from pivy import coin
+from PySide2 import QtCore
 
 dia_data=['10','12','16','20','22','24','30',]
-type_data=['A','B','C']
+type_data=['A','B']
 
 class Ui_Dialog(object):
     global column_list
@@ -61,12 +61,12 @@ class Ui_Dialog(object):
         self.le_L.setGeometry(QtCore.QRect(110, 60, 50, 20))
         self.le_L.setAlignment(QtCore.Qt.AlignCenter)
         #ブレス幅 W
-        self.label_W = QtGui.QLabel('Width',Dialog)
-        self.label_W.setGeometry(QtCore.QRect(10, 88, 100, 20))
-        self.label_W.setStyleSheet("color: black;")
-        self.le_W = QtGui.QLineEdit('1000',Dialog)
-        self.le_W.setGeometry(QtCore.QRect(110, 85, 50, 20))
-        self.le_W.setAlignment(QtCore.Qt.AlignCenter)
+        #self.label_W = QtGui.QLabel('Width',Dialog)
+        #self.label_W.setGeometry(QtCore.QRect(10, 88, 100, 20))
+        #self.label_W.setStyleSheet("color: black;")
+        #self.le_W = QtGui.QLineEdit('1000',Dialog)
+        #self.le_W.setGeometry(QtCore.QRect(110, 85, 50, 20))
+        #self.le_W.setAlignment(QtCore.Qt.AlignCenter)
         #ターンバックル位置Tp
         self.label_Lx = QtGui.QLabel('Turnbackle',Dialog)
         self.label_Lx.setGeometry(QtCore.QRect(10, 113, 100, 20))
@@ -119,10 +119,10 @@ class Ui_Dialog(object):
         #print('aaaaaaaaaaa')
         key=self.comboBox_type.currentText()
         #print(key)
-        if key=='C':
-            self.le_W.show()
-        else:
-            self.le_W.hide()
+        #if key=='C':
+        #    self.le_W.show()
+        #else:
+        #    self.le_W.hide()
 
         fname='turnBackle'+self.comboBox_type.currentText()+'.png'
         #print(fname)
@@ -132,8 +132,6 @@ class Ui_Dialog(object):
         #App.ActiveDocument.recompute()
 
     def read_data(self):
-         #print('ssssssssssssssssssssssssssssssssssssss')
-         #return
          global mySht
          selection = Gui.Selection.getSelection()
          # Partsグループが選択されているかチェック
@@ -271,7 +269,7 @@ class Ui_Dialog(object):
            App.ActiveDocument.recompute() 
            return
     def create(self): 
-         doc=App.activeDocument
+         doc=App.ActiveDocument
          key=self.comboBox_type.currentText()
          if key=='A':
              fname='turnBackleA.FCStd'
@@ -282,17 +280,57 @@ class Ui_Dialog(object):
 
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'turnBackle_data',fname) 
-         #print(joined_path)
+         
+          # --- インポート前のオブジェクトリストを取得 ---
+         old_obj_names = [o.Name for o in doc.Objects]
+         
+         # マージ実行
          Gui.ActiveDocument.mergeProject(joined_path)
+         doc.recompute() # 一旦再計算して内部IDを確定させる
+         # --- インポート後に増えたオブジェクトを特定 ---
+         new_objs = [o for o in doc.Objects if o.Name not in old_obj_names]
          
+         if not new_objs:
+             print("Error: オブジェクトが読み込まれませんでした。")
+             return
+         #latticeBeamというラベルを持つものを優先的に探す
+         move_target = None
+         for o in new_objs:
+             if "TrunBackleA"  in o.Label or "TrunBackleA"  in o.Name:
+                 move_target = o
+                 break
+             elif "TrunBackleB"  in o.Label or "TrunBackleB"  in o.Name:
+                 move_target = o
+                 break
+             elif "TrunBackleC"  in o.Label or "TrunBackleCB"  in o.Name:
+                 move_target = o
+                 break
+             
          
-         
-         #objs=doc.Objects
-         #if objs:
-         #    last_obj=objs[-1] 
-         #Gui.activateWorkbench("DraftWorkbench")
-         #Gui.Selection.addSelection(last_obj)
-         #Gui.runCommand('Draft_Move',0) 
+         # 見つからなければ、新しく入ってきた最初のオブジェクトをターゲットにする
+         if not move_target:
+             move_target = new_objs[0]
+         view = Gui.ActiveDocument.ActiveView
+         callbacks = {}
+         def move_cb(info):
+             pos = info["Position"]
+             # 重要：ビュー平面上の3D座標を取得
+             p = view.getPoint(pos)
+             if move_target:
+                 move_target.Placement.Base = p
+                 #view.softRedraw()
+         def click_cb(info):
+             if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
+                 # コールバック解除
+                 view.removeEventCallback("SoLocation2Event", callbacks["move"])
+                 view.removeEventCallback("SoMouseButtonEvent", callbacks["click"])
+                 App.ActiveDocument.recompute()
+                 print("Placed: " + move_target.Label)
+         # イベント登録
+         callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
+         callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb) 
+        
+
 
 class main():
         d = QtGui.QWidget()
