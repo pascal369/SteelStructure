@@ -131,7 +131,7 @@ class Ui_Dialog(object):
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'accodionGate_data',fname)
          
- # --- インポート前のオブジェクトリストを取得 ---
+         # --- インポート前のオブジェクトリストを取得 ---
          old_obj_names = [o.Name for o in doc.Objects]
          
          # マージ実行
@@ -179,13 +179,7 @@ class Ui_Dialog(object):
          # イベント登録
          callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
          callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)
-        # try:
-        #    doc=App.ActiveDocument
-        #    Gui.ActiveDocument.mergeProject(joined_path)
-        # except:
-        #    doc=App.newDocument()
-        #    Gui.ActiveDocument.mergeProject(joined_path)
-        # Gui.SendMsgToActiveView("ViewFit")
+
     def spinMove(self):
          r0=float(self.le_L.text())
          r1 = self.spinBox.value()
