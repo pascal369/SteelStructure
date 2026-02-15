@@ -40,10 +40,10 @@ class Ui_Dialog(object):
 
         #type
         self.label_type = QtGui.QLabel('Type',Dialog)
-        self.label_type.setGeometry(QtCore.QRect(10, 13, 100, 20))
+        self.label_type.setGeometry(QtCore.QRect(10, 10, 100, 20))
         self.label_type.setStyleSheet("color: black;")
         self.comboBox_type = QtGui.QComboBox(Dialog)
-        self.comboBox_type.setGeometry(QtCore.QRect(110, 10, 100, 20))
+        self.comboBox_type.setGeometry(QtCore.QRect(110, 8, 100, 20))
 
         
         #ロッド径 dia
@@ -58,7 +58,7 @@ class Ui_Dialog(object):
         self.label_L.setGeometry(QtCore.QRect(10, 63, 100, 20))
         self.label_L.setStyleSheet("color: black;")
         self.le_L = QtGui.QLineEdit('1000',Dialog)
-        self.le_L.setGeometry(QtCore.QRect(110, 60, 50, 20))
+        self.le_L.setGeometry(QtCore.QRect(110, 62, 50, 20))
         self.le_L.setAlignment(QtCore.Qt.AlignCenter)
         #ブレス幅 W
         #self.label_W = QtGui.QLabel('Width',Dialog)
@@ -69,10 +69,10 @@ class Ui_Dialog(object):
         #self.le_W.setAlignment(QtCore.Qt.AlignCenter)
         #ターンバックル位置Tp
         self.label_Lx = QtGui.QLabel('Turnbackle',Dialog)
-        self.label_Lx.setGeometry(QtCore.QRect(10, 113, 100, 20))
+        self.label_Lx.setGeometry(QtCore.QRect(10, 88, 100, 20))
         self.label_Lx.setStyleSheet("color: black;")
         self.le_Lx = QtGui.QLineEdit('500',Dialog)
-        self.le_Lx.setGeometry(QtCore.QRect(110, 110, 50, 20))
+        self.le_Lx.setGeometry(QtCore.QRect(110, 85, 50, 20))
         self.le_Lx.setAlignment(QtCore.Qt.AlignCenter)
 
         
