@@ -103,10 +103,9 @@ class Channel:
             pface.translate(Base.Vector(-B/2,0,-H/2)) 
             c00=pface
             obj.Shape=c00
-            
         
         obj.size=size
-        obj.H=H
+        obj.H0=H
         obj.B=B
         
         try:
@@ -114,9 +113,7 @@ class Channel:
             obj.mass=g
             obj.ViewObject.Proxy=0
         except:
-            #obj.mass=g
-            #obj.ViewObject.Proxy=0
             pass    
-        #obj.Shape=c00
+       
        
    

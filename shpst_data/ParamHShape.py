@@ -90,7 +90,7 @@ class HShape:
         else:    
             c00=pface
         obj.size=size
-        obj.H=H
+        obj.H0=H
         obj.B=B 
         g=c00.Volume*g0/10**9 
         label='mass[kg]'
