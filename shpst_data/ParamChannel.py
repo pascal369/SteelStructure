@@ -105,7 +105,7 @@ class Channel:
             obj.Shape=c00
         
         obj.size=size
-        obj.H0=H
+        obj.H=H
         obj.B=B
         
         try:
