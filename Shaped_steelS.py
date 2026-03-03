@@ -380,7 +380,7 @@ class Ui_Dialog(object):
             t1=sa[2]
             t2=sa[3]
 
-            obj.addProperty("App::PropertyFloat", "H0",'Dimension').H0=H
+            obj.addProperty("App::PropertyFloat", "H",'Dimension').H=H
             obj.addProperty("App::PropertyFloat", "B",'Dimension').B=B
             obj.addProperty("App::PropertyFloat", "t1",'Dimension').t1=t1
             obj.addProperty("App::PropertyFloat", "t2",'Dimension').t2=t2
@@ -438,7 +438,7 @@ class Ui_Dialog(object):
             t1=sa[2]
             t2=sa[3]
 
-            obj.addProperty("App::PropertyFloat", "H0",'Dimension').H0=H
+            obj.addProperty("App::PropertyFloat", "H",'Dimension').H=H
             obj.addProperty("App::PropertyFloat", "B",'Dimension').B=B
             obj.addProperty("App::PropertyFloat", "t1",'Dimension').t1=t1
             obj.addProperty("App::PropertyFloat", "t2",'Dimension').t2=t2
@@ -486,7 +486,7 @@ class Ui_Dialog(object):
             t1=sa[2]
             t2=sa[3]
 
-            obj.addProperty("App::PropertyFloat", "H0",'Dimension').H0=H
+            obj.addProperty("App::PropertyFloat", "H",'Dimension').H=H
             obj.addProperty("App::PropertyFloat", "B",'Dimension').B=B
             obj.addProperty("App::PropertyFloat", "t1",'Dimension').t1=t1
             obj.addProperty("App::PropertyFloat", "t2",'Dimension').t2=t2
@@ -738,7 +738,7 @@ class Ui_Dialog(object):
             B=sa[1]
             t=sa[2]
 
-            obj.addProperty("App::PropertyFloat", "H0",'Dimension').H0=H
+            obj.addProperty("App::PropertyFloat", "H",'Dimension').H=H
             obj.addProperty("App::PropertyFloat", "B",'Dimension').B=B
             obj.addProperty("App::PropertyFloat", "t",'Dimension').t=t
 
@@ -789,7 +789,7 @@ class Ui_Dialog(object):
             C=sa[2]
             t=sa[3]
 
-            obj.addProperty("App::PropertyFloat", "H0",'Dimension').H0=H
+            obj.addProperty("App::PropertyFloat", "H",'Dimension').H=H
             obj.addProperty("App::PropertyFloat", "A",'Dimension').A=A
             obj.addProperty("App::PropertyFloat", "C",'Dimension').C=C
             obj.addProperty("App::PropertyFloat", "t",'Dimension').t=t
