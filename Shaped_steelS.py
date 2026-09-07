@@ -15,7 +15,7 @@ import Draft
 import FreeCAD, FreeCADGui
 import FreeCAD as App
 from pivy import coin
-from PySide2 import QtCore
+from PySide import QtCore
 from shpst_data import ShpstData
 from shpst_data import ShpstData
 from shpst_data import ParamAngle
@@ -90,7 +90,7 @@ class Ui_Dialog(object):
         self.label_l.setGeometry(QtCore.QRect(10, 90, 81, 20))
         self.label_l.setStyleSheet("color: black;")
         self.spinBoxL=QtGui.QSpinBox(Dialog)
-        self.spinBoxL.setGeometry(100, 90, 60, 32)
+        self.spinBoxL.setGeometry(100, 90, 70, 32)
         self.spinBoxL.setMinimum(1)  # 最小値
         self.spinBoxL.setMaximum(5500)  # 最大値
         self.spinBoxL.setValue(5500)  # 
@@ -870,10 +870,7 @@ class Ui_Dialog(object):
             FreeCAD.ActiveDocument.recompute() 
 
         
-        #Gui.ActiveDocument.ActiveView.fitAll() 
-        #Gui.activateWorkbench("DraftWorkbench")
-        #Gui.Selection.addSelection(obj)
-        #Gui.runCommand('Draft_Move',0)
+        obj.addProperty("App::PropertyString", "Count",label).Count='1'
         view = Gui.ActiveDocument.ActiveView
         obj.ViewObject.Visibility = True
         sep = coin.SoSeparator()

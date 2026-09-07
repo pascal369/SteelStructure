@@ -15,7 +15,7 @@ from hdrl_data import ParamEdge
 #from hdrl_data import ParamChannel
 from hdrl_data import HandData
 from pivy import coin
-from PySide2 import QtCore
+from PySide import QtCore
         
 class ViewProvider:
     def __init__(self, obj):
@@ -46,7 +46,7 @@ class Ui_Dialog(object):
         self.label_l1.setGeometry(QtCore.QRect(30, 67, 60, 12))
         self.label_l1.setStyleSheet("color: black;")
         self.spinBoxL1=QtGui.QSpinBox(Dialog)
-        self.spinBoxL1.setGeometry(90, 70, 60, 40)
+        self.spinBoxL1.setGeometry(90, 70, 70, 40)
         self.spinBoxL1.setMinimum(100)  # 最小値
         self.spinBoxL1.setMaximum(50000)  # 最大値
         self.spinBoxL1.setValue(1600)  # 
@@ -65,7 +65,7 @@ class Ui_Dialog(object):
         self.label_l2.setGeometry(QtCore.QRect(163, 67, 60, 12))
         self.label_l2.setStyleSheet("color: black;")
         self.spinBoxL2=QtGui.QSpinBox(Dialog)
-        self.spinBoxL2.setGeometry(190, 70, 60, 40)
+        self.spinBoxL2.setGeometry(190, 70, 70, 40)
         self.spinBoxL2.setMinimum(100)  # 最小値
         self.spinBoxL2.setMaximum(50000)  # 最大値
         self.spinBoxL2.setValue(1600)  # 

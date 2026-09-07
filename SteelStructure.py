@@ -57,21 +57,21 @@ class Ui_Dialog(object):
 
         #jpn text
         self.pushButton_jpn = QtGui.QPushButton('Jpn Text',Dialog)
-        self.pushButton_jpn.setGeometry(QtCore.QRect(80, 62, 50, 22))
+        self.pushButton_jpn.setGeometry(QtCore.QRect(80, 62, 90, 22))
         self.le_jpn = QtGui.QLineEdit(Dialog)
         self.le_jpn.setGeometry(QtCore.QRect(175, 62, 170, 22))
         self.le_jpn.setAlignment(QtCore.Qt.AlignCenter)  
 
         #standard
         self.pushButton_st = QtGui.QPushButton('Standard',Dialog)
-        self.pushButton_st.setGeometry(QtCore.QRect(80, 85, 50, 22))
+        self.pushButton_st.setGeometry(QtCore.QRect(80, 85, 90, 22))
         self.le_st = QtGui.QLineEdit(Dialog)
         self.le_st.setGeometry(QtCore.QRect(175, 85, 170, 22))
         self.le_st.setAlignment(QtCore.Qt.AlignCenter) 
 
         #material
         self.pushButton_mt = QtGui.QPushButton('Material',Dialog)
-        self.pushButton_mt.setGeometry(QtCore.QRect(80, 110, 50, 22))
+        self.pushButton_mt.setGeometry(QtCore.QRect(80, 110, 90, 22))
         self.comboBox_mt = QtGui.QComboBox(Dialog)
         self.comboBox_mt.setGeometry(QtCore.QRect(175, 108, 170, 22))
         self.comboBox_mt.setEditable(True)

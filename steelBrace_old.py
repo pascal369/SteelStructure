@@ -42,34 +42,19 @@ class Ui_Dialog(object):
         self.comboBox_angle.setGeometry(QtCore.QRect(80, 35, 80, 22))
 
         #幅W
-        self.label_W = QtGui.QLabel('W[mm]',Dialog)
+        self.label_W = QtGui.QLabel('W[mm',Dialog)
         self.label_W.setGeometry(QtCore.QRect(10, 63, 60, 12))
         self.label_W.setStyleSheet("color: black;")
-
-        #self.lineEdit_W = QtGui.QLineEdit('2500',Dialog)
-        #self.lineEdit_W.setGeometry(QtCore.QRect(80, 61, 80, 22))
-        #self.lineEdit_W.setAlignment(QtCore.Qt.AlignCenter)
-        self.spinBoxW=QtGui.QSpinBox(Dialog)
-        self.spinBoxW.setGeometry(80, 60, 70, 22)
-        self.spinBoxW.setMinimum(500)  # 最小値
-        self.spinBoxW.setMaximum(9500)  # 最大値
-        self.spinBoxW.setValue(4000)  # 
-        self.spinBoxW.setSingleStep(10) #step
-        self.spinBoxW.setAlignment(QtCore.Qt.AlignCenter)
+        self.lineEdit_W = QtGui.QLineEdit('2500',Dialog)
+        self.lineEdit_W.setGeometry(QtCore.QRect(80, 61, 80, 22))
+        self.lineEdit_W.setAlignment(QtCore.Qt.AlignCenter)
         #高H
-        self.label_H = QtGui.QLabel('H[mm]',Dialog)
+        self.label_H = QtGui.QLabel('H[mm',Dialog)
         self.label_H.setGeometry(QtCore.QRect(10, 88, 60, 12))
         self.label_H.setStyleSheet("color: black;")
-        #self.lineEdit_H = QtGui.QLineEdit('2200',Dialog)
-        #self.lineEdit_H.setGeometry(QtCore.QRect(80, 85, 80, 22))
-        #self.lineEdit_H.setAlignment(QtCore.Qt.AlignCenter)
-        self.spinBoxH=QtGui.QSpinBox(Dialog)
-        self.spinBoxH.setGeometry(80, 85, 70, 22)
-        self.spinBoxH.setMinimum(500)  # 最小値
-        self.spinBoxH.setMaximum(9500)  # 最大値
-        self.spinBoxH.setValue(4000)  # 
-        self.spinBoxH.setSingleStep(10) #step
-        self.spinBoxH.setAlignment(QtCore.Qt.AlignCenter)
+        self.lineEdit_H = QtGui.QLineEdit('2200',Dialog)
+        self.lineEdit_H.setGeometry(QtCore.QRect(80, 85, 80, 22))
+        self.lineEdit_H.setAlignment(QtCore.Qt.AlignCenter)
         #ガセットプレートサイズ
         self.label_L = QtGui.QLabel('GPL[mm',Dialog)
         self.label_L.setGeometry(QtCore.QRect(10, 113, 60, 12))
@@ -95,9 +80,6 @@ class Ui_Dialog(object):
         self.comboBox_type.currentIndexChanged[int].connect(self.ontype)
         self.comboBox_type.setCurrentIndex(0)
 
-        self.spinBoxW.valueChanged[int].connect(self.update2) 
-        self.spinBoxH.valueChanged[int].connect(self.update2) 
-
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.onImport)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.select_objects_by_multiple_labels)
@@ -120,6 +102,8 @@ class Ui_Dialog(object):
         return
     def onImport(self):
         global spreadsheet
+        global AngleSteel
+        global AngleSteelB
         selection = Gui.Selection.getSelection()
         #self.comboBox_angle.clear()
         if selection:
@@ -129,43 +113,44 @@ class Ui_Dialog(object):
                  parts_group = selected_object
                  # Partsグループ内のオブジェクトを走査してスプレッドシートを探す
                  for obj in parts_group.Group:
-                     #print(obj.Label)
+                     print(obj.Label)
 
                      if obj.TypeId == "Spreadsheet::Sheet":
                          # スプレッドシートが見つかった場合の処理
                          spreadsheet = obj 
-                        
+                     elif obj.Label[:10]=='AngleSteel':
+                         AngleSteel=obj 
+                     elif obj.Label[:11]=='AngleSteelB':
+                         AngleSteelB=obj     
 
-                     self.spinBoxW.setValue(int(spreadsheet.getContents('W0')))    
-                     self.spinBoxH.setValue(int(spreadsheet.getContents('H0')))          
-                     self.lineEdit_L.setText(spreadsheet.getContents('La')) 
-                     self.comboBox_angle.setEditable(True)
-                     self.comboBox_angle.setCurrentText(spreadsheet.getContents('myAngle'))
-                     self.comboBox_type.setCurrentText(spreadsheet.getContents('key'))
+
+        self.lineEdit_W.setText(spreadsheet.getContents('W0'))    
+        self.lineEdit_L.setText(spreadsheet.getContents('La'))          
+        self.lineEdit_H.setText(spreadsheet.getContents('H0')) 
+        self.comboBox_angle.setEditable(True)
+        self.comboBox_angle.setCurrentText(spreadsheet.getContents('myAngle')[1:])
+        self.comboBox_type.setCurrentText(spreadsheet.getContents('key')[1:])
 
     def collect_objects_recursive(self,group, target_labels):
         global AngleSteel
         global AngleSteelB
         matched = []
         for obj in getattr(group, "Group", []):
-            if obj.Label=='AngleSteel':
+            #print(obj.Label)
+            if obj.Label[:10]=='AngleSteel':
                 AngleSteel=obj
-            elif obj.Label=='AngleSteelB':
-                AngleSteelB=obj    
-             # 下位フォルダなら再帰的に探索
+            try:
+                if obj.Label[:11]=='AngleSteelB':
+                    AngleSteelB=obj  
+            except:
+                pass
+            # 下位フォルダなら再帰的に探索
             if hasattr(obj, "Group"):
                 matched.extend(self.collect_objects_recursive(obj, target_labels))
             else:
                 # ラベルが完全一致するオブジェクトを追加
                 if obj.Label == target_labels:
                     matched.append(obj)
-            size=self.comboBox_angle.currentText()
-            try:
-                
-                AngleSteel.size=size 
-                AngleSteelB.size=size   
-            except:
-                pass            
         return matched  
     def select_objects_by_multiple_labels(self):
         sel = Gui.Selection.getSelection()
@@ -176,43 +161,38 @@ class Ui_Dialog(object):
         if not hasattr(root, "Group"):
             App.Console.PrintError("選択されたオブジェクトはフォルダ（Groupなど）ではありません。\n")
             return
-        target_labels =['AngleSteel','AngleSteelB']   # ← ここを探したいラベル名に変更！
+        target_labels =['Carrier', 'Return']   # ← ここを探したいラベル名に変更！
         matched_objects = self.collect_objects_recursive(root, target_labels)
         Gui.Selection.clearSelection()
         for obj in matched_objects:
-            Gui.Selection.addSelection(obj)  
-    def update2(self):
-        myW=self.spinBoxW.value()
-        myH=self.spinBoxH.value()
-        spreadsheet.set('B2',str(myW))
-        spreadsheet.set('B3',str(myH))
-        App.ActiveDocument.recompute()
-        
+            Gui.Selection.addSelection(obj)   
 
     def update(self):
-             #global B0
-             #global key
-             size=self.comboBox_angle.currentText()
+             global B0
+             key=self.comboBox_angle.currentText()
              for i in range(13,40):
-                 print(size,spreadsheet.getContents('A'+str(i)))
-                 if size==spreadsheet.getContents('A'+str(i))[1:]:
-                     B=spreadsheet.getContents('B'+str(i))
+                 print(key,spreadsheet.getContents('A'+str(i))[1:])
+                 if key==spreadsheet.getContents('A'+str(i))[1:]:
+                     B0=spreadsheet.getContents('B'+str(i))
+                     print(B0)
                      break
              #try:
-             myW=self.spinBoxW.value()
-             myH=self.spinBoxH.value()
+             myW=self.lineEdit_W.text()
              myL=self.lineEdit_L.text()
-             spreadsheet.set('B2',str(myW))
-             spreadsheet.set('B3',str(myH))
+             myH=self.lineEdit_H.text()
+             spreadsheet.set('B2',myW)
+             spreadsheet.set('B3',myH)
              spreadsheet.set('B5',myL)
-             spreadsheet.set('B11',B)
-             spreadsheet.set('myAngle',size)
-             #size=self.comboBox_angle.currentText()
-             try:
-                 AngleSteel.size=size 
-                 AngleSteelB.size=size  
-             except:
-                 pass
+             spreadsheet.set('B11',B0)
+             spreadsheet.set('myAngle',key)
+             #AngleSteel.size=key
+
+             AngleSteel.size=spreadsheet.getContents('myAngle')[1:]
+             AngleSteelB.size=spreadsheet.getContents('myAngle')[1:]
+             #AngleSteelB.size=key
+             #print(B0)
+ 
+             
              App.ActiveDocument.recompute()
          
     def create(self): 
@@ -220,9 +200,9 @@ class Ui_Dialog(object):
          mytype=self.comboBox_type.currentText()
          fname='steelBrace'+mytype+'.FCStd'
          base=os.path.dirname(os.path.abspath(__file__))
-         joined_path = os.path.join(base, 'StlStu_data',fname) 
+         joined_path = os.path.join(base, 'StlStu_data',fname)
 
-         # --- インポート前のオブジェクトリストを取得 ---
+          # --- インポート前のオブジェクトリストを取得 ---
          old_obj_names = [o.Name for o in doc.Objects]
          
          # マージ実行
@@ -256,7 +236,7 @@ class Ui_Dialog(object):
              p = view.getPoint(pos)
              if move_target:
                  move_target.Placement.Base = p
-                 #view.softRedraw()
+                 view.softRedraw()
      
          def click_cb(info):
              if info["State"] == "DOWN" and info["Button"] == "BUTTON1":
@@ -268,8 +248,8 @@ class Ui_Dialog(object):
      
          # イベント登録
          callbacks["move"] = view.addEventCallback("SoLocation2Event", move_cb)
-         callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb)
-         
+         callbacks["click"] = view.addEventCallback("SoMouseButtonEvent", click_cb) 
+          
 class main():
         d = QtGui.QWidget()
         d.ui = Ui_Dialog()

@@ -17,9 +17,9 @@
 #*    USA
 #***************************************************************************
 
-from PySide2 import QtWidgets
+from PySide import QtWidgets
 try:
-  from PySide2 import QtWebEngineWidgets
+  from PySide import QtWebEngineWidgets
 except ImportError:
   raise Exception("Missing package. Please install: python3-pyside2.qtwebenginewidgets.")
 

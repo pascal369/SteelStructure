@@ -184,7 +184,7 @@ class Ui_Dialog(object):
             p = view.getPoint(pos)
             if move_target:
                 move_target.Placement.Base = p
-                view.softRedraw()
+                #view.softRedraw()
     
         def click_cb(info):
             if info["State"] == "DOWN" and info["Button"] == "BUTTON1":

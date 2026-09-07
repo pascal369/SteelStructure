@@ -14,7 +14,7 @@ from PySide import QtCore
 from shpst_data import ShpstData
 import Draft,DraftGui
 from pivy import coin
-from PySide2 import QtCore
+#from PySide2 import QtCore
 Post=['Pst_H','Pst_L','Pst_C','Pst_SQ','Pst_Pipe',]
 class Ui_Dialog(object):
     def setupUi(self, Dialog):

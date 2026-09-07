@@ -146,14 +146,18 @@ class Ui_Dialog(object):
             self.comboBox_LShp.addItems(TShp)    
 
     def spinMoveH(self):
+         self.spinBoxH.blockSignals(True)
          dL=self.spinBoxH.value()
          spreadsheet.set('H0',str(dL))
          App.ActiveDocument.recompute() 
+         self.spinBoxH.blockSignals(False)
 
     def spinMoveL(self):
+         self.spinBoxL.blockSignals(True)
          dL=self.spinBoxL.value()
          spreadsheet.set('L0',str(dL))
          App.ActiveDocument.recompute() 
+         self.spinBoxL.blockSignals(False)
 
     def read_data(self):
          global angle

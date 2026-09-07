@@ -10,7 +10,7 @@ import Draft
 import FreeCAD as App
 import FreeCADGui as Gui
 from pivy import coin
-from PySide2 import QtCore
+#from PySide2 import QtCore
 from pln_data import plndata
 from pln_data import ParamCircle
 from pln_data import ParamSemiCircle

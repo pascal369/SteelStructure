@@ -51,7 +51,7 @@ class Ui_Dialog(object):
         self.label_size.setStyleSheet("color: black;")
 
         self.spinBoxL=QtGui.QSpinBox(Dialog)
-        self.spinBoxL.setGeometry(80, 65, 60, 32)
+        self.spinBoxL.setGeometry(80, 65, 70, 32)
         self.spinBoxL.setMinimum(100)  # 最小値
         self.spinBoxL.setMaximum(20000)  # 最大値
         self.spinBoxL.setValue(2500)  # 
@@ -59,10 +59,10 @@ class Ui_Dialog(object):
         self.spinBoxL.setAlignment(QtCore.Qt.AlignCenter)
         #heightStep
         self.label_step = QtGui.QLabel('step',Dialog)
-        self.label_step.setGeometry(QtCore.QRect(145, 65, 50, 22))
+        self.label_step.setGeometry(QtCore.QRect(155, 65, 50, 22))
         self.label_step.setStyleSheet("color: black;")
         self.le_step = QtGui.QLineEdit('10',Dialog)
-        self.le_step.setGeometry(QtCore.QRect(180, 65, 40, 22))
+        self.le_step.setGeometry(QtCore.QRect(180, 65, 50, 22))
         self.le_step.setAlignment(QtCore.Qt.AlignCenter)
         #Create
         self.pushButton = QtGui.QPushButton('Create',Dialog)

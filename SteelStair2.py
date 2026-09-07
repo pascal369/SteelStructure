@@ -20,7 +20,7 @@ import FreeCADGui
 from StlStr_data2 import ParamStair2
 from StlStr_data2 import StlStrdata2
 from pivy import coin
-from PySide2 import QtCore
+#from PySide2 import QtCore
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):

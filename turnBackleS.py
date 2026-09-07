@@ -18,7 +18,7 @@ from PySide import QtGui
 from PySide import QtUiTools
 from PySide import QtCore
 from pivy import coin
-from PySide2 import QtCore
+#from PySide2 import QtCore
 
 dia_data=['10','12','16','20','22','24','30',]
 type_data=['A','B']
@@ -60,13 +60,13 @@ class Ui_Dialog(object):
         self.le_L = QtGui.QLineEdit('1000',Dialog)
         self.le_L.setGeometry(QtCore.QRect(110, 62, 50, 20))
         self.le_L.setAlignment(QtCore.Qt.AlignCenter)
-        #ブレス幅 W
-        #self.label_W = QtGui.QLabel('Width',Dialog)
-        #self.label_W.setGeometry(QtCore.QRect(10, 88, 100, 20))
-        #self.label_W.setStyleSheet("color: black;")
-        #self.le_W = QtGui.QLineEdit('1000',Dialog)
-        #self.le_W.setGeometry(QtCore.QRect(110, 85, 50, 20))
-        #self.le_W.setAlignment(QtCore.Qt.AlignCenter)
+        self.spinBox_L=QtGui.QSpinBox(Dialog)
+        self.spinBox_L.setGeometry(160, 62, 70, 22)
+        self.spinBox_L.setMinimum(100)  # 最小値
+        self.spinBox_L.setMaximum(5000)  # 最大値
+        self.spinBox_L.setValue(1000)  # 
+        self.spinBox_L.setSingleStep(10) #step
+        self.spinBox_L.setAlignment(QtCore.Qt.AlignCenter)
         #ターンバックル位置Tp
         self.label_Lx = QtGui.QLabel('Turnbackle',Dialog)
         self.label_Lx.setGeometry(QtCore.QRect(10, 88, 100, 20))
@@ -100,6 +100,8 @@ class Ui_Dialog(object):
         self.comboBox_type.currentIndexChanged[int].connect(self.onType)
         self.comboBox_type.setCurrentIndex(0)
 
+        self.spinBox_L.valueChanged[int].connect(self.paraDim)
+
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("pressed()"), self.create)
         QtCore.QObject.connect(self.pushButton2, QtCore.SIGNAL("pressed()"), self.update)
         QtCore.QObject.connect(self.pushButton3, QtCore.SIGNAL("pressed()"), self.read_data)
@@ -107,7 +109,14 @@ class Ui_Dialog(object):
         
 
         self.retranslateUi(Dialog)
-        
+    def paraDim(self):
+            self.spinBox_L.blockSignals(True)
+            L=self.spinBox_L.value()
+            mySht.set('L0',str(L))
+            self.le_L.setText(str(L))
+            App.ActiveDocument.recompute() 
+            self.spinBox_L.blockSignals(False)
+
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "turnBackle", None))
         self.pushButton.setText(QtGui.QApplication.translate("Dialog", "Create", None))  
@@ -159,6 +168,7 @@ class Ui_Dialog(object):
                              #print('bbbbbbbbbbbbbbbbbbbbbbbbbbb')
                              self.le_W.setText(mySht.getContents('w0')) 
                              self.le_L.setText(mySht.getContents('l0')) 
+                             self.spinBox_L.setValue(int(mySht.getContents('L0')))
 
                  fname='turnBackle'+self.comboBox_type.currentText()+'.png'
                  base=os.path.dirname(os.path.abspath(__file__))
@@ -281,7 +291,7 @@ class Ui_Dialog(object):
          base=os.path.dirname(os.path.abspath(__file__))
          joined_path = os.path.join(base, 'turnBackle_data',fname) 
          
-          # --- インポート前のオブジェクトリストを取得 ---
+         # --- インポート前のオブジェクトリストを取得 ---
          old_obj_names = [o.Name for o in doc.Objects]
          
          # マージ実行
